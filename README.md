@@ -1,5 +1,5 @@
-# VoyaGo
-VoyaGo — Bora viajar.
+# TripFy
+TripFy — Bora viajar.
 
 Descrição
 -------
@@ -22,5 +22,5 @@ Como contribuir
 
 Contato
 -------
-Repo: https://github.com/IcaroLSL/VoyaGo
+Repo: https://github.com/IcaroLSL/TripFy
 
