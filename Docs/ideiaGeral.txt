@@ -1,4 +1,4 @@
 Ideia central: Permitir que as pessoas possão buscar ou montar um roteiro de viagem de acordo com a sua localização ou a de seu destino.
 
 O usuário poderá montar o roteiro a partir dos dias em que fará a viagem, definindo as atividades que realizará e os horários em que serão realizadas de acordo com categorias, como restaurantes, museus,
- atividades ao ar livre, ṕreço e avaliações. 
+ atividades ao ar livre, preço e avaliações. Também poderá compartilhar seu roteiro com outros usuário, criando um grupo no qual os participantes podem ver e até editar de acordo com seus cargos.
