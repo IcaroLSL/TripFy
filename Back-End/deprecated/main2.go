@@ -28,9 +28,10 @@ var (
 	exibirNome        = true
 	exibirEndereco    = true
 	exibirTipo        = true
+	exibirValor       = true
+	exibirAvaliacao   = true
 	exibirTelefone    = false
 	exibirSite        = false
-	exibirAvaliacao   = false
 	exibirCoordenadas = false
 )
 
@@ -96,6 +97,7 @@ type Place struct {
 	NationalPhoneNumber string   `json:"nationalPhoneNumber"`
 	WebsiteURI          string   `json:"websiteUri"`
 	Rating              float64  `json:"rating"`
+	PriceLevel          int      `json:"priceLevel"`
 	Location            struct {
 		Latitude  float64 `json:"latitude"`
 		Longitude float64 `json:"longitude"`
@@ -123,7 +125,7 @@ func buscarLugares(lat, lon float64, tipo string) ([]Place, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-Goog-Api-Key", apiKey)
 	// Pedimos todos os campos na API; o que é exibido é filtrado depois no código
-	req.Header.Set("X-Goog-FieldMask", "places.displayName,places.formattedAddress,places.types,places.nationalPhoneNumber,places.websiteUri,places.rating,places.location")
+	req.Header.Set("X-Goog-FieldMask", "places.displayName,places.formattedAddress,places.types,places.nationalPhoneNumber,places.websiteUri,places.rating,places.location,places.priceLevel")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -164,6 +166,9 @@ func exibirPlace(p Place) {
 	if exibirAvaliacao {
 		fmt.Printf("Avaliação: %.1f\n", p.Rating)
 	}
+	if exibirValor {
+		fmt.Printf("Preço (nível): %d\n", p.PriceLevel)
+	}
 	if exibirCoordenadas {
 		fmt.Printf("Coordenadas: %.6f, %.6f\n", p.Location.Latitude, p.Location.Longitude)
 	}
@@ -179,7 +184,178 @@ func main() {
 	}
 	fmt.Printf("Coordenadas encontradas: %.6f, %.6f\n\n", lat, lon)
 
-	tipos := []string{"tourist_attraction", "restaurant", "hotel", "museum"}
+	tipos := []string{
+		// =========================
+		// AUTOMOTIVE
+		// =========================
+		"car_dealer",
+		"car_rental",
+		"car_repair",
+		"car_wash",
+		"ebike_charging_station",
+		"electric_vehicle_charging_station",
+		"gas_station",
+		"parking",
+		"parking_garage",
+		"parking_lot",
+		"rest_stop",
+		"tire_shop",
+		"truck_dealer",
+
+		// =========================
+		// NEGÓCIOS
+		// =========================
+		"business_center",
+		"corporate_office",
+		"coworking_space",
+		"farm",
+		"manufacturer",
+		"ranch",
+		"supplier",
+		"television_studio",
+
+		// =========================
+		// CULTURA
+		// =========================
+		"art_gallery",
+		"art_museum",
+		"art_studio",
+		"auditorium",
+		"castle",
+		"cultural_landmark",
+		"fountain",
+		"historical_place",
+		"history_museum",
+		"monument",
+		"museum",
+		"performing_arts_theater",
+		"sculpture",
+
+		// =========================
+		// EDUCAÇÃO
+		// =========================
+		"academic_department",
+		"educational_institution",
+		"library",
+		"preschool",
+		"primary_school",
+		"research_institute",
+		"school",
+		"secondary_school",
+		"university",
+
+		// =========================
+		// LAZER E RECREAÇÃO
+		// =========================
+		"amusement_center",
+		"amusement_park",
+		"aquarium",
+		"barbecue_area",
+		"botanical_garden",
+		"bowling_alley",
+		"casino",
+		"city_park",
+		"comedy_club",
+		"community_center",
+		"concert_hall",
+		"convention_center",
+		"cultural_center",
+		"dog_park",
+		"event_venue",
+		"garden",
+		"hiking_area",
+		"marina",
+		"movie_theater",
+		"national_park",
+		"night_club",
+		"park",
+		"tourist_attraction",
+		"water_park",
+		"zoo",
+
+		// =========================
+		// FINANÇAS
+		// =========================
+		"atm",
+		"bank",
+		"accounting",
+
+		// =========================
+		// ALIMENTOS E BEBIDAS
+		// =========================
+		"restaurant",
+		"bar",
+		"cafe",
+		"bakery",
+		"fast_food_restaurant",
+		"coffee_shop",
+		"ice_cream_shop",
+		"meal_takeaway",
+		"pizza_restaurant",
+		"sushi_restaurant",
+
+		// =========================
+		// SAÚDE E BEM-ESTAR
+		// =========================
+		"hospital",
+		"pharmacy",
+		"dental_clinic",
+		"doctor",
+		"spa",
+		"yoga_studio",
+
+		// =========================
+		// HOSPEDAGEM
+		// =========================
+		"hotel",
+		"motel",
+		"hostel",
+		"guest_house",
+		"resort_hotel",
+		"campground",
+		"lodging",
+		"extended_stay_hotel",
+
+		// =========================
+		// LOCAIS DE CULTO
+		// =========================
+		"church",
+		"mosque",
+		"synagogue",
+		"hindu_temple",
+		"buddhist_temple",
+
+		// =========================
+		// COMPRAS
+		// =========================
+		"shopping_mall",
+		"supermarket",
+		"store",
+		"convenience_store",
+		"clothing_store",
+		"electronics_store",
+		"pet_store",
+
+		// =========================
+		// ESPORTES
+		// =========================
+		"gym",
+		"fitness_center",
+		"stadium",
+		"sports_complex",
+		"swimming_pool",
+		"tennis_court",
+
+		// =========================
+		// TRANSPORTE
+		// =========================
+		"airport",
+		"bus_station",
+		"train_station",
+		"subway_station",
+		"taxi_stand",
+		"parking_lot",
+	}
 
 	for _, tipo := range tipos {
 		fmt.Printf("=== Tipo: %s ===\n", tipo)
