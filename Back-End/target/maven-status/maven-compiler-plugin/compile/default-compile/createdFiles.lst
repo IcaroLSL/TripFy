@@ -1,0 +1,7 @@
+com/tripfy/tripfy/infrastructure/adapter/input/rest/HealthController.class
+com/tripfy/tripfy/TripfyApplication.class
+com/tripfy/tripfy/domain/port/input/CheckHealthUseCase.class
+com/tripfy/tripfy/domain/model/HealthStatus.class
+com/tripfy/tripfy/application/usecase/CheckHealthUseCaseImpl.class
+com/tripfy/tripfy/infrastructure/config/SecurityConfig.class
+com/tripfy/tripfy/application/dto/HealthResponseDTO.class
