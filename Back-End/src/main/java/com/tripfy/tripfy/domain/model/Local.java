@@ -1,6 +1,6 @@
-package com.tripfy.tripfy.application.dto;
+package com.tripfy.tripfy.domain.model;
 
-public record LocalResponseDTO(
+public record Local(
     String  name,
     String  address,
     String  type,

@@ -1,0 +1,1 @@
+export { MembroLista } from './MembroLista';
