@@ -33,8 +33,8 @@ const CardRoteiro = ({ image, title, location, stars, tripDays, priceLevel, like
         </View>
         {/* <Text>{stars}</Text> */}
         <View className='flex-row space-x-2'>
-          <AppText theme={theme} className='text-gray-400'>Preço avaliado: {priceLevel}<MaterialIcon name="attach-money" className='text-gray-400' /></AppText>
-          <View className='self-end bg-gray-400 rounded-full px-2'>
+          <AppText theme={theme} className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>Preço avaliado: {priceLevel}<MaterialIcon name="attach-money" className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`} /></AppText>
+          <View className={`self-end ${theme === 'light' ? 'bg-gray-200' : 'bg-[#1A1A2E]'} rounded-full px-2`}>
             <AppText theme={theme} className='text-gray-900'>{tripDays} dias</AppText>
           </View>
         </View>

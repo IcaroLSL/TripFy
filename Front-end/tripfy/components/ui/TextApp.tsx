@@ -25,7 +25,7 @@ export const AppTitle = ({theme, className, children}: DefaultProps & { children
 export const AppDescription = ({theme, className, children}: DefaultProps & { children: React.ReactNode }) => {
 
   return (
-      <Text className={`${theme === 'light' ? 'text-gray-300' : 'text-gray-400'} ${className} text-base`}>
+      <Text className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} ${className} text-base`}>
         {children}
       </Text>
   )
