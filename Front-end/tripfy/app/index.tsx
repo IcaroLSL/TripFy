@@ -24,7 +24,7 @@ export default function App() {
             stars={4.5}
             tripDays={3}
             priceLevel={2}
-            liked={false}
+            liked={true}
           />
             <CardRoteiro
             theme={theme}
