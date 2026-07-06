@@ -1,9 +1,15 @@
 package com.tripfy.tripfy.domain.model;
 
+import java.util.List;
+
 public record Local(
     String  name,
     String  address,
-    String  type,
+    List<String> types,
+    String  phoneNumber,
+    String  websiteUri,
+    Double  rating,
     Integer priceLevel,
-    Float   rating
+    Double  latitude,
+    Double  longitude
 ) {}
