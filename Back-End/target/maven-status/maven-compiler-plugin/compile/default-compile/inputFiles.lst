@@ -1,7 +1,0 @@
-/home/yoku/Documents/Tripfy/Back-End/src/main/java/com/tripfy/tripfy/TripfyApplication.java
-/home/yoku/Documents/Tripfy/Back-End/src/main/java/com/tripfy/tripfy/application/dto/HealthResponseDTO.java
-/home/yoku/Documents/Tripfy/Back-End/src/main/java/com/tripfy/tripfy/application/usecase/CheckHealthUseCaseImpl.java
-/home/yoku/Documents/Tripfy/Back-End/src/main/java/com/tripfy/tripfy/domain/model/HealthStatus.java
-/home/yoku/Documents/Tripfy/Back-End/src/main/java/com/tripfy/tripfy/domain/port/input/CheckHealthUseCase.java
-/home/yoku/Documents/Tripfy/Back-End/src/main/java/com/tripfy/tripfy/infrastructure/adapter/input/rest/HealthController.java
-/home/yoku/Documents/Tripfy/Back-End/src/main/java/com/tripfy/tripfy/infrastructure/config/SecurityConfig.java
