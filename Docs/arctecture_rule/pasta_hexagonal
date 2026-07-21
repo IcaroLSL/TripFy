@@ -1,0 +1,152 @@
+Boa iniciativa em tentar sozinho! Essa é exatamente a pergunta certa para fazer agora.
+A regra é uma só, e deriva diretamente da Arquitetura Hexagonal:
+A pergunta que você faz para cada arquivo
+
+"Esse código sabe que existe Spring, banco de dados, HTTP ou qualquer tecnologia específica?"
+
+SIM → infrastructure
+NÃO → domain ou application
+
+As pastas e o que vai em cada uma
+domain/model
+O "o que é" do seu negócio. Classes que representam conceitos reais do Tripfy, sem nenhuma anotação de framework.
+Pergunta: "Isso existiria se eu trocasse Spring por outra coisa?"
+SIM → vai aqui
+
+Exemplos:
+✅ User.java         → um usuário é um conceito do negócio
+✅ Itinerary.java    → um roteiro é um conceito do negócio
+✅ Local.java        → um lugar é um conceito do negócio
+✅ HealthStatus.java → um status é um conceito do negócio
+
+❌ UserEntity.java   → "Entity" é JPA, vai em infrastructure
+
+domain/port/input
+O que a aplicação sabe fazer — contratos das funcionalidades. Sempre interfaces, nunca implementações.
+Pergunta: "Isso descreve uma ação/funcionalidade do sistema?"
+SIM → vai aqui
+
+Exemplos:
+✅ LoginUseCase.java
+✅ SearchPlacesUseCase.java
+✅ CreateItineraryUseCase.java
+✅ CheckHealthUseCase.java
+
+domain/port/output
+O que a aplicação precisa de fora — contratos para serviços externos. Também sempre interfaces.
+Pergunta: "Isso é uma dependência externa que o domínio precisa mas não quer conhecer?"
+SIM → vai aqui
+
+Exemplos:
+✅ PlacesGateway.java        → precisa do Google, mas não quer saber que é Google
+✅ UserRepository.java       → precisa de banco, mas não quer saber que é Postgres
+✅ PlacesPaginationCache.java → precisa de cache, mas não quer saber que é Redis
+✅ EventPublisher.java       → precisa publicar eventos, mas não quer saber como
+
+domain/service
+Regras de negócio complexas que envolvem mais de um model ou lógica que não pertence a nenhum model específico.
+Pergunta: "Isso é uma regra do negócio que orquestra vários conceitos?"
+SIM → vai aqui
+
+Exemplos:
+✅ PasswordValidator.java    → regras de senha (mínimo 8 chars, deve ter número...)
+✅ TokenGenerator.java       → lógica de geração de JWT (pura, sem framework)
+✅ RouteOptimizer.java       → lógica de otimização de rota entre atividades
+
+application/usecase
+Implementações dos Use Cases — orquestram o domain e chamam os ports de saída. É o único lugar que pode ter @Service.
+Pergunta: "Isso implementa um UseCase e coordena domain + ports?"
+SIM → vai aqui
+
+Exemplos:
+✅ LoginUseCaseImpl.java
+✅ SearchPlacesUseCaseImpl.java
+✅ CreateItineraryUseCaseImpl.java
+
+application/dto
+Objetos de transferência de dados — o que entra e sai da API. Sem lógica, só dados.
+Pergunta: "Isso é só um envelope de dados que vai pro cliente ou vem do cliente?"
+SIM → vai aqui
+
+Exemplos:
+✅ LoginRequestDTO.java      → { email, password }
+✅ LoginResponseDTO.java     → { token, refreshToken, expiresIn }
+✅ LocalResponseDTO.java     → o que o cliente vê de um lugar
+✅ PlacePageResponseDTO.java → lista paginada
+
+infrastructure/adapter/input/rest
+Controllers REST — recebem requisições HTTP e devolvem respostas. Sabem sobre HTTP, então ficam em infrastructure.
+Pergunta: "Isso lida com HTTP (request, response, status code)?"
+SIM → vai aqui
+
+Exemplos:
+✅ AuthController.java
+✅ PlacesController.java
+✅ HealthController.java
+
+infrastructure/adapter/output/persistence/postgres
+Implementações de repositório para PostgreSQL — JPA, Hibernate, queries SQL.
+Pergunta: "Isso usa JPA/@Entity/@Repository para falar com Postgres?"
+SIM → vai aqui
+
+Exemplos:
+✅ UserEntity.java                     → entity/ (a tabela mapeada)
+✅ SpringDataUserRepository.java       → repository/ (interface JPA)
+✅ PostgresUserRepository.java         → implementa UserRepository do domain
+
+infrastructure/adapter/output/persistence/mongo
+Implementações de repositório para MongoDB — documentos, coleções.
+Pergunta: "Isso usa @Document para falar com MongoDB?"
+SIM → vai aqui
+
+Exemplos:
+✅ ItineraryDocument.java              → document/ (o documento mapeado)
+✅ SpringDataItineraryRepository.java  → repository/ (interface Mongo)
+✅ MongoItineraryRepository.java       → implementa ItineraryRepository do domain
+
+infrastructure/adapter/output/cache
+Implementações de cache — Redis, Memcached.
+Pergunta: "Isso usa Redis/StringRedisTemplate para guardar ou ler dados?"
+SIM → vai aqui
+
+Exemplos:
+✅ RedisPlacesPaginationCache.java
+✅ RedisSessionCache.java
+
+infrastructure/adapter/output/messaging
+Publicação de eventos/mensagens — Spring Events agora, Kafka depois.
+Pergunta: "Isso publica ou consome eventos/mensagens?"
+SIM → vai aqui
+
+Exemplos:
+✅ SpringEventPublisher.java  → implementa EventPublisher do domain
+✅ KafkaEventPublisher.java   → quando migrar para Kafka
+
+infrastructure/config
+Configurações do Spring — beans, segurança, conexões.
+Pergunta: "Isso é um @Configuration ou @Bean do Spring?"
+SIM → vai aqui
+
+Exemplos:
+✅ SecurityConfig.java
+✅ RedisConfig.java
+✅ MongoConfig.java
+
+Resumo visual
+Você criou uma classe nova. Onde vai?
+
+É uma interface de contrato?
+├── Descreve uma funcionalidade? → domain/port/input
+└── Descreve uma dependência externa? → domain/port/output
+
+É uma implementação?
+├── Implementa um UseCase? → application/usecase
+├── Usa @RestController? → infrastructure/adapter/input/rest
+├── Usa @Entity ou @Document? → infrastructure/adapter/output/persistence
+├── Usa Redis? → infrastructure/adapter/output/cache
+├── Publica eventos? → infrastructure/adapter/output/messaging
+└── Usa @Configuration? → infrastructure/config
+
+É só dados (record/DTO)?
+├── Representa um conceito do negócio? → domain/model
+└── Representa dados da API (request/response)? → application/dto
