@@ -1,4 +1,10 @@
 {
+    "material-icon-theme.folders.associations": {
+        "dto": "interface",
+        "endpoint": "controller",
+        "gateway": "connection",
+        "google": "aws"
+    },
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.compile.nullAnalysis.mode": "automatic"
 }
