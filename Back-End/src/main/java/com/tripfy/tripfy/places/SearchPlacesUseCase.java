@@ -3,8 +3,10 @@ package com.tripfy.tripfy.places;
 import com.tripfy.tripfy.places.gateway.PlacesGateway;
 import com.tripfy.tripfy.places.gateway.PlacesPaginationCache;
 import com.tripfy.tripfy.places.model.Local;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

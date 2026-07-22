@@ -1,11 +1,13 @@
-package com.tripfy.tripfy.infra.google.gateway;
+package com.tripfy.tripfy.infra.google.places.gateway;
 
-import com.tripfy.tripfy.infra.google.dto.GoogleGeocodeResponseDTO;
-import com.tripfy.tripfy.infra.google.dto.GooglePlacesResponseDTO;
+import com.tripfy.tripfy.infra.google.places.dto.GoogleGeocodeResponseDTO;
+import com.tripfy.tripfy.infra.google.places.dto.GooglePlacesResponseDTO;
 import com.tripfy.tripfy.places.gateway.PlacesGateway;
 import com.tripfy.tripfy.places.model.Local;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

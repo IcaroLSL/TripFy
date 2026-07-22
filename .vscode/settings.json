@@ -5,6 +5,16 @@
         "gateway": "connection",
         "google": "aws"
     },
+    "material-icon-theme.folders.customClones": [
+        {
+            "name": "postgresSQL",
+            "base": "database",
+            "color": "#336791",
+            "lightColor": "#A7C8E8",
+            "folderNames": ["postgresSQL"],
+            "rootFolderNames": ["postgresSQL"]
+        }
+    ],
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.compile.nullAnalysis.mode": "automatic"
 }

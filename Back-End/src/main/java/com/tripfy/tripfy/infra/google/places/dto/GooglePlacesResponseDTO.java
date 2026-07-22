@@ -1,6 +1,7 @@
-package com.tripfy.tripfy.infra.google.dto;
+package com.tripfy.tripfy.infra.google.places.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

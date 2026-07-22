@@ -1,11 +1,14 @@
-package com.tripfy.tripfy.infra.redis;
+package com.tripfy.tripfy.infra.redis.places;
 
 import com.tripfy.tripfy.places.gateway.PlacesPaginationCache;
 import com.tripfy.tripfy.places.model.Local;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
