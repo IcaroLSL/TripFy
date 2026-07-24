@@ -1,73 +1,59 @@
 databaseChangeLog:
   - changeSet:
+      id: 001-create-userrole-enum
+      author: tripfy
+      changes:
+        - sql:
+            sql: CREATE TYPE USERROLE AS ENUM ('admin', 'user', 'sponsor');
+
+  - changeSet:
       id: 001-create-users-table
       author: tripfy
       changes:
-        - createTable:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: username
-                  type: VARCHAR(150)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: email
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: password_hash
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: name
-                  type: VARCHAR(100)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: role
-                  type: VARCHAR(50)
-                  defaultValue: USER
-                  constraints:
-                    nullable: false
-              - column:
-                  name: active
-                  type: BOOLEAN
-                  defaultValueBoolean: true
-                  constraints:
-                    nullable: false
-              - column:
-                  name: failed_login_attempts
-                  type: INT
-                  defaultValueNumeric: 0
-                  constraints:
-                    nullable: false
-              - column:
-                  name: locked_until
-                  type: TIMESTAMP WITH TIME ZONE
-              - column:
-                  name: last_login_at
-                  type: TIMESTAMP WITH TIME ZONE
-              - column:
-                  name: created_at
-                  type: TIMESTAMP WITH TIME ZONE
-                  defaultValueComputed: now()
-                  constraints:
-                    nullable: false
-              - column:
-                  name: updated_at
-                  type: TIMESTAMP WITH TIME ZONE
-                  defaultValueComputed: now()
-                  constraints:
-                    nullable: false
+        - sql:
+            sql: |
+              CREATE TABLE users (
+                  id BIGINT PRIMARY KEY DEFAULT (
+                      (EXTRACT(EPOCH FROM now()) * 1000000)::BIGINT +
+                      (EXTRACT(MICROSECONDS FROM now())::BIGINT % 1000000)
+                  ),
+                  name VARCHAR(100) NOT NULL CHECK (
+                      name !~ '--' AND
+                      name !~ '/\*' AND
+                      name !~ '\*/'
+                  ),
+                  username VARCHAR(150) UNIQUE NOT NULL CHECK (
+                      username !~ '--' AND
+                      username !~ '/\*' AND
+                      username !~ '\*/'
+                  ),
+                  password VARCHAR(255) NOT NULL CHECK (
+                      password !~ '--' AND
+                      password !~ '/\*' AND
+                      password !~ '\*/'
+                  ),
+                  role USERROLE NOT NULL DEFAULT 'user',
+                  status_active BOOLEAN NOT NULL DEFAULT true,
+                  date_created TIMESTAMPTZ NOT NULL DEFAULT now(),
+                  date_updated TIMESTAMPTZ NOT NULL DEFAULT now()
+              );
+
+  - changeSet:
+      id: 001-create-users-date-updated-trigger
+      author: tripfy
+      changes:
+        - sql:
+            splitStatements: false
+            sql: |
+             CREATE OR REPLACE FUNCTION update_date_updated_column()
+             RETURNS TRIGGER AS $$
+             BEGIN
+                 NEW.date_updated = now();
+                 RETURN NEW;
+             END;
+             $$ LANGUAGE plpgsql;
+  
+             CREATE TRIGGER update_users_date_updated
+             BEFORE UPDATE ON users
+             FOR EACH ROW
+             EXECUTE FUNCTION update_date_updated_column();

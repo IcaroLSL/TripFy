@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-api-select-role
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              CREATE ROLE api_select NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN NOREPLICATION NOBYPASSRLS PASSWORD '${apiSelectPassword}';
+              GRANT USAGE ON SCHEMA public TO api_select;
+              GRANT SELECT ON ALL TABLES IN SCHEMA public TO api_select;
+              GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO api_select;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO api_select;
+
+  - changeSet:
+      id: 005-create-api-insert-role
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              CREATE ROLE api_insert NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN NOREPLICATION NOBYPASSRLS PASSWORD '${apiInsertPassword}';
+              GRANT USAGE ON SCHEMA public TO api_insert;
+              GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO api_insert;
+              GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO api_insert;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT ON TABLES TO api_insert;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE ON SEQUENCES TO api_insert;
+
+  - changeSet:
+      id: 005-create-api-update-role
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              CREATE ROLE api_update NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN NOREPLICATION NOBYPASSRLS PASSWORD '${apiUpdatePassword}';
+              GRANT USAGE ON SCHEMA public TO api_update;
+              GRANT SELECT, UPDATE ON ALL TABLES IN SCHEMA public TO api_update;
+              GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO api_update;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, UPDATE ON TABLES TO api_update;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE ON SEQUENCES TO api_update;
+
+  - changeSet:
+      id: 005-create-api-delete-role
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              CREATE ROLE api_delete NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN NOREPLICATION NOBYPASSRLS PASSWORD '${apiDeletePassword}';
+              GRANT USAGE ON SCHEMA public TO api_delete;
+              GRANT SELECT, DELETE ON ALL TABLES IN SCHEMA public TO api_delete;
+              GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO api_delete;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, DELETE ON TABLES TO api_delete;
+              

@@ -2,4 +2,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/001-create-users-table.yaml
   - include:
-      file: db/changelog/changes/002-create-sessions-table.yaml
+      file: db/changelog/changes/002-create-login-logs-table.yaml
+  - include:
+      file: db/changelog/changes/003-create-status-logs-table.yaml
+  - include:
+      file: db/changelog/changes/004-create-api-roles.yaml

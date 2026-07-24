@@ -3,7 +3,8 @@
         "dto": "interface",
         "endpoint": "controller",
         "gateway": "connection",
-        "google": "aws"
+        "google": "aws",
+        "datasource": "migrations",
     },
     "material-icon-theme.folders.customClones": [
         {
