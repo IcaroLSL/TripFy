@@ -1,15 +1,9 @@
 import { View, Text, useColorScheme } from 'react-native'
 import React, { useState } from 'react'
 import { ScreenContent } from '../../components/ScreenContent'
-import { AppDescription, AppText, AppTitle } from '../../components/ui/TextApp';
 import StepViewer from '../../components/ui/StepViewer';
 import { Button } from '../../components/ui/Button';
 import Divider from '../../components/ui/Divider';
-import { TextField } from '../../components/ui/FormFields/TextField';
-import { useForm } from 'react-hook-form';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import { DateField } from '../../components/ui/FormFields/DateField';
-import WarningCard from '../../components/ui/WarningCard';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
 
