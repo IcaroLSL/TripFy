@@ -8,7 +8,7 @@ interface CardProps {
 
 const Card = ({ className, children }: CardProps) => {
   return (
-    <View className={`shadow-md  p-4 rounded-md ${className || ''}`}>
+    <View className={`shadow-md rounded-md ${className || ''}`}>
         {children}
     </View>
   )

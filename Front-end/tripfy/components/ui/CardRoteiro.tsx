@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import Card from './Card'
 import { CardRoteiroProps } from '../../interfaces/CardRoteiro'
@@ -7,21 +7,26 @@ import { DefaultProps } from '../../interfaces/DefaultProps'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const CardRoteiro = ({ image, title, location, stars, tripDays, priceLevel, liked, theme }: CardRoteiroProps & DefaultProps) => {
+  const [isLiked, setIsLiked] = React.useState(liked);
+
+  const onLikePress = () => {
+    setIsLiked(!isLiked);
+  }
 
   return (
-    <Card className={`min-w-[200px] max-w-[500px] p-0 ${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'} shadow-md rounded-md`}>
+    <Card className={`min-w-[250px] max-w-[250px] p-0 ${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'} shadow-md rounded-md`}>
 
       <View className='relative'>
-        <Image source={{ uri: image }} style={{ width: '100%', height: 130, borderRadius: 8, borderBottomRightRadius:0, borderBottomLeftRadius: 0 }} />
-        
+        <Image source={image !== '' ? { uri: image } : require('../../assets/images/image-placeholder.jpeg')} style={{ width: '100%', height: 130, borderRadius: 8, borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }} />
+
         <View className='absolute top-2 left-2 right-2 flex flex-row items-center justify-between'>
           <View className={`${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'} rounded-full px-2 py-1 flex flex-row items-center space-x-1`}>
-            <MaterialIcon name="star" className='text-yellow-300' />
+            <MaterialIcon name="star" color={'#eab308'} className='text-yellow-500' />
             <AppText theme={theme}>{stars}</AppText>
           </View>
-          <View className={`${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'} rounded-full px-2 py-2 flex flex-row items-center space-x-1`}>
-            {liked ? <MaterialIcon name="favorite" size={24} className='text-red-500' /> : <MaterialIcon name="favorite-border" size={24} className='text-red-500' />}
-          </View>
+          <TouchableOpacity  className={`${theme === 'light' ? 'bg-white active:bg-white/50' : 'bg-[#1A1A2E] active:bg-[#1A1A2E]/50'} rounded-full px-2 py-2 flex flex-row items-center space-x-1`} onPress={onLikePress}>
+            {isLiked ? <MaterialIcon name="favorite" color={"#ef4444"} size={24} className='text-red-500' /> : <MaterialIcon color={'#ef4444'} name="favorite-border" size={24} className='text-red-500' />}
+          </TouchableOpacity>
         </View>
       </View>
       <View className='p-4'>
@@ -32,8 +37,30 @@ const CardRoteiro = ({ image, title, location, stars, tripDays, priceLevel, like
           <AppDescription theme={theme}>{location}</AppDescription>
         </View>
 
-        <View className='flex-row space-x-2'>
-          <AppText theme={theme} className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>Preço avaliado: {priceLevel}<MaterialIcon name="attach-money" className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`} /></AppText>
+        <View className='flex-row justify-between items-center mt-2'>
+          <View className='flex-row items-center gap-1'>
+            <AppText theme={theme} className={theme === 'light' ? 'text-gray-600' : 'text-gray-400'}>
+              Preço avaliado:
+            </AppText>
+
+            {priceLevel !== null ? (
+              <View className='flex-row items-center gap-0.5'>
+                {Array.from({ length: priceLevel }).map((_, i) => (
+                  <MaterialIcon
+                    key={i}
+                    name="attach-money"
+                    color={'#16a34a'}
+                    size={16}
+                  />
+                ))}
+              </View>
+            ) : (
+              <AppText theme={theme} className={theme === 'light' ? 'text-gray-600' : 'text-gray-400'}>
+                Não disponível
+              </AppText>
+            )}
+          </View>
+
           <View className={`self-end ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-400'} rounded-full px-2`}>
             <AppText theme={theme} className='text-gray-900'>{tripDays} dias</AppText>
           </View>

@@ -4,6 +4,6 @@ export interface CardRoteiroProps {
     location: string;
     stars: number;
     tripDays: number;
-    priceLevel: number;
+    priceLevel: number | null;
     liked: boolean;
 }
