@@ -1,9 +1,11 @@
 package com.tripfy.tripfy.auth.endpoint;
 
-import com.tripfy.tripfy.auth.LoginUseCase;
+import com.tripfy.tripfy.auth.usecase.LoginUseCase;
 import com.tripfy.tripfy.auth.dto.LoginRequest;
 import com.tripfy.tripfy.auth.dto.LoginResponse;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

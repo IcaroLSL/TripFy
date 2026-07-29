@@ -1,9 +1,11 @@
 package com.tripfy.tripfy.health.endpoint;
 
-import com.tripfy.tripfy.health.CheckHealthUseCase;
+import com.tripfy.tripfy.health.usecase.CheckHealthUseCase;
 import com.tripfy.tripfy.health.dto.HealthResponse;
 import com.tripfy.tripfy.health.model.HealthStatus;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

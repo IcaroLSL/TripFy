@@ -1,6 +1,6 @@
 package com.tripfy.tripfy.places.endpoint;
 
-import com.tripfy.tripfy.places.SearchPlacesUseCase;
+import com.tripfy.tripfy.places.usecase.SearchPlacesUseCase;
 import com.tripfy.tripfy.places.dto.PlaceResponse;
 import com.tripfy.tripfy.places.dto.SearchPlacesResponse;
 import com.tripfy.tripfy.places.model.Local;
