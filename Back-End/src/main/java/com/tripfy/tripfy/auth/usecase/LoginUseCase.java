@@ -1,10 +1,11 @@
-package com.tripfy.tripfy.auth;
+package com.tripfy.tripfy.auth.usecase;
 
 import com.tripfy.tripfy.auth.dto.LoginRequest;
 import com.tripfy.tripfy.auth.dto.LoginResponse;
 import com.tripfy.tripfy.auth.gateway.TokenGenerator;
 import com.tripfy.tripfy.auth.gateway.UserRepository;
 import com.tripfy.tripfy.auth.model.User;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

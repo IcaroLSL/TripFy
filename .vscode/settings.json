@@ -3,8 +3,9 @@
         "dto": "interface",
         "endpoint": "controller",
         "gateway": "connection",
-        "google": "aws",
         "datasource": "migrations",
+        "argon2": "secure",
+        "usecase": "command",
     },
     "material-icon-theme.folders.customClones": [
         {
@@ -14,6 +15,14 @@
             "lightColor": "#A7C8E8",
             "folderNames": ["postgresSQL"],
             "rootFolderNames": ["postgresSQL"]
+        },
+        {
+            "name": "google",
+            "base": "public",
+            "color": "#1A73E8",
+            "lightColor": "#34A853",// #EA4335 #FBBC05
+            "folderNames": ["google"],
+            "rootFolderNames": ["google"]
         }
     ],
     "java.configuration.updateBuildConfiguration": "interactive",

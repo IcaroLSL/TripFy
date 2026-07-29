@@ -1,4 +1,4 @@
-package com.tripfy.tripfy.places;
+package com.tripfy.tripfy.places.usecase;
 
 import com.tripfy.tripfy.places.gateway.PlacesGateway;
 import com.tripfy.tripfy.places.gateway.PlacesPaginationCache;
