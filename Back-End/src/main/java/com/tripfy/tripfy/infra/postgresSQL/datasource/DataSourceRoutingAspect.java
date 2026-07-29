@@ -3,12 +3,13 @@ package com.tripfy.tripfy.infra.postgresSQL.datasource;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-@Order(0) // precisa rodar ANTES do @Transactional (que geralmente é Order mais alto)
+@Order(0)
 public class DataSourceRoutingAspect {
 
     @Around("execution(* com.tripfy.tripfy.infra.postgresSQL..*Repository.*(..))")
