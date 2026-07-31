@@ -20,4 +20,11 @@ public class PostgresUserRepository implements UserRepository {
         return jpaRepository.findByUsername(username)
                 .map(e -> new User(e.getId().toString(), e.getUsername(), e.getPassword(), e.getName()));
     }
+
+    @Override
+    public User insertUser(User user) {
+        UserEntity entity = new UserEntity(user.username(), user.password(), user.name());
+        UserEntity saved = jpaRepository.save(entity);
+        return new User(saved.getId().toString(), saved.getUsername(), saved.getPassword(), saved.getName());
+    }
 }

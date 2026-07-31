@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 @Order(0)
 public class DataSourceRoutingAspect {
 
-    @Around("execution(* com.tripfy.tripfy.infra.postgresSQL..*Repository.*(..))")
+    @Around("execution(* com.tripfy.tripfy.infra.postgresSQL..*Repository.*(..)) " +
+        "&& !execution(* com.tripfy.tripfy.infra.postgresSQL..*JpaRepository.*(..))")
     public Object route(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         DbOperation operation = resolveOperation(methodName);

@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 public class UserEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -21,16 +22,16 @@ public class UserEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(insertable = false)
     private UserRole role;
 
-    @Column(name = "status_active", nullable = false)
+    @Column(name = "status_active", insertable = false)
     private boolean statusActive;
 
-    @Column(name = "date_created", nullable = false, updatable = false)
+    @Column(name = "date_created", insertable = false, updatable = false)
     private java.time.OffsetDateTime dateCreated;
 
-    @Column(name = "date_updated", nullable = false)
+    @Column(name = "date_updated", insertable = false, updatable = false)
     private java.time.OffsetDateTime dateUpdated;
 
     protected UserEntity() {}
@@ -42,6 +43,12 @@ public class UserEntity {
         this.name = name;
         this.role = role;
         this.statusActive = statusActive;
+    }
+
+    public UserEntity(String username, String password, String name) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
     }
 
     public Long getId() { return id; }
