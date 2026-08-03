@@ -6,9 +6,10 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 interface ScreenContentProps {
   children?: React.ReactNode;
+  footerBar?: boolean
 }
 
-export const ScreenContent: React.FC<ScreenContentProps> = ({ children }) => {
+export const ScreenContent: React.FC<ScreenContentProps> = ({ children, footerBar = true }) => {
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
   return (
     <SafeAreaProvider>
@@ -19,7 +20,7 @@ export const ScreenContent: React.FC<ScreenContentProps> = ({ children }) => {
           {children}
         </View>
 
-        <FooterBar />
+        {footerBar && <FooterBar />}
       </SafeAreaView>
     </SafeAreaProvider>
   );

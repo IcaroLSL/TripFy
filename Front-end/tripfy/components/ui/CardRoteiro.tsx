@@ -14,7 +14,7 @@ const CardRoteiro = ({ image, title, location, stars, tripDays, priceLevel, like
   }
 
   return (
-    <Card className={`min-w-[250px] max-w-[250px] p-0 ${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'} shadow-md rounded-md`}>
+    <Card theme={theme} className={`min-w-[250px] max-w-[250px] p-0 shadow-md rounded-md`}>
 
       <View className='relative'>
         <Image source={image !== '' ? { uri: image } : require('../../assets/images/image-placeholder.jpeg')} style={{ width: '100%', height: 130, borderRadius: 8, borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }} />

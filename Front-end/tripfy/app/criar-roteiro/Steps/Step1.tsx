@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Divider from '../../../components/ui/Divider';
 import { TextField } from '../../../components/ui/FormFields/TextField';
 import { AppTitle, AppDescription, AppText } from '../../../components/ui/TextApp';
@@ -9,10 +9,34 @@ import { useForm } from 'react-hook-form';
 import { Button } from '../../../components/ui/Button';
 import { DateField } from '../../../components/ui/FormFields/DateField';
 import { StepProps } from '../../../interfaces/StepProps';
+import { set, z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { th } from 'zod/v4/locales';
+import { useGetSelectCities } from '../../../hooks/useGetSelectCities';
+
+
+const formSchema = z.object({
+    destino: z.string().min(1, { message: "Destino é obrigatório" }),
+    data: z.object({
+        startDate: z.date("Data de início é obrigatória"),
+        endDate: z.date("Data de fim é obrigatória"),
+    }).refine((data) => data.startDate <= data.endDate, {
+        message: "Data de início deve ser menor ou igual à data de fim",
+    }),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
-    const { control } = useForm({
+    const {searchQuery, setSearchQuery, cities, loading, clearCities} = useGetSelectCities()
+    const { control, handleSubmit } = useForm<FormData>({
+        resolver: zodResolver(formSchema),
     });
+
+    const onSubmit = (data: FormData) => {
+        setSearchQuery(data.destino);
+        console.log(data);
+    }
     return (
         <>
             <AppTitle theme={theme}>Para Onde Vamos?</AppTitle>
@@ -41,6 +65,12 @@ const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
                     Raio padrão de busca: 50km a partir do ponto escolhido (ajustável depois na montagem). Nota: se houver permanência mínima recomendada por tipo de destino, exibir aqui só após confirmação da regra (ver aviso no topo).
                 </AppDescription>
             </WarningCard>
+
+            <Button theme={theme}  onPress={handleSubmit(onSubmit)}>
+                <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
+                    Enviar
+                </Text>
+            </Button>
         </>
     )
 }

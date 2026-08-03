@@ -1,67 +1,102 @@
 import { StatusBar } from 'expo-status-bar';
 
 import '../global.css'
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ScreenContent } from '../components/ScreenContent';
-import { Text, useColorScheme, View } from 'react-native';
+import { Image, Text, useColorScheme, View, ImageBackground } from 'react-native';
 import Card from '../components/ui/Card';
-import CardRoteiro from '../components/ui/CardRoteiro';
-import CarrosselRoteiros from '../components/ui/CarrosselRoteiros';
-import { CardRoteiroProps } from '../interfaces/CardRoteiro';
-import Search from '../components/ui/Search';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+
+import { AppDescription, AppText, AppTitle } from '../components/ui/TextApp';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { TextField } from '../components/ui/FormFields/TextField';
+import { PasswordField } from '../components/ui/FormFields/PasswordField';
+import { Button } from '../components/ui/Button';
+import Divider from '../components/ui/Divider';
+import { SwitchField } from '../components/ui/FormFields/SwitchField';
+
+const formSchema = z.object({
+  username: z.string().min(1, 'Username is required'),
+  password: z.string().min(1, 'Password is required'),
+  rememberMe: z.boolean().optional(),
+})
+
+type FormData = z.infer<typeof formSchema>
 
 export default function App() {
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
-  console.log('Current theme:', theme);
+  const { control, handleSubmit } = useForm<FormData>({
+    resolver: zodResolver(formSchema)
+  })
 
-  const roteiros: CardRoteiroProps[] = [
-    {
-      image:
-        "",
-      title: "3 dias em Monte Verde",
-      location: "São Paulo, Brasil",
-      stars: 4.5,
-      tripDays: 3,
-      priceLevel: 2,
-      liked: true,
-    },
-    {
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10",
-      title: "3 dias em Monte Verde",
-      location: "São Paulo, Brasil",
-      stars: 4.5,
-      tripDays: 3,
-      priceLevel: 3,
-      liked: false,
-    },
-    {
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10",
-      title: "3 dias em Monte Verde",
-      location: "São Paulo, Brasil",
-      stars: 4.5,
-      tripDays: 3,
-      priceLevel: 4,
-      liked: false,
-    },
-  ];
 
   return (
     <SafeAreaProvider>
-      <ScreenContent>
-        <View className='flex flex-row w-full gap-4'>
-          <Search theme={theme}  className='w-full'/>
-          <View className={`rounded-full items-center p-2 ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-800'}`}>
-            <MaterialIcon name='notifications' size={24} color={theme === 'light' ? '#000' : '#fff'} />
-          </View>
-        </View>
-        <CarrosselRoteiros theme={theme} titulo='Perto de Você' descricao='Raio de 50km da sua localização' listaRoteiros={roteiros} />
-        <CarrosselRoteiros theme={theme} titulo='Mais Bem Avaliados' descricao='Nota Acima de 4.5' listaRoteiros={roteiros} />
+      <ImageBackground 
+        source={theme === 'light' ? require('../assets/images/fundo_light_login.png') : require('../assets/images/fundo_dark_login.jpg')}
+        className='flex-1'
+      >
+        <SafeAreaView className={`h-screen w-screen flex flex-col justify-end p-4` }>
 
-      </ScreenContent>
+          <Image source={ theme === 'light' ? require('../assets/images/logo_light_2.png') : require('../assets/images/logo_dark_2.png')} className='w-[50%] h-[30%] self-center' />
+
+        <Card theme={theme} className='flex items-center h-[70%] gap-4'>
+
+          <AppDescription theme={theme}>
+            Don't have an account? <Text className='text-blue-500' onPress={() => console.log('Sign up')}>Sign up</Text>
+          </AppDescription>
+          <View className='items-start gap-2'>
+            <AppText className='text-center' theme={theme}>
+              Username:
+            </AppText>
+            <TextField control={control} name='username' placeholder='Enter your username' theme={theme} />
+          </View>
+
+          <View className='items-start gap-2'>
+            <AppText className='text-center' theme={theme}>
+              Password:
+            </AppText>
+            <PasswordField control={control} name='password' placeholder='Enter your password' theme={theme} />
+          </View>
+
+          <View className='flex flex-row justify-between items-center w-full'>
+            <View>
+
+              <SwitchField control={control} name='rememberMe' placeholder='Remember me' theme={theme} />
+
+            </View>
+            <Text className='text-blue-500' onPress={() => console.log('Forgot password')}>Forgot Password</Text>
+          </View>
+
+          <Button className='w-[40%]' onPress={handleSubmit((data: FormData) => console.log(data))} theme={theme}>
+            <AppText className='text-white' theme={theme}>
+              Sign in
+            </AppText>
+          </Button>
+
+          <Divider theme={theme} message='Or continue' />
+
+          <View className='flex flex-row gap-4 justify-center'>
+
+            <Button variant='outline' className='w-[40%]' onPress={handleSubmit((data: FormData) => console.log(data))} theme={theme}>
+              <AppText theme={theme}>
+                Google
+              </AppText>
+            </Button>
+
+            <Button variant='outline' className='w-[40%]' onPress={handleSubmit((data: FormData) => console.log(data))} theme={theme}>
+              <AppText theme={theme}>
+                Apple
+              </AppText>
+            </Button>
+          </View>
+
+        </Card>
+
+        </SafeAreaView>
+      </ImageBackground>
       <StatusBar style="auto" />
-    </SafeAreaProvider>
+    </SafeAreaProvider >
   );
 }
