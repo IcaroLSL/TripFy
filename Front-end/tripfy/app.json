@@ -5,7 +5,7 @@
     "slug": "tripfy",
     "version": "1.0.0",
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/icon.png",
       "bundler": "metro"
     },
     "experiments": {

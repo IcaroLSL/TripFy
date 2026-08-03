@@ -27,7 +27,12 @@ type FormData = z.infer<typeof formSchema>
 export default function App() {
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
   const { control, handleSubmit } = useForm<FormData>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
+    defaultValues:{
+      username: '',
+      password: '',
+      rememberMe: false,
+    }
   })
 
 
