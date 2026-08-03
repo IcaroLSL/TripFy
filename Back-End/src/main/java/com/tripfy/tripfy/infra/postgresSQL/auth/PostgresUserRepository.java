@@ -16,15 +16,32 @@ public class PostgresUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findById(String id) {
+        return jpaRepository.findById(Long.valueOf(id)).map(this::toDomain);
+    }
+
+    @Override
     public Optional<User> findByUsername(String username) {
-        return jpaRepository.findByUsername(username)
-                .map(e -> new User(e.getId().toString(), e.getUsername(), e.getPassword(), e.getName()));
+        return jpaRepository.findByUsername(username).map(this::toDomain);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return jpaRepository.findByEmail(email).map(this::toDomain);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return jpaRepository.existsByUsername(username);
     }
 
     @Override
     public User insertUser(User user) {
-        UserEntity entity = new UserEntity(user.username(), user.password(), user.name());
-        UserEntity saved = jpaRepository.save(entity);
-        return new User(saved.getId().toString(), saved.getUsername(), saved.getPassword(), saved.getName());
+        UserEntity entity = new UserEntity(user.username(), user.password(), user.name(), user.email());
+        return toDomain(jpaRepository.save(entity));
+    }
+
+    private User toDomain(UserEntity e) {
+        return new User(e.getId().toString(), e.getUsername(), e.getPassword(), e.getName(), e.getEmail());
     }
 }

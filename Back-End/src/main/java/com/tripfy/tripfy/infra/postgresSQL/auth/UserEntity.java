@@ -15,11 +15,14 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = true, unique = true)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(insertable = false)
@@ -36,25 +39,29 @@ public class UserEntity {
 
     protected UserEntity() {}
 
-    public UserEntity(Long id, String username, String password, String name, UserRole role, boolean statusActive) {
+    public UserEntity(Long id, String username, String password, String name, String email,
+                       UserRole role, boolean statusActive) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
+        this.email = email;
         this.role = role;
         this.statusActive = statusActive;
     }
 
-    public UserEntity(String username, String password, String name) {
+    public UserEntity(String username, String password, String name, String email) {
         this.username = username;
         this.password = password;
         this.name = name;
+        this.email = email;
     }
 
     public Long getId() { return id; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public String getName() { return name; }
+    public String getEmail() { return email; }
     public UserRole getRole() { return role; }
     public boolean isStatusActive() { return statusActive; }
     public java.time.OffsetDateTime getDateCreated() { return dateCreated; }

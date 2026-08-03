@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-user-oauth-providers-table
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              CREATE TABLE user_oauth_providers (
+                  id BIGINT PRIMARY KEY DEFAULT (
+                      (EXTRACT(EPOCH FROM now()) * 1000000)::BIGINT +
+                      (EXTRACT(MICROSECONDS FROM now())::BIGINT % 1000000)
+                  ),
+                  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                  provider VARCHAR(20) NOT NULL,
+                  provider_id VARCHAR(255) NOT NULL,
+                  date_created TIMESTAMPTZ NOT NULL DEFAULT now(),
+                  CONSTRAINT uk_provider_identity UNIQUE (provider, provider_id),
+                  CONSTRAINT uk_user_provider UNIQUE (user_id, provider)
+              );
+
+              CREATE INDEX idx_user_oauth_providers_user_id ON user_oauth_providers(user_id);
+
+  - changeSet:
+      id: 008-migrate-existing-oauth-links
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO user_oauth_providers (user_id, provider, provider_id)
+              SELECT id, auth_provider, provider_id
+              FROM users
+              WHERE auth_provider IS NOT NULL
+                AND auth_provider <> 'LOCAL'
+                AND provider_id IS NOT NULL;
+
+  - changeSet:
+      id: 008-drop-oauth-columns-from-users
+      author: tripfy
+      changes:
+        - dropColumn:
+            tableName: users
+            columnName: auth_provider
+        - dropColumn:
+            tableName: users
+            columnName: provider_id
