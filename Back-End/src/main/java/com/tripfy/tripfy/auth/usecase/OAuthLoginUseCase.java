@@ -40,12 +40,21 @@ public class OAuthLoginUseCase {
         if (validator == null) {
             throw new IllegalArgumentException("Provedor OAuth não suportado: " + request.provider());
         }
+        
+        System.out.println("Passando pelo OAuthLoginUseCase.execute com provider: " + request.provider() + " e token: " + request.token());
 
         OAuthUserInfo info = validator.validate(request.token());
+        
+        System.out.println("Informações do usuário obtidas do provedor OAuth: " + info);
+
         User user = resolveUser(info);
+
+        System.out.println("Usuário resolvido: " + user);
 
         String accessToken = tokenGenerator.generateAccessToken(user);
         String refreshToken = tokenGenerator.generateRefreshToken(user);
+
+        System.out.println("Tokens gerados: accessToken=" + accessToken + ", refreshToken=" + refreshToken);
 
         return new LoginResponse(user.id(), user.name(), accessToken, refreshToken);
     }

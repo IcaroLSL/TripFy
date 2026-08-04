@@ -23,6 +23,14 @@
             "lightColor": "#34A853",// #EA4335 #FBBC05
             "folderNames": ["google"],
             "rootFolderNames": ["google"]
+        },
+        {
+            "name": "facebook",
+            "base": "forgejo",
+            "color": "#3b5998",
+            "lightColor": "#8b9dc3",
+            "folderNames": ["facebook"],
+            "rootFolderNames": ["facebook"]
         }
     ],
     "java.configuration.updateBuildConfiguration": "interactive",

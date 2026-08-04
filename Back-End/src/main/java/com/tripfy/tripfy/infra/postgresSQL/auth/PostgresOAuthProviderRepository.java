@@ -23,6 +23,6 @@ public class PostgresOAuthProviderRepository implements OAuthProviderRepository 
 
     @Override
     public void linkProvider(String userId, AuthProvider provider, String providerId) {
-        jpaRepository.save(new OAuthProviderLinkEntity(Long.valueOf(userId), provider, providerId));
+        jpaRepository.saveAndFlush(new OAuthProviderLinkEntity(Long.valueOf(userId), provider, providerId));
     }
 }

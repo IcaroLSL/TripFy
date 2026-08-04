@@ -6,6 +6,8 @@ import com.tripfy.tripfy.auth.dto.LoginResponse;
 import com.tripfy.tripfy.auth.usecase.CreateUserUseCase;
 import com.tripfy.tripfy.auth.dto.CreateUserRequest;
 import com.tripfy.tripfy.auth.dto.CreateUserResponse;
+import com.tripfy.tripfy.auth.usecase.OAuthLoginUseCase;
+import com.tripfy.tripfy.auth.dto.OAuthLoginRequest;
 
 import jakarta.validation.Valid;
 
@@ -22,10 +24,12 @@ public class AuthController {
 
     private final LoginUseCase loginUseCase;
     private final CreateUserUseCase createUserUseCase;
+    private final OAuthLoginUseCase oAuthLoginUseCase;
 
-    public AuthController(LoginUseCase loginUseCase, CreateUserUseCase createUserUseCase) {
+    public AuthController(LoginUseCase loginUseCase, CreateUserUseCase createUserUseCase, OAuthLoginUseCase oAuthLoginUseCase) {
         this.loginUseCase = loginUseCase;
         this.createUserUseCase = createUserUseCase;
+        this.oAuthLoginUseCase = oAuthLoginUseCase;
     }
 
     @PostMapping("/login")
@@ -37,5 +41,10 @@ public class AuthController {
     public ResponseEntity<CreateUserResponse> register(@Valid @RequestBody CreateUserRequest request) {
         CreateUserResponse response = createUserUseCase.execute(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/oauth/login")
+    public ResponseEntity<LoginResponse> oauthLogin(@RequestBody @Valid OAuthLoginRequest request) {
+        return ResponseEntity.ok(oAuthLoginUseCase.execute(request));
     }
 }

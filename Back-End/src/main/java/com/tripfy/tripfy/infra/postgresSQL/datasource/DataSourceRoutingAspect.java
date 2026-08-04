@@ -29,13 +29,13 @@ public class DataSourceRoutingAspect {
     private DbOperation resolveOperation(String methodName) {
         String name = methodName.toLowerCase();
 
-        if (name.startsWith("insert") || name.startsWith("create")) {
+        if (name.startsWith("insert") || name.startsWith("create") || name.startsWith("link")) {
             return DbOperation.INSERT;
         }
         if (name.startsWith("update")) {
             return DbOperation.UPDATE;
         }
-        if (name.startsWith("delete") || name.startsWith("remove")) {
+        if (name.startsWith("delete") || name.startsWith("remove") || name.startsWith("unlink")) {
             return DbOperation.DELETE;
         }
         // find, select, get, exists, count...

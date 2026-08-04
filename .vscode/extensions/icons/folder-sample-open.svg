@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+    <path id="folder-back" fill="#8b9dc3" d="m6.922 3.768-.644-.536A1 1 0 0 0 5.638 3H2a1 1 0 0 0-1 1v7l1-4.5A1 1 0 0 1 2.976 5.7H14V5a1 1 0 0 0-1-1H7.562a1 1 0 0 1-.64-.232"/>
+    <path id="folder-front" fill="#b6c2e2" d="M2.976 5.7h10.348a.9.9 0 0 1 .877 1.104l-.95 4.1A1 1 0 0 1 12.277 12H2.05a1 1 0 0 1-.976-1.216l.925-4.1a1 1 0 0 1 .977-.984"/>
+    <g id="motive" fill="none" transform="translate(7.265 5.228)scale(.08531)">
+        <path stroke="#3b5998" stroke-width="12.5" d="M29 84V35a25 25 0 0 1 25-25h10" class="prefix__prefix__orange"/>
+        <path stroke="#3b5998" stroke-width="12.5" d="M29 84V69a25 25 0 0 1 25-25h10" class="prefix__prefix__red"/>
+    </g>
+</svg>

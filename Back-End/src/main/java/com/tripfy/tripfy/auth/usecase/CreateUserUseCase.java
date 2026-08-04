@@ -29,7 +29,7 @@ public class CreateUserUseCase {
 
         String hashedPassword = passwordEncoder.encode(request.password());
 
-        User user = new User(null, request.username(), hashedPassword, request.name());
+        User user = new User(null, request.username(), hashedPassword, request.name(), null);
 
         try {
             User created = userRepository.insertUser(user);
