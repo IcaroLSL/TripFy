@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +35,18 @@ public class GooglePlacesGateway implements PlacesGateway {
 
     private static final double SEARCH_RADIUS_METERS = 5000.0;
 
+    // Tipos aceitos vindos do front, mapeados pro termo usado no textQuery.
+    // LinkedHashMap só pra manter ordem estável e previsível no texto final.
+    private static final Map<String, String> TYPE_LABELS = new LinkedHashMap<>();
+    static {
+        TYPE_LABELS.put("restaurant",         "restaurantes");
+        TYPE_LABELS.put("tourist_attraction", "pontos turísticos");
+        TYPE_LABELS.put("lodging",            "hospedagem");
+    }
+
+    private static final List<String> DEFAULT_TYPES =
+        List.of("restaurant", "tourist_attraction", "lodging");
+
     private GoogleGeocodeResponseDTO.Location buscarCoordenadas(String cidade) {
         GoogleGeocodeResponseDTO response = restClient.get()
             .uri("https://maps.googleapis.com/maps/api/geocode/json?address={cidade}&key={key}",
@@ -50,26 +64,37 @@ public class GooglePlacesGateway implements PlacesGateway {
     }
 
     @Override
-    public PlacesResult searchByLocation(String location) {
+    public PlacesResult searchByLocation(String location, List<String> types) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(location, coords.lat(), coords.lng(), null));
+        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), null));
     }
 
     @Override
-    public PlacesResult searchByLocationWithToken(String location, String pageToken) {
+    public PlacesResult searchByLocationWithToken(String location, List<String> types, String pageToken) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(location, coords.lat(), coords.lng(), pageToken));
+        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), pageToken));
     }
 
-    private Map<String, Object> buildRequestBody(String location, Double lat, Double lng, String pageToken) {
+    private String buildTextQuery(List<String> types, String location) {
+        List<String> effectiveTypes = (types == null || types.isEmpty()) ? DEFAULT_TYPES : types;
+
+        String labels = effectiveTypes.stream()
+            .map(type -> TYPE_LABELS.getOrDefault(type, type))
+            .distinct()
+            .reduce((a, b) -> a + ", " + b)
+            .orElse("restaurantes, pontos turísticos e hospedagem");
+
+        return labels + " em " + location;
+    }
+
+    private Map<String, Object> buildRequestBody(String location, List<String> types,
+                                                  Double lat, Double lng, String pageToken) {
         var center       = Map.of("latitude", lat, "longitude", lng);
         var circle       = Map.of("center", center, "radius", SEARCH_RADIUS_METERS);
         var locationBias = Map.of("circle", circle);
 
-        String textQuery = "restaurantes, pontos turísticos e hospedagem em " + location;
-
-        var body = new java.util.HashMap<String, Object>();
-        body.put("textQuery",      textQuery);
+        var body = new HashMap<String, Object>();
+        body.put("textQuery",      buildTextQuery(types, location));
         body.put("locationBias",   locationBias);
         body.put("maxResultCount", 20);
         body.put("languageCode",   "pt-BR");

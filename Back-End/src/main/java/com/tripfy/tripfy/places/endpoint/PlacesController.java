@@ -31,9 +31,10 @@ public class PlacesController {
             @RequestParam String location,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) List<String> types,
             @AuthenticationPrincipal AuthenticatedUser user) {
 
-        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit);
+        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, types);
 
         List<PlaceResponse> places = pageResult.places().stream()
             .map(this::toPlaceResponse)

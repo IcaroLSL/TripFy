@@ -20,11 +20,9 @@ public class SearchPlacesUseCase {
     private final PlacesGateway         placesGateway;
     private final PlacesPaginationCache paginationCache;
 
-    public PlacesPageResult execute(String userId, String location, int page, int limit) {
+    public PlacesPageResult execute(String userId, String location, int page, int limit, List<String> types) {
 
-        String cacheKey = userId + ":"
-            + location.toLowerCase().replaceAll("\\s+", "_")
-            + ":limit=" + limit;
+        String cacheKey = buildCacheKey(userId, location, limit, types);
 
         List<Local> buffer = new ArrayList<>();
 
@@ -51,11 +49,11 @@ public class SearchPlacesUseCase {
             PlacesGateway.PlacesResult result;
 
             if (page == 1 && buffer.isEmpty()) {
-                result = placesGateway.searchByLocation(location);
+                result = placesGateway.searchByLocation(location, types);
             } else {
                 var token = paginationCache.getNextPageToken(cacheKey);
                 if (token.isEmpty()) break;
-                result = placesGateway.searchByLocationWithToken(location, token.get());
+                result = placesGateway.searchByLocationWithToken(location, types, token.get());
             }
 
             buffer.addAll(result.places());
@@ -82,6 +80,17 @@ public class SearchPlacesUseCase {
             || paginationCache.getNextPageToken(cacheKey).isPresent();
 
         return new PlacesPageResult(result, hasMore);
+    }
+
+    private String buildCacheKey(String userId, String location, int limit, List<String> types) {
+        String typesPart = (types == null || types.isEmpty())
+            ? "default"
+            : types.stream().sorted().reduce((a, b) -> a + "-" + b).orElse("default");
+
+        return userId + ":"
+            + location.toLowerCase().replaceAll("\\s+", "_")
+            + ":limit=" + limit
+            + ":types=" + typesPart;
     }
 
     public record PlacesPageResult(List<Local> places, boolean hasMore) {}
