@@ -29,7 +29,9 @@ public class GooglePlacesGateway implements PlacesGateway {
     private static final String FIELD_MASK =
         "places.displayName,places.formattedAddress,places.types," +
         "places.nationalPhoneNumber,places.websiteUri,places.rating," +
-        "places.priceLevel,places.location";
+        "places.priceLevel,places.location,nextPageToken";
+
+    private static final double SEARCH_RADIUS_METERS = 5000.0;
 
     private GoogleGeocodeResponseDTO.Location buscarCoordenadas(String cidade) {
         GoogleGeocodeResponseDTO response = restClient.get()
@@ -50,39 +52,39 @@ public class GooglePlacesGateway implements PlacesGateway {
     @Override
     public PlacesResult searchByLocation(String location) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(coords.lat(), coords.lng(), null));
+        return executeSearch(buildRequestBody(location, coords.lat(), coords.lng(), null));
     }
 
     @Override
     public PlacesResult searchByLocationWithToken(String location, String pageToken) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(coords.lat(), coords.lng(), pageToken));
+        return executeSearch(buildRequestBody(location, coords.lat(), coords.lng(), pageToken));
     }
 
-    private Map<String, Object> buildRequestBody(Double lat, Double lng, String pageToken) {
-        var center            = Map.of("latitude", lat, "longitude", lng);
-        var circle            = Map.of("center", center, "radius", 5000.0);
-        var locationRestriction = Map.of("circle", circle);
+    private Map<String, Object> buildRequestBody(String location, Double lat, Double lng, String pageToken) {
+        var center       = Map.of("latitude", lat, "longitude", lng);
+        var circle       = Map.of("center", center, "radius", SEARCH_RADIUS_METERS);
+        var locationBias = Map.of("circle", circle);
+
+        String textQuery = "restaurantes, pontos turísticos e hospedagem em " + location;
+
+        var body = new java.util.HashMap<String, Object>();
+        body.put("textQuery",      textQuery);
+        body.put("locationBias",   locationBias);
+        body.put("maxResultCount", 20);
+        body.put("languageCode",   "pt-BR");
+        body.put("regionCode",     "BR");
 
         if (pageToken != null) {
-            return Map.of(
-                "includedTypes",        List.of("restaurant", "tourist_attraction", "lodging"),
-                "maxResultCount",       20,
-                "locationRestriction",  locationRestriction,
-                "pageToken",            pageToken
-            );
+            body.put("pageToken", pageToken);
         }
 
-        return Map.of(
-            "includedTypes",       List.of("restaurant", "tourist_attraction", "lodging"),
-            "maxResultCount",      20,
-            "locationRestriction", locationRestriction
-        );
+        return body;
     }
 
     private PlacesResult executeSearch(Map<String, Object> body) {
         GooglePlacesResponseDTO response = restClient.post()
-            .uri("https://places.googleapis.com/v1/places:searchNearby")
+            .uri("https://places.googleapis.com/v1/places:searchText")
             .header("X-Goog-Api-Key", apiKey)
             .header("X-Goog-FieldMask", FIELD_MASK)
             .body(body)

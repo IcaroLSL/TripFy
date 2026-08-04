@@ -6,6 +6,8 @@
         "datasource": "migrations",
         "argon2": "secure",
         "usecase": "command",
+        "java": "java",
+        "tripfy": "java",
     },
     "material-icon-theme.folders.customClones": [
         {
@@ -31,6 +33,22 @@
             "lightColor": "#8b9dc3",
             "folderNames": ["facebook"],
             "rootFolderNames": ["facebook"]
+        },
+        {
+            "name": "oauth",
+            "base": "admin",
+            "color": "#4285F4",
+            "lightColor": "#34A853",
+            "folderNames": ["oauth"],
+            "rootFolderNames": ["oauth"]
+        },
+        {
+            "name": ".mvn",
+            "base": "packages",
+            "color": "#F44539",
+            "lightColor": "#F44539",
+            "folderNames": [".mvn"],
+            "rootFolderNames": [".mvn"]
         }
     ],
     "java.configuration.updateBuildConfiguration": "interactive",
