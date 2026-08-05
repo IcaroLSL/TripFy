@@ -53,7 +53,7 @@ export function usePostLogin(): PostLoginResponse {
             await secureAuthStorage.saveTokens(response.data.accessToken, response.data.refreshToken);
             return true
         } catch (err) {
-            console.log("Login error:", err)
+            console.log(err)
             setError("Failed to login with sign in")
             return false
         } finally {
