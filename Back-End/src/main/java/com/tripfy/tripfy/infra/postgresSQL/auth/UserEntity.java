@@ -9,45 +9,59 @@ import jakarta.persistence.*;
 public class UserEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = true, unique = true)
+    private String email;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(insertable = false)
     private UserRole role;
 
-    @Column(name = "status_active", nullable = false)
+    @Column(name = "status_active", insertable = false)
     private boolean statusActive;
 
-    @Column(name = "date_created", nullable = false, updatable = false)
+    @Column(name = "date_created", insertable = false, updatable = false)
     private java.time.OffsetDateTime dateCreated;
 
-    @Column(name = "date_updated", nullable = false)
+    @Column(name = "date_updated", insertable = false, updatable = false)
     private java.time.OffsetDateTime dateUpdated;
 
     protected UserEntity() {}
 
-    public UserEntity(Long id, String username, String password, String name, UserRole role, boolean statusActive) {
+    public UserEntity(Long id, String username, String password, String name, String email,
+                       UserRole role, boolean statusActive) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
+        this.email = email;
         this.role = role;
         this.statusActive = statusActive;
+    }
+
+    public UserEntity(String username, String password, String name, String email) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.email = email;
     }
 
     public Long getId() { return id; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public String getName() { return name; }
+    public String getEmail() { return email; }
     public UserRole getRole() { return role; }
     public boolean isStatusActive() { return statusActive; }
     public java.time.OffsetDateTime getDateCreated() { return dateCreated; }

@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-grant-select-user-oauth-providers
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT SELECT ON user_oauth_providers TO api_select;
+
+  - changeSet:
+      id: 009-grant-insert-user-oauth-providers
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT SELECT, INSERT ON user_oauth_providers TO api_insert;
+
+  - changeSet:
+      id: 009-grant-update-user-oauth-providers
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT SELECT, UPDATE ON user_oauth_providers TO api_update;
+
+  - changeSet:
+      id: 009-grant-delete-user-oauth-providers
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT SELECT, DELETE ON user_oauth_providers TO api_delete;

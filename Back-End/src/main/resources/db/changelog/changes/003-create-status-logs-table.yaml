@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 004-create-status-logs-table
+      id: 003-create-status-logs-table
       author: tripfy
       changes:
         - sql:

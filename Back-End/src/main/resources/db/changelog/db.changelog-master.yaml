@@ -7,3 +7,13 @@ databaseChangeLog:
       file: db/changelog/changes/003-create-status-logs-table.yaml
   - include:
       file: db/changelog/changes/004-create-api-roles.yaml
+  - include:
+      file: db/changelog/changes/005-update-api-role-permissions.yaml
+  - include:
+      file: db/changelog/changes/006-add-oauth-fields-to-users.yaml
+  - include:
+      file: db/changelog/changes/007-fix-password-nullable-and-add-email.yaml
+  - include:
+      file: db/changelog/changes/008-create-user-oauth-providers-table.yaml
+  - include:
+      file: db/changelog/changes/009-grant-permissions-user-oauth-providers.yaml

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 005-create-api-select-role
+      id: 004-create-api-select-role
       author: tripfy
       changes:
         - sql:
@@ -12,7 +12,7 @@ databaseChangeLog:
               ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO api_select;
 
   - changeSet:
-      id: 005-create-api-insert-role
+      id: 004-create-api-insert-role
       author: tripfy
       changes:
         - sql:
@@ -25,7 +25,7 @@ databaseChangeLog:
               ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE ON SEQUENCES TO api_insert;
 
   - changeSet:
-      id: 005-create-api-update-role
+      id: 004-create-api-update-role
       author: tripfy
       changes:
         - sql:
@@ -38,7 +38,7 @@ databaseChangeLog:
               ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE ON SEQUENCES TO api_update;
 
   - changeSet:
-      id: 005-create-api-delete-role
+      id: 004-create-api-delete-role
       author: tripfy
       changes:
         - sql:

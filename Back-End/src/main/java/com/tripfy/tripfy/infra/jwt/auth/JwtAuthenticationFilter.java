@@ -42,10 +42,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (tokenData.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
                 TokenValidator.TokenData data = tokenData.get();
 
+                AuthenticatedUser principal = new AuthenticatedUser(
+                    data.userId()
+                    // data.username(),
+                    // data.name()
+                );
+
                 var authentication = new UsernamePasswordAuthenticationToken(
-                        data.userId(),
-                        null,
-                        List.of()
+                    principal,
+                    null,
+                    List.of()
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

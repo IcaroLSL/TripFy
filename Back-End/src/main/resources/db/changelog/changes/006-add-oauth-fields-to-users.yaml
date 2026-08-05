@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-add-oauth-fields-to-users
+      author: seu-nome
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: auth_provider
+                  type: varchar(20)
+                  defaultValue: LOCAL
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+        - modifyDataType:
+            tableName: users
+            columnName: password
+            newDataType: varchar(255)
+        - addNotNullConstraint:
+            tableName: users
+            columnName: password
+            constraints: false # deixa nullable, usuário OAuth não tem senha
+        - addUniqueConstraint:
+            tableName: users
+            columnNames: auth_provider, provider_id
+            constraintName: uk_provider_identity

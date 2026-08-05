@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-user-oauth-providers-table
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              CREATE TABLE user_oauth_providers (
+                  id BIGINT PRIMARY KEY DEFAULT (
+                      (EXTRACT(EPOCH FROM now()) * 1000000)::BIGINT +
+                      (EXTRACT(MICROSECONDS FROM now())::BIGINT % 1000000)
+                  ),
+                  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                  provider VARCHAR(20) NOT NULL,
+                  provider_id VARCHAR(255) NOT NULL,
+                  date_created TIMESTAMPTZ NOT NULL DEFAULT now(),
+                  CONSTRAINT uk_oauth_provider_identity UNIQUE (provider, provider_id),
+                  CONSTRAINT uk_oauth_user_provider UNIQUE (user_id, provider)
+              );
+
+              CREATE INDEX idx_user_oauth_providers_user_id ON user_oauth_providers(user_id);

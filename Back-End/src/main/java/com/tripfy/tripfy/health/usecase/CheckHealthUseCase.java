@@ -1,4 +1,4 @@
-package com.tripfy.tripfy.health;
+package com.tripfy.tripfy.health.usecase;
 
 import com.tripfy.tripfy.health.model.HealthStatus;
 import org.springframework.stereotype.Service;

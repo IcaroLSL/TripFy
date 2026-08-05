@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-update-api-select-permissions
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT USAGE ON SCHEMA public TO api_select;
+              GRANT SELECT ON ALL TABLES IN SCHEMA public TO api_select;
+              GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO api_select;
+
+  - changeSet:
+      id: 005-update-api-insert-permissions
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT USAGE ON SCHEMA public TO api_insert;
+              GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO api_insert;
+              GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO api_insert;
+
+  - changeSet:
+      id: 005-update-api-update-permissions
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT USAGE ON SCHEMA public TO api_update;
+              GRANT SELECT, UPDATE ON ALL TABLES IN SCHEMA public TO api_update;
+              GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO api_update;
+
+  - changeSet:
+      id: 005-update-api-delete-permissions
+      author: tripfy
+      changes:
+        - sql:
+            sql: |
+              GRANT USAGE ON SCHEMA public TO api_delete;
+              GRANT SELECT, DELETE ON ALL TABLES IN SCHEMA public TO api_delete;
+              GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO api_delete;
