@@ -1,0 +1,209 @@
+{
+  "categories": [
+    {
+      "key": "food_and_drink",
+      "label": "Comida e Bebida",
+      "types": [
+        { "key": "restaurant", "label": "Restaurante" },
+        { "key": "bar", "label": "Bar" },
+        { "key": "cafe", "label": "Café" },
+        { "key": "bakery", "label": "Padaria" },
+        { "key": "fast_food_restaurant", "label": "Fast food" },
+        { "key": "pizza_restaurant", "label": "Pizzaria" },
+        { "key": "seafood_restaurant", "label": "Frutos do mar" },
+        { "key": "steak_house", "label": "Churrascaria / Steakhouse" },
+        { "key": "sushi_restaurant", "label": "Sushi" },
+        { "key": "japanese_restaurant", "label": "Restaurante japonês" },
+        { "key": "italian_restaurant", "label": "Restaurante italiano" },
+        { "key": "chinese_restaurant", "label": "Restaurante chinês" },
+        { "key": "mexican_restaurant", "label": "Restaurante mexicano" },
+        { "key": "french_restaurant", "label": "Restaurante francês" },
+        { "key": "indian_restaurant", "label": "Restaurante indiano" },
+        { "key": "thai_restaurant", "label": "Restaurante tailandês" },
+        { "key": "vegetarian_restaurant", "label": "Restaurante vegetariano" },
+        { "key": "vegan_restaurant", "label": "Restaurante vegano" },
+        { "key": "brazilian_restaurant", "label": "Restaurante brasileiro" },
+        { "key": "coffee_shop", "label": "Cafeteria" },
+        { "key": "ice_cream_shop", "label": "Sorveteria" },
+        { "key": "dessert_shop", "label": "Doceria" },
+        { "key": "wine_bar", "label": "Wine bar" },
+        { "key": "brewery", "label": "Cervejaria" },
+        { "key": "pub", "label": "Pub" },
+        { "key": "night_club", "label": "Balada" },
+        { "key": "cocktail_bar", "label": "Bar de coquetéis" },
+        { "key": "food_court", "label": "Praça de alimentação" },
+        { "key": "buffet_restaurant", "label": "Buffet" },
+        { "key": "breakfast_restaurant", "label": "Café da manhã" },
+        { "key": "brunch_restaurant", "label": "Brunch" },
+        { "key": "fine_dining_restaurant", "label": "Alta gastronomia" },
+        { "key": "diner", "label": "Lanchonete" },
+        { "key": "juice_shop", "label": "Sucos" },
+        { "key": "tea_house", "label": "Casa de chá" },
+        { "key": "candy_store", "label": "Doces e balas" }
+      ]
+    },
+    {
+      "key": "lodging",
+      "label": "Hospedagem",
+      "types": [
+        { "key": "hotel", "label": "Hotel" },
+        { "key": "motel", "label": "Motel" },
+        { "key": "hostel", "label": "Hostel" },
+        { "key": "inn", "label": "Pousada" },
+        { "key": "resort_hotel", "label": "Resort" },
+        { "key": "bed_and_breakfast", "label": "Cama e café" },
+        { "key": "guest_house", "label": "Casa de hóspedes" },
+        { "key": "campground", "label": "Camping" },
+        { "key": "cottage", "label": "Chalé" },
+        { "key": "extended_stay_hotel", "label": "Hotel de longa estadia" },
+        { "key": "lodging", "label": "Hospedagem (geral)" },
+        { "key": "rv_park", "label": "Área para motorhome" },
+        { "key": "private_guest_room", "label": "Quarto privado" },
+        { "key": "farmstay", "label": "Estadia em fazenda" }
+      ]
+    },
+    {
+      "key": "entertainment_and_recreation",
+      "label": "Entretenimento e Recreação",
+      "types": [
+        { "key": "tourist_attraction", "label": "Ponto turístico" },
+        { "key": "amusement_park", "label": "Parque de diversões" },
+        { "key": "water_park", "label": "Parque aquático" },
+        { "key": "zoo", "label": "Zoológico" },
+        { "key": "aquarium", "label": "Aquário" },
+        { "key": "movie_theater", "label": "Cinema" },
+        { "key": "casino", "label": "Cassino" },
+        { "key": "bowling_alley", "label": "Boliche" },
+        { "key": "karaoke", "label": "Karaokê" },
+        { "key": "amphitheatre", "label": "Anfiteatro" },
+        { "key": "concert_hall", "label": "Casa de shows" },
+        { "key": "park", "label": "Parque" },
+        { "key": "botanical_garden", "label": "Jardim botânico" },
+        { "key": "national_park", "label": "Parque nacional" },
+        { "key": "state_park", "label": "Parque estadual" },
+        { "key": "hiking_area", "label": "Trilha" },
+        { "key": "picnic_ground", "label": "Área de piquenique" },
+        { "key": "dog_park", "label": "Parque para cães" },
+        { "key": "skateboard_park", "label": "Pista de skate" },
+        { "key": "playground", "label": "Playground" },
+        { "key": "observation_deck", "label": "Mirante" },
+        { "key": "ferris_wheel", "label": "Roda gigante" },
+        { "key": "amusement_center", "label": "Centro de diversões" },
+        { "key": "video_arcade", "label": "Fliperama" },
+        { "key": "comedy_club", "label": "Stand-up comedy" },
+        { "key": "opera_house", "label": "Teatro de ópera" },
+        { "key": "philharmonic_hall", "label": "Sala filarmônica" },
+        { "key": "performing_arts_theater", "label": "Teatro" },
+        { "key": "wildlife_park", "label": "Parque de vida selvagem" },
+        { "key": "wildlife_refuge", "label": "Refúgio de vida selvagem" },
+        { "key": "event_venue", "label": "Espaço para eventos" },
+        { "key": "wedding_venue", "label": "Espaço para casamentos" },
+        { "key": "marina", "label": "Marina" },
+        { "key": "visitor_center", "label": "Centro de visitantes" },
+        { "key": "historical_landmark", "label": "Marco histórico" },
+        { "key": "cultural_center", "label": "Centro cultural" },
+        { "key": "community_center", "label": "Centro comunitário" },
+        { "key": "planetarium", "label": "Planetário" },
+        { "key": "garden", "label": "Jardim" },
+        { "key": "plaza", "label": "Praça" }
+      ]
+    },
+    {
+      "key": "culture",
+      "label": "Cultura",
+      "types": [
+        { "key": "museum", "label": "Museu" },
+        { "key": "art_gallery", "label": "Galeria de arte" },
+        { "key": "historical_place", "label": "Local histórico" },
+        { "key": "monument", "label": "Monumento" },
+        { "key": "sculpture", "label": "Escultura" },
+        { "key": "art_museum", "label": "Museu de arte" },
+        { "key": "history_museum", "label": "Museu histórico" },
+        { "key": "cultural_landmark", "label": "Marco cultural" },
+        { "key": "auditorium", "label": "Auditório" },
+        { "key": "art_studio", "label": "Ateliê de arte" },
+        { "key": "castle", "label": "Castelo" },
+        { "key": "fountain", "label": "Fonte / Chafariz" }
+      ]
+    },
+    {
+      "key": "natural_features",
+      "label": "Natureza",
+      "types": [
+        { "key": "beach", "label": "Praia" },
+        { "key": "island", "label": "Ilha" },
+        { "key": "lake", "label": "Lago" },
+        { "key": "river", "label": "Rio" },
+        { "key": "mountain_peak", "label": "Pico de montanha" },
+        { "key": "nature_preserve", "label": "Reserva natural" },
+        { "key": "scenic_spot", "label": "Mirante natural" },
+        { "key": "woods", "label": "Bosque" }
+      ]
+    },
+    {
+      "key": "places_of_worship",
+      "label": "Locais de Culto",
+      "types": [
+        { "key": "church", "label": "Igreja" },
+        { "key": "mosque", "label": "Mesquita" },
+        { "key": "synagogue", "label": "Sinagoga" },
+        { "key": "hindu_temple", "label": "Templo hindu" },
+        { "key": "buddhist_temple", "label": "Templo budista" },
+        { "key": "shinto_shrine", "label": "Santuário xintoísta" }
+      ]
+    },
+    {
+      "key": "sports",
+      "label": "Esportes",
+      "types": [
+        { "key": "stadium", "label": "Estádio" },
+        { "key": "arena", "label": "Arena" },
+        { "key": "gym", "label": "Academia" },
+        { "key": "fitness_center", "label": "Centro de fitness" },
+        { "key": "golf_course", "label": "Campo de golfe" },
+        { "key": "swimming_pool", "label": "Piscina" },
+        { "key": "tennis_court", "label": "Quadra de tênis" },
+        { "key": "ski_resort", "label": "Estação de esqui" },
+        { "key": "ice_skating_rink", "label": "Pista de patinação" },
+        { "key": "sports_complex", "label": "Complexo esportivo" },
+        { "key": "sports_club", "label": "Clube esportivo" },
+        { "key": "athletic_field", "label": "Campo esportivo" },
+        { "key": "race_course", "label": "Autódromo / Hipódromo" },
+        { "key": "fishing_pier", "label": "Píer de pesca" },
+        { "key": "cycling_park", "label": "Ciclovia" }
+      ]
+    },
+    {
+      "key": "shopping",
+      "label": "Compras",
+      "types": [
+        { "key": "shopping_mall", "label": "Shopping" },
+        { "key": "market", "label": "Mercado" },
+        { "key": "farmers_market", "label": "Feira livre" },
+        { "key": "flea_market", "label": "Feira de antiguidades" },
+        { "key": "department_store", "label": "Loja de departamentos" },
+        { "key": "gift_shop", "label": "Loja de presentes" },
+        { "key": "jewelry_store", "label": "Joalheria" },
+        { "key": "book_store", "label": "Livraria" },
+        { "key": "clothing_store", "label": "Loja de roupas" },
+        { "key": "shoe_store", "label": "Loja de calçados" },
+        { "key": "supermarket", "label": "Supermercado" },
+        { "key": "convenience_store", "label": "Loja de conveniência" }
+      ]
+    },
+    {
+      "key": "transportation",
+      "label": "Transporte",
+      "types": [
+        { "key": "airport", "label": "Aeroporto" },
+        { "key": "international_airport", "label": "Aeroporto internacional" },
+        { "key": "train_station", "label": "Estação de trem" },
+        { "key": "subway_station", "label": "Estação de metrô" },
+        { "key": "bus_station", "label": "Rodoviária" },
+        { "key": "ferry_terminal", "label": "Terminal de balsa" },
+        { "key": "taxi_stand", "label": "Ponto de táxi" },
+        { "key": "bike_sharing_station", "label": "Estação de bicicletas compartilhadas" }
+      ]
+    }
+  ]
+}

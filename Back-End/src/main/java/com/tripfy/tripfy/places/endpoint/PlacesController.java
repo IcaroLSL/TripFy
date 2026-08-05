@@ -6,6 +6,8 @@ import com.tripfy.tripfy.places.dto.SearchPlacesResponse;
 import com.tripfy.tripfy.places.model.Local;
 import com.tripfy.tripfy.places.usecase.SearchPlacesUseCase;
 import com.tripfy.tripfy.places.usecase.SearchPlacesUseCase.PlacesPageResult;
+import com.tripfy.tripfy.places.dto.PlaceTypeCatalogDTO;
+import com.tripfy.tripfy.places.gateway.PlaceTypeCatalog;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,16 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/places")
+@RequestMapping("/v1")
 public class PlacesController {
 
     private final SearchPlacesUseCase searchPlacesUseCase;
+    private final PlaceTypeCatalog placeTypeCatalog;
 
-    public PlacesController(SearchPlacesUseCase searchPlacesUseCase) {
+    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, PlaceTypeCatalog placeTypeCatalog) {
         this.searchPlacesUseCase = searchPlacesUseCase;
+        this.placeTypeCatalog = placeTypeCatalog;
     }
 
-    @GetMapping
+    @GetMapping("/places")
     public ResponseEntity<SearchPlacesResponse> search(
             @RequestParam String location,
             @RequestParam(defaultValue = "1") int page,
@@ -34,7 +38,8 @@ public class PlacesController {
             @RequestParam(required = false) List<String> types,
             @AuthenticationPrincipal AuthenticatedUser user) {
 
-        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, types);
+        List<String> validTypes = placeTypeCatalog.filterValid(types);
+        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, validTypes);
 
         List<PlaceResponse> places = pageResult.places().stream()
             .map(this::toPlaceResponse)
@@ -55,5 +60,10 @@ public class PlacesController {
             local.latitude(),
             local.longitude()
         );
+    }
+
+    @GetMapping("/places/types")
+    public ResponseEntity<PlaceTypeCatalogDTO> list() {
+        return ResponseEntity.ok(placeTypeCatalog.catalog());
     }
 }

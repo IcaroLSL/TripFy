@@ -2,10 +2,10 @@ package com.tripfy.tripfy.infra.google.places.gateway;
 
 import com.tripfy.tripfy.infra.google.places.dto.GoogleGeocodeResponseDTO;
 import com.tripfy.tripfy.infra.google.places.dto.GooglePlacesResponseDTO;
+import com.tripfy.tripfy.places.gateway.PlaceTypeCatalog;
 import com.tripfy.tripfy.places.gateway.PlacesGateway;
 import com.tripfy.tripfy.places.model.Local;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,20 +13,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class GooglePlacesGateway implements PlacesGateway {
 
     @Value("${google.places.api-key}")
     private String apiKey;
 
     private final RestClient restClient = RestClient.create();
+    private final PlaceTypeCatalog placeTypeCatalog;
+
+    public GooglePlacesGateway(PlaceTypeCatalog placeTypeCatalog) {
+        this.placeTypeCatalog = placeTypeCatalog;
+    }
 
     private static final String FIELD_MASK =
         "places.displayName,places.formattedAddress,places.types," +
@@ -34,15 +37,6 @@ public class GooglePlacesGateway implements PlacesGateway {
         "places.priceLevel,places.location,nextPageToken";
 
     private static final double SEARCH_RADIUS_METERS = 5000.0;
-
-    // Tipos aceitos vindos do front, mapeados pro termo usado no textQuery.
-    // LinkedHashMap só pra manter ordem estável e previsível no texto final.
-    private static final Map<String, String> TYPE_LABELS = new LinkedHashMap<>();
-    static {
-        TYPE_LABELS.put("restaurant",         "restaurantes");
-        TYPE_LABELS.put("tourist_attraction", "pontos turísticos");
-        TYPE_LABELS.put("lodging",            "hospedagem");
-    }
 
     private static final List<String> DEFAULT_TYPES =
         List.of("restaurant", "tourist_attraction", "lodging");
@@ -79,7 +73,7 @@ public class GooglePlacesGateway implements PlacesGateway {
         List<String> effectiveTypes = (types == null || types.isEmpty()) ? DEFAULT_TYPES : types;
 
         String labels = effectiveTypes.stream()
-            .map(type -> TYPE_LABELS.getOrDefault(type, type))
+            .map(placeTypeCatalog::label)
             .distinct()
             .reduce((a, b) -> a + ", " + b)
             .orElse("restaurantes, pontos turísticos e hospedagem");
