@@ -14,7 +14,9 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-secure-store",
+      "@react-native-google-signin/google-signin"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
