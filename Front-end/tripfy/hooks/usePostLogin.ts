@@ -30,11 +30,12 @@ export function usePostLogin(): PostLoginResponse {
             const tokenOauth = responseGoogleOauth.data?.idToken;
 
             const { data } = await apiClient.post('/v1/auth/oauth/login', { provider, token: tokenOauth });
-
+            console.log("OAuth login response:", data);
             await secureAuthStorage.saveTokens(data.accessToken, data.refreshToken);
             setUser(data.user);
             return true;
         } catch (err) {
+            console.log("OAuth login error:", err);
             setError('Failed to login with OAuth');
             return false;
         } finally {
@@ -47,10 +48,12 @@ export function usePostLogin(): PostLoginResponse {
         setError(null)
         try {
             const response = await apiClient.post("/v1/auth/login", data)
+            console.log("Login response:", response.data)
             setUser(response.data)
             await secureAuthStorage.saveTokens(response.data.accessToken, response.data.refreshToken);
             return true
         } catch (err) {
+            console.log("Login error:", err)
             setError("Failed to login with sign in")
             return false
         } finally {

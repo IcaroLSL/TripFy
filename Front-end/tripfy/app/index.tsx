@@ -15,6 +15,8 @@ import { PasswordField } from '../components/ui/FormFields/PasswordField';
 import { Button } from '../components/ui/Button';
 import Divider from '../components/ui/Divider';
 import { SwitchField } from '../components/ui/FormFields/SwitchField';
+import { usePostLogin } from '../hooks/usePostLogin';
+import { AntDesign } from '@expo/vector-icons';
 
 const formSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -26,6 +28,7 @@ type FormData = z.infer<typeof formSchema>
 
 export default function App() {
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
+  const {signInLogin, oAuthLogin, loading, error} = usePostLogin()
   const { control, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues:{
@@ -74,7 +77,7 @@ export default function App() {
             <Text className='text-blue-500' onPress={() => console.log('Forgot password')}>Forgot Password</Text>
           </View>
 
-          <Button className='w-[40%]' onPress={handleSubmit((data: FormData) => console.log(data))} theme={theme}>
+          <Button className='w-[40%]' onPress={handleSubmit((data: FormData) => signInLogin(data))} theme={theme}>
             <AppText className='text-white' theme={theme}>
               Sign in
             </AppText>
@@ -84,16 +87,12 @@ export default function App() {
 
           <View className='flex flex-row gap-4 justify-center'>
 
-            <Button variant='outline' className='w-[40%]' onPress={handleSubmit((data: FormData) => console.log(data))} theme={theme}>
-              <AppText theme={theme}>
-                Google
-              </AppText>
+            <Button variant='outline' className='w-[40%]' onPress={handleSubmit((data: FormData) => oAuthLogin('GOOGLE'))} theme={theme}>
+              <AntDesign name='google' color={theme === 'dark' ? '#ffffff' : 'black'}/>
             </Button>
 
-            <Button variant='outline' className='w-[40%]' onPress={handleSubmit((data: FormData) => console.log(data))} theme={theme}>
-              <AppText theme={theme}>
-                Apple
-              </AppText>
+            <Button variant='outline' className='w-[40%]' onPress={handleSubmit((data: FormData) => oAuthLogin('APPLE'))} theme={theme}>
+              <AntDesign name='apple' color={theme === 'dark' ? '#ffffff' : 'black'}/>
             </Button>
           </View>
 
