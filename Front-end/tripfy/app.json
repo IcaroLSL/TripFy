@@ -16,7 +16,13 @@
       "expo-router",
       "expo-font",
       "expo-secure-store",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Tripfy to use your location."
+        }
+      ]
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -11,7 +11,6 @@ import CarrosselRoteiros from '../../components/ui/CarrosselRoteiros';
 
 export default function Home() {
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
-  console.log('Current theme:', theme);
 
   const roteiros: CardRoteiroProps[] = [
     {
@@ -47,7 +46,6 @@ export default function Home() {
   ];
 
   return (
-    <SafeAreaProvider>
       <ScreenContent>
         <View className='flex flex-row w-full gap-4'>
           <Search theme={theme}  className='w-full'/>
@@ -57,9 +55,6 @@ export default function Home() {
         </View>
         <CarrosselRoteiros theme={theme} titulo='Perto de Você' descricao='Raio de 50km da sua localização' listaRoteiros={roteiros} />
         <CarrosselRoteiros theme={theme} titulo='Mais Bem Avaliados' descricao='Nota Acima de 4.5' listaRoteiros={roteiros} />
-
       </ScreenContent>
-      <StatusBar style="auto" />
-    </SafeAreaProvider>
   );
 }
