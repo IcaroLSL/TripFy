@@ -14,7 +14,7 @@ export const ScreenContent: React.FC<ScreenContentProps> = ({ children, footerBa
   return (
     <SafeAreaProvider>
 
-      <SafeAreaView className={`h-screen w-screen ${theme === 'light' ? 'bg-[#F5F5F5]' : 'bg-[#0F0F1A]'} flex flex-col justify-between`}>
+      <SafeAreaView className={`flex-1 w-full ${theme === 'light' ? 'bg-[#F5F5F5]' : 'bg-[#0F0F1A]'} flex flex-col justify-between`}>
         
         <View className='p-4 gap-4'>
           {children}

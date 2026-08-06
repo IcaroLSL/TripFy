@@ -12,7 +12,6 @@ import { StepProps } from '../../../interfaces/StepProps';
 import { set, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { th } from 'zod/v4/locales';
-import { useGetSelectCities } from '../../../hooks/useGetSelectCities';
 
 
 const formSchema = z.object({
@@ -28,13 +27,11 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
-    const {searchQuery, setSearchQuery, cities, loading, clearCities} = useGetSelectCities()
     const { control, handleSubmit } = useForm<FormData>({
         resolver: zodResolver(formSchema),
     });
 
     const onSubmit = (data: FormData) => {
-        setSearchQuery(data.destino);
         console.log(data);
     }
     return (
