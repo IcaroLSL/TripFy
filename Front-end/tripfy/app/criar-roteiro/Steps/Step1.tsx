@@ -74,7 +74,7 @@ const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
 
             <WarningCard>
                 <AppDescription theme={theme}>
-                    Raio padrão de busca: 50km a partir do ponto escolhido (ajustável depois na montagem). Nota: se houver permanência mínima recomendada por tipo de destino, exibir aqui só após confirmação da regra (ver aviso no topo).
+                    Raio padrão de busca: 50km a partir do ponto escolhido (ajustável depois na montagem).
                 </AppDescription>
             </WarningCard>
 

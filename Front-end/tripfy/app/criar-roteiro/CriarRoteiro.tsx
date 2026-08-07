@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import Divider from '../../components/ui/Divider';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
+import Step3 from './Steps/Step3';
 
 const CriarRoteiro = () => {
   const theme = useColorScheme() || 'light';
@@ -21,6 +22,10 @@ const CriarRoteiro = () => {
 
       {currentStep === 2 && (
         <Step2 theme={theme} currentStep={currentStep} setCurrentStep={setCurrentStep} />
+      )}
+
+      {currentStep === 3 && (
+        <Step3 theme={theme} currentStep={currentStep} setCurrentStep={setCurrentStep} />
       )}
 
       <Divider theme={theme} />
