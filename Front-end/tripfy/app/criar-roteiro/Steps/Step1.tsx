@@ -31,6 +31,13 @@ const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
     const [errorLocation, setErrorLocation] = useState<string | null>(null);
     const { control, handleSubmit } = useForm<FormData>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            destino: '',
+            data: {
+                startDate: new Date(),
+                endDate: new Date(),
+            },
+        },
     });
 
     const handleGetLocation = async () => {
