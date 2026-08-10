@@ -37,6 +37,8 @@ public class PlacesController {
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) List<String> types,
             @AuthenticationPrincipal AuthenticatedUser user) {
+        
+        System.out.println("chamando endpoint de busca de lugares");
 
         List<String> validTypes = placeTypeCatalog.filterValid(types);
         PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, validTypes);
@@ -64,6 +66,8 @@ public class PlacesController {
 
     @GetMapping("/places/types")
     public ResponseEntity<PlaceTypeCatalogDTO> list() {
+        System.out.println("chamando endpoint de listagem de tipos de lugares");
+
         return ResponseEntity.ok(placeTypeCatalog.catalog());
     }
 }

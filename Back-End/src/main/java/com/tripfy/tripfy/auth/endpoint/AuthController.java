@@ -34,17 +34,23 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        System.out.println("chamando endpoint de login");
+
         return ResponseEntity.ok(loginUseCase.execute(request));
     }
 
     @PostMapping("/register")
     public ResponseEntity<CreateUserResponse> register(@Valid @RequestBody CreateUserRequest request) {
+        System.out.println("chamando endpoint de registro");
+
         CreateUserResponse response = createUserUseCase.execute(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/oauth/login")
     public ResponseEntity<LoginResponse> oauthLogin(@RequestBody @Valid OAuthLoginRequest request) {
+        System.out.println("chamando endpoint de login via OAuth");
+
         return ResponseEntity.ok(oAuthLoginUseCase.execute(request));
     }
 }
