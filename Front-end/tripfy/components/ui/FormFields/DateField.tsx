@@ -86,7 +86,7 @@ export function DateField<T extends FieldValues>({
       disabled: `${theme === 'dark' ? 'text-gray-600' : 'text-gray-300'} opacity-50 rounded-lg`,
       disabled_label: `${theme === 'dark' ? 'text-gray-600' : 'text-gray-300'} opacity-50`,
       
-      // Header & navigation
+      // Header & naviga{error && <Text className="text-red-500 text-sm font-medium">{error.message}</Text>}tion
       button_prev: `text-blue-600 font-bold text-xl`,
       button_next: `text-blue-600 font-bold text-xl`,
       button_prev_image: `text-blue-600`,
@@ -172,7 +172,11 @@ export function DateField<T extends FieldValues>({
                             />
                         </Pressable>
 
-                        {error && <Text className="text-red-500 text-sm font-medium">{error.message}</Text>}
+                        {error && (
+                            <Text className="text-red-500 text-sm font-medium">
+                                {typeof error === 'object' && error?.message ? error.message : 'Data inválida'}
+                            </Text>
+                        )}
 
                         <Modal visible={isOpen} transparent animationType="fade" onRequestClose={() => setIsOpen(false)}>
                             <Pressable

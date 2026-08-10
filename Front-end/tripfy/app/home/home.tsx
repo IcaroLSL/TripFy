@@ -4,7 +4,7 @@ import '../../global.css'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Text, useColorScheme, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { CardRoteiroProps } from '../../interfaces/CardRoteiro';
+import { CardRoteiroProps } from '../../src/interfaces/CardRoteiro';
 import { ScreenContent } from '../../components/ScreenContent';
 import Search from '../../components/ui/Search';
 import CarrosselRoteiros from '../../components/ui/CarrosselRoteiros';

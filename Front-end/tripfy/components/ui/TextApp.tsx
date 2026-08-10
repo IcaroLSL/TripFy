@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { DefaultProps } from '../../interfaces/DefaultProps'
+import { DefaultProps } from '../../src/interfaces/DefaultProps'
 
 export const AppText = ({theme, className, children}: DefaultProps & { children: React.ReactNode }) => {
 

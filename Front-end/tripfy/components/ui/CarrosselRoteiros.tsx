@@ -1,7 +1,7 @@
 import { View, Text, FlatList } from 'react-native'
 import React from 'react'
-import { DefaultProps } from '../../interfaces/DefaultProps'
-import { CarrosselRoteirosProps } from '../../interfaces/CarrosselRoteiros'
+import { DefaultProps } from '../../src/interfaces/DefaultProps'
+import { CarrosselRoteirosProps } from '../../src/interfaces/CarrosselRoteiros'
 import { AppDescription, AppTitle } from './TextApp'
 import CardRoteiro from './CardRoteiro'
 

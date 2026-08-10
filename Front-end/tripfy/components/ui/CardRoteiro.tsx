@@ -1,9 +1,9 @@
 import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import Card from './Card'
-import { CardRoteiroProps } from '../../interfaces/CardRoteiro'
+import { CardRoteiroProps } from '../../src/interfaces/CardRoteiro'
 import { AppDescription, AppText, AppTitle } from './TextApp'
-import { DefaultProps } from '../../interfaces/DefaultProps'
+import { DefaultProps } from '../../src/interfaces/DefaultProps'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const CardRoteiro = ({ image, title, location, stars, tripDays, priceLevel, liked, theme }: CardRoteiroProps & DefaultProps) => {

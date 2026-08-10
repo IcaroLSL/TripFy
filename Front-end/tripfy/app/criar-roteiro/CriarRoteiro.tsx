@@ -7,43 +7,37 @@ import Divider from '../../components/ui/Divider';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
 import Step3 from './Steps/Step3';
+import { Roteiro } from '@/interfaces/Roteiro';
 
 const CriarRoteiro = () => {
   const theme = useColorScheme() || 'light';
   const [currentStep, setCurrentStep] = React.useState(1);
+  const [disabledNext, setDisabledNext] = useState(false);
+  const [roteiroData, setRoteiroData] = useState<Roteiro>({
+    destino: '',
+    startDate: new Date(),
+    endDate: new Date(),
+    atividades: [],
+    orcamento: '',
+    avaliacaoMinima: '',
+  })
 
   return (
     <ScreenContent>
       <StepViewer totalSteps={5} currentStep={currentStep} />
 
       {currentStep === 1 && (
-        <Step1 theme={theme} currentStep={currentStep} setCurrentStep={setCurrentStep} />
+        <Step1 theme={theme} setDisabledNext={setDisabledNext} roteiroData={roteiroData} setRoteiroData={setRoteiroData} currentStep={currentStep} setCurrentStep={setCurrentStep} />
       )}
 
       {currentStep === 2 && (
-        <Step2 theme={theme} currentStep={currentStep} setCurrentStep={setCurrentStep} />
+        <Step2 theme={theme} setDisabledNext={setDisabledNext} roteiroData={roteiroData} setRoteiroData={setRoteiroData} currentStep={currentStep} setCurrentStep={setCurrentStep} />
       )}
 
       {currentStep === 3 && (
-        <Step3 theme={theme} currentStep={currentStep} setCurrentStep={setCurrentStep} />
+        <Step3 theme={theme} setDisabledNext={setDisabledNext} roteiroData={roteiroData} setRoteiroData={setRoteiroData} currentStep={currentStep} setCurrentStep={setCurrentStep} />
       )}
 
-      <Divider theme={theme} />
-      <View className='flex flex-row justify-center gap-4'>
-        {currentStep > 1 && (
-          <Button variant='outline' className='w-[40%] flex self-start' theme={theme} onPress={() => { setCurrentStep(currentStep - 1); }} disabled={currentStep <= 1}>
-            <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
-              Anterior
-            </Text>
-          </Button>
-        )}
-
-        <Button className='w-[40%] flex self-end' theme={theme} onPress={() => { setCurrentStep(currentStep + 1); }} disabled={currentStep >= 5}>
-          <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
-            Próximo
-          </Text>
-        </Button>
-      </View>
 
     </ScreenContent>
   )

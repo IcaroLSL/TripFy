@@ -8,28 +8,29 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../components/ui/Button';
 import { DateField } from '../../../components/ui/FormFields/DateField';
-import { StepProps } from '../../../interfaces/StepProps';
+import { StepProps } from '../../../src/interfaces/StepProps';
 import { set, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Location from 'expo-location';
+import { de } from 'zod/v4/locales';
 
 
 const formSchema = z.object({
     destino: z.string().min(1, { message: "Destino é obrigatório" }),
     data: z.object({
-        startDate: z.date("Data de início é obrigatória"),
-        endDate: z.date("Data de fim é obrigatória"),
+        startDate: z.date({ message: "Data de Início é obrigatória" }),
+        endDate: z.date({ message: "Data de Fim é obrigatória" }),
     }).refine((data) => data.startDate <= data.endDate, {
         message: "Data de início deve ser menor ou igual à data de fim",
+        path: ["endDate"],
     }),
-});
+})
 
 type FormData = z.infer<typeof formSchema>;
 
-const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
     const [errorLocation, setErrorLocation] = useState<string | null>(null);
-    const { control, handleSubmit } = useForm<FormData>({
+    const { control, handleSubmit, setValue, watch, setError } = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             destino: '',
@@ -38,6 +39,7 @@ const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
                 endDate: new Date(),
             },
         },
+        mode: 'onBlur',
     });
 
     const handleGetLocation = async () => {
@@ -49,13 +51,19 @@ const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
 
         let location = await Location.getCurrentPositionAsync({});
         console.log('Current location:', location);
-        setLocation(location);
-        setCurrentStep(currentStep + 1);
+        setValue('destino', location.coords.latitude + ', ' + location.coords.longitude);
     }
 
     const onSubmit = (data: FormData) => {
-        console.log(data);
+        setCurrentStep(currentStep + 1);
+        setRoteiroData({
+            ...roteiroData,
+            destino: data.destino,
+            startDate: data.data.startDate,
+            endDate: data.data.endDate,
+        });
     }
+
     return (
         <>
             <AppTitle theme={theme}>Para Onde Vamos?</AppTitle>
@@ -79,17 +87,15 @@ const Step1 = ({ theme, currentStep, setCurrentStep }: StepProps) => {
                 <DateField mode='range' theme={theme} control={control} name="data" placeholder="Selecione a data de início e fim" />
             </View>
 
-            <WarningCard>
-                <AppDescription theme={theme}>
-                    Raio padrão de busca: 50km a partir do ponto escolhido (ajustável depois na montagem).
-                </AppDescription>
-            </WarningCard>
+            <Divider theme={theme} />
 
-            <Button theme={theme} onPress={handleSubmit(onSubmit)}>
-                <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
-                    Enviar
-                </Text>
-            </Button>
+            <View className='flex flex-row justify-center gap-4'>
+                <Button className='w-[40%] flex self-end' theme={theme} onPress={handleSubmit(onSubmit)} disabled={currentStep >= 5}>
+                    <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
+                        Próximo
+                    </Text>
+                </Button>
+            </View>
         </>
     )
 }

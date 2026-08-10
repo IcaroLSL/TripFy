@@ -1,7 +1,7 @@
 import { View, Text, TextInput } from 'react-native'
 import React from 'react'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import { DefaultProps } from '../../interfaces/DefaultProps'
+import { DefaultProps } from '../../src/interfaces/DefaultProps'
 
 const Search = ({ theme, className }: DefaultProps) => {
     return (

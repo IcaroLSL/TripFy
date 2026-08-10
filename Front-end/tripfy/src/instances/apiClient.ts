@@ -1,4 +1,6 @@
+import { secureAuthStorage } from "@/services/secureAuthStorage";
 import axios from "axios";
+
 
 export const apiClient = axios.create({
   baseURL: process.env.EXPO_PUBLIC_BASE_URL, // Substitua pelo URL do seu backend
