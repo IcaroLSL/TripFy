@@ -22,6 +22,9 @@ public class HealthController {
 
     @GetMapping
     public ResponseEntity<HealthResponse> check() {
+
+        System.out.println("chamando endpoint de health check");
+
         HealthStatus status = checkHealthUseCase.execute();
 
         return ResponseEntity.ok(new HealthResponse(

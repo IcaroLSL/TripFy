@@ -49,6 +49,22 @@
             "lightColor": "#F44539",
             "folderNames": [".mvn"],
             "rootFolderNames": [".mvn"]
+        },
+        {
+            "name": "Back-end",
+            "base": "assembly",
+            "color": "#A949BB",
+            "lightColor": "#808080",
+            "folderNames": ["Back-end"],
+            "rootFolderNames": ["Back-end"]
+        },
+        {
+            "name": "Front-end",
+            "base": "astro",
+            "color": "#00BCFF",
+            "lightColor": "#808080",
+            "folderNames": ["Front-end"],
+            "rootFolderNames": ["Front-end"]
         }
     ],
     "java.configuration.updateBuildConfiguration": "interactive",
