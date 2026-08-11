@@ -111,7 +111,7 @@ const Step3 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                     </Button>
                 )}
 
-                <Button className='w-[40%] flex self-end' theme={theme} onPress={() => { onSubmit() }} disabled={currentStep >= 5}>
+                <Button className='w-[40%] flex self-end' theme={theme} onPress={() => { onSubmit() }} disabled={ selectedPriceRange === null || selectedRating === null || currentStep >= 5}>
                     <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
                         Próximo
                     </Text>

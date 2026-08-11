@@ -33,7 +33,7 @@ const CardRoteiro = ({ image, title, location, stars, tripDays, priceLevel, like
 
         <AppTitle theme={theme}>{title}</AppTitle>
         <View className='flex-row space-x-1'>
-          <MaterialIcon name="place" className='text-gray-400' />
+          <MaterialIcon name="place" color={'#9ca3af'} className='text-gray-400' />
           <AppDescription theme={theme}>{location}</AppDescription>
         </View>
 

@@ -63,7 +63,7 @@ export default function App() {
 
           <Image source={theme === 'light' ? require('../assets/images/logo_light_2.png') : require('../assets/images/logo_dark_2.png')} className='w-[50%] h-[30%] self-center' />
 
-          <Card theme={theme} className='flex items-center h-[70%] gap-4'>
+          <Card theme={theme} className='flex p-4 items-center h-[70%] gap-4'>
 
             <AppDescription theme={theme}>
               Don't have an account? <Text className='text-blue-500' onPress={() => console.log('Sign up')}>Sign up</Text>

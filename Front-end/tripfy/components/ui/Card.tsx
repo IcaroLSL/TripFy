@@ -9,7 +9,7 @@ interface CardProps {
 
 const Card = ({ className, children, theme }: CardProps) => {
   return (
-    <View className={`shadow-md rounded-md p-4 ${className || ''} ${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'}`}>
+    <View className={`shadow-md rounded-md ${className || ''} ${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'}`}>
         {children}
     </View>
   )
