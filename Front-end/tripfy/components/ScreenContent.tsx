@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, useColorScheme, View } from 'react-native';
+import { ScrollView, useColorScheme, View } from 'react-native';
 
 import FooterBar from './ui/FooterBar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -13,12 +13,17 @@ export const ScreenContent: React.FC<ScreenContentProps> = ({ children, footerBa
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
   return (
     <SafeAreaProvider>
-
       <SafeAreaView className={`flex-1 w-full ${theme === 'light' ? 'bg-[#F5F5F5]' : 'bg-[#0F0F1A]'} flex flex-col justify-between`}>
-        
-        <View className='p-4 gap-4'>
-          {children}
-        </View>
+
+        <ScrollView
+          className='flex-1 w-full'
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          <View className='p-4 gap-4 flex-1'>
+            {children}
+          </View>
+        </ScrollView>
 
         {footerBar && <FooterBar />}
       </SafeAreaView>

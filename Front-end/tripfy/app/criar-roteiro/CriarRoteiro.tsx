@@ -38,11 +38,10 @@ const CriarRoteiro = () => {
       {currentStep === 3 && (
         <Step3 theme={theme} setDisabledNext={setDisabledNext} roteiroData={roteiroData} setRoteiroData={setRoteiroData} currentStep={currentStep} setCurrentStep={setCurrentStep} />
       )}
-      
+
       {currentStep === 4 && (
         <Step4 theme={theme} setDisabledNext={setDisabledNext} roteiroData={roteiroData} setRoteiroData={setRoteiroData} currentStep={currentStep} setCurrentStep={setCurrentStep} />
-      )
-      }
+      )}
 
 
     </ScreenContent>
