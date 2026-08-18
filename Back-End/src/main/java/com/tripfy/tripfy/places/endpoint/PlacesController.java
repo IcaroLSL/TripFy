@@ -10,6 +10,9 @@ import com.tripfy.tripfy.places.dto.PlaceTypeCatalogDTO;
 import com.tripfy.tripfy.places.gateway.PlaceTypeCatalog;
 import com.tripfy.tripfy.places.dto.PositionResponse;
 import com.tripfy.tripfy.places.gateway.PositionGateway;
+import com.tripfy.tripfy.places.dto.PlaceImageRequest;
+import com.tripfy.tripfy.places.dto.PlaceImageResponse;
+import com.tripfy.tripfy.places.gateway.PlaceImageGateway;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,11 +30,13 @@ public class PlacesController {
     private final SearchPlacesUseCase searchPlacesUseCase;
     private final PlaceTypeCatalog placeTypeCatalog;
     private final PositionGateway positionGateway;
+    private final PlaceImageGateway placeImageGateway;
 
-    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, PlaceTypeCatalog placeTypeCatalog, PositionGateway positionGateway) {
+    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, PlaceTypeCatalog placeTypeCatalog, PositionGateway positionGateway, PlaceImageGateway placeImageGateway) {
         this.searchPlacesUseCase = searchPlacesUseCase;
         this.placeTypeCatalog = placeTypeCatalog;
         this.positionGateway = positionGateway;
+        this.placeImageGateway = placeImageGateway;
     }
 
     @GetMapping("/places")
@@ -88,4 +93,18 @@ public class PlacesController {
 
         return ResponseEntity.ok(positionResponse);
     }
+
+    @GetMapping("/places/image")
+    public ResponseEntity<PlaceImageResponse> getImageByPlace(
+            @RequestParam String photoReference,
+            @AuthenticationPrincipal AuthenticatedUser user) {
+        
+        System.out.println("chamando endpoint de busca de imagem por lugar");
+
+        PlaceImageResponse placeImageResponse =
+                placeImageGateway.getImageByPlace(photoReference);
+
+        return ResponseEntity.ok(placeImageResponse);
+    }
+
 }
