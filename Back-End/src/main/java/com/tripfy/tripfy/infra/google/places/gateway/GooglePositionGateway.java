@@ -70,7 +70,6 @@ public class GooglePositionGateway implements PositionGateway {
     }
 
     private PositionResponse extractCity(String response) {
-
         try {
             JsonNode root = objectMapper.readTree(response);
             JsonNode results = root.get("results");
@@ -80,6 +79,10 @@ public class GooglePositionGateway implements PositionGateway {
                         "Nenhum resultado encontrado para a posição"
                 );
             }
+
+            String city = null;
+            String state = null;
+            String country = null;
 
             for (JsonNode result : results) {
 
@@ -92,30 +95,50 @@ public class GooglePositionGateway implements PositionGateway {
                 }
 
                 for (JsonNode component : addressComponents) {
-
                     JsonNode types = component.get("types");
-
                     if (types == null || !types.isArray()) {
                         continue;
                     }
 
+                    String longText = component.get("longText").asText();
+
                     for (JsonNode type : types) {
-
-                        if ("locality".equals(type.asText())) {
-
-                            String city =
-                                    component.get("longText").asText();
-
-                            return new PositionResponse(city);
+                        switch (type.asText()) {
+                            case "locality":
+                                city = longText;
+                                break;
+                            case "administrative_area_level_1":
+                                state = longText;
+                                break;
+                            case "country":
+                                country = longText;
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
+
+                if (city != null && state != null && country != null) {
+                    break;
+                }
             }
 
-            throw new IllegalStateException(
-                    "Cidade não encontrada para a posição"
-            );
+            if (city == null) {
+                throw new IllegalStateException(
+                        "Cidade não encontrada para a posição"
+                );
+            }
 
+            String location = city;
+            if (state != null) {
+                location += ", " + state;
+            }
+            if (country != null) {
+                location += " - " + country;
+            }
+
+            return new PositionResponse(location);
         } catch (Exception e) {
             throw new IllegalStateException(
                     "Erro ao processar resposta de geocodificação",
