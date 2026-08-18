@@ -28,7 +28,7 @@ export function usePostLogin(): PostLoginResponse {
             await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
             const responseGoogleOauth = await GoogleSignin.signIn();
             const tokenOauth = responseGoogleOauth.data?.idToken;
-
+            console.log("Google OAuth token:", tokenOauth);
             const { data } = await apiClient.post('/v1/auth/oauth/login', { provider, token: tokenOauth });
             console.log("OAuth login response:", data);
             await secureAuthStorage.saveTokens(data.accessToken, data.refreshToken);

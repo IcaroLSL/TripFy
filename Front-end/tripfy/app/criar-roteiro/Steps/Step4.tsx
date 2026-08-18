@@ -1,14 +1,15 @@
 import { View, Text, Pressable, ScrollView, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { StepProps } from '@/interfaces/StepProps'
 import Divider from '../../../components/ui/Divider'
 import { Button } from '../../../components/ui/Button'
 import { AppDescription, AppTitle } from '../../../components/ui/TextApp'
 import CardAtividade from '../../../components/ui/CardAtividade'
 import { MaterialIcons } from '@expo/vector-icons'
-import TimeField from '../../../components/ui/FormFields/TimeField'
 import { Atividade } from '@/interfaces/Atividade'
+import { useGetPlaces } from '../../../hooks/useGetPlaces'
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+import { router } from 'expo-router'
 
 
 
@@ -16,55 +17,99 @@ interface AtividadesRoteiro {
     activities: Atividade[];
 }
 
-const mockedActivities: Record<number, AtividadesRoteiro> = {
-    12: {
-        activities: [
-            {
-                id: 1,
-                day: 0,
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
-                name: 'Praia do Meio',
-                startTime: '10:00',
-                endTime: '12:00',
-                priceLevel: 3,
-                stars: 5,
-                description: 'Uma bela praia para relaxar e aproveitar o sol.'
-            },
-            {
-                id: 2,
-                day: 0,
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
-                name: 'Praia do Meio',
-                startTime: '10:00',
-                endTime: '12:00',
-                priceLevel: 3,
-                stars: 5,
-                description: 'Uma bela praia para relaxar e aproveitar o sol.'
-            },
-            {
-                id: 3,
-                day: 0,
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
-                name: 'Praia do Meio',
-                startTime: '10:00',
-                endTime: '12:00',
-                priceLevel: 3,
-                stars: 5,
-                description: 'Uma bela praia para relaxar e aproveitar o sol.'
-            },
-        ]
-    }
-};
+const activities: Atividade[] = [
+    {
+        id: 1,
+        day: 0,
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
+        name: 'Praia do Meio',
+        startTime: '',
+        endTime: '',
+        priceLevel: 3,
+        stars: 5,
+        description: 'Descrição da atividade exemplo',
+    },
+    {
+        id: 2,
+        day: 0,
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHzhGHbChZMwDEMsqT9tv58DsvXqcgqcsYKG0tNXjzFg&s=10',
+        name: 'Bar do Português',
+        startTime: '',
+        endTime: '',
+        priceLevel: 3,
+        stars: 5,
+        description: 'Descrição da atividade exemplo',
+    },
+    {
+        id: 3,
+        day: 0,
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE1xwFHEtfu7cCaDBXocSAZUqhyP2YuDuRbjMu5V4sSnJK-kG3L4PpkJEx&s=10',
+        name: 'Parque do Oeste',
+        startTime: '',
+        endTime: '',
+        priceLevel: 3,
+        stars: 5,
+        description: 'Descrição da atividade exemplo',
+    },
+    {
+        id: 4,
+        day: 0,
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS-gGIxkpjdfwhWHKTZTIELWLn0NmChPYxRUFnaW-Y7A&s=10',
+        name: 'Pub 8',
+        startTime: '',
+        endTime: '',
+        priceLevel: 3,
+        stars: 5,
+        description: 'Descrição da atividade exemplo',
+    },
+    {
+        id: 5,
+        day: 0,
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSFSI00xdY4mh-zeCv1LX_U18aPVGnN3qOSKFqWojggQyy8PlBvj7E82M&s=10',
+        name: 'Biblioteca',
+        startTime: '',
+        endTime: '',
+        priceLevel: 3,
+        stars: 5,
+        description: 'Descrição da atividade exemplo',
+    },
+    {
+        id: 6,
+        day: 0,
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsxYS84-qOB8dVRRYvX3Q1n9salZ9zh0yt7DTgtYmZuT3_zlXBvUf1Bq2D&s=10',
+        name: 'Shopping Jaraguá',
+        startTime: '',
+        endTime: '',
+        priceLevel: 3,
+        stars: 5,
+        description: 'Descrição da atividade exemplo',
+    },
+]
 
 const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
-
-
+    const { getPlaces, loading, error } = useGetPlaces()
+    const [places, setPlaces] = useState<Atividade[]>([]);
     const [days, setDays] = useState<number[]>([]);
     const [selectedDay, setSelectedDay] = useState<number>(roteiroData.startDate.getDate() || 1);
-    const [morningActivities, setMorningActivities] = useState<Record<number, AtividadesRoteiro>>(mockedActivities);
-    const [afterNoonActivities, setAfterNoonActivities] = useState<Record<number, AtividadesRoteiro>>(mockedActivities);
-    const [nightActivities, setNightActivities] = useState<Record<number, AtividadesRoteiro>>(mockedActivities);
-    const [earlyMorningActivities, setEarlyMorningActivities] = useState<Record<number, AtividadesRoteiro>>(mockedActivities);
+    const [morningActivities, setMorningActivities] = useState<Record<number, AtividadesRoteiro>>({});
+    const [afterNoonActivities, setAfterNoonActivities] = useState<Record<number, AtividadesRoteiro>>({});
+    const [nightActivities, setNightActivities] = useState<Record<number, AtividadesRoteiro>>({});
+    const [earlyMorningActivities, setEarlyMorningActivities] = useState<Record<number, AtividadesRoteiro>>({});
+
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const fetchedPlaces = await getPlaces({
+                    destino: roteiroData.destino,
+                    atividades: roteiroData.atividades,
+                }, 1);
+                setPlaces(fetchedPlaces);
+            } catch (error) {
+                console.error("Error fetching places:", error);
+            }
+        };
+        fetchPlaces()
+    }, [])
 
     useEffect(() => {
         if (roteiroData.startDate && roteiroData.endDate) {
@@ -74,6 +119,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             setDays(daysArray);
         }
     }, [roteiroData])
+
 
     const handleManagerActivities = (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => {
         let updatedActivities: Record<number, AtividadesRoteiro> = {};
@@ -157,103 +203,60 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             </View>
 
             <AppTitle theme={theme}>Sugerido para você</AppTitle>
+            {places.length >= 0 ? (
 
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <View className='gap-4 flex flex-row'>
-                    <CardAtividade theme={theme}
-                        atividade={{
-                            id: 1,
-                            day: selectedDay,
-                            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
-                            name: 'Praia do Meio',
-                            startTime: '',
-                            endTime: '',
-                            priceLevel: 3,
-                            stars: 5,
-                            description: 'Descrição da atividade exemplo'
-                        }}
-                        added={true}
-                        onAddActivity={handleManagerActivities}
-                    />
-                    <CardAtividade theme={theme}
-                        atividade={{
-                            id: 2,
-                            day: selectedDay,
-                            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHzhGHbChZMwDEMsqT9tv58DsvXqcgqcsYKG0tNXjzFg&s=10',
-                            name: 'Bar do Português',
-                            startTime: '',
-                            endTime: '',
-                            priceLevel: 3,
-                            stars: 5,
-                            description: 'Descrição da atividade exemplo'
-                        }}
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    <View className='gap-4 flex flex-row'>
 
-                        added={false}
-                        onAddActivity={handleManagerActivities}
-                    />
-                    <CardAtividade theme={theme}
-                        atividade={{
-                            id: 3,
-                            day: selectedDay,
-                            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE1xwFHEtfu7cCaDBXocSAZUqhyP2YuDuRbjMu5V4sSnJK-kG3L4PpkJEx&s=10',
-                            name: 'Parque do Oeste',
-                            startTime: '',
-                            endTime: '',
-                            priceLevel: 3,
-                            stars: 5,
-                            description: 'Descrição da atividade exemplo'
-                        }}
-                        onAddActivity={handleManagerActivities}
-                        added={false} />
-                    <CardAtividade theme={theme}
-                        atividade={{
-                            id: 4,
-                            day: selectedDay,
-                            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS-gGIxkpjdfwhWHKTZTIELWLn0NmChPYxRUFnaW-Y7A&s=10',
-                            name: 'Pub 8',
-                            startTime: '',
-                            endTime: '',
-                            priceLevel: 3,
-                            stars: 5,
-                            description: 'Descrição da atividade exemplo'
-                        }}
-                        added={false}
-                        onAddActivity={handleManagerActivities}
-                    />
-                    <CardAtividade theme={theme}
-                        atividade={{
-                            id: 5,
-                            day: selectedDay,
-                            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSFSI00xdY4mh-zeCv1LX_U18aPVGnN3qOSKFqWojggQyy8PlBvj7E82M&s=10',
-                            name: 'Biblioteca',
-                            startTime: '',
-                            endTime: '',
-                            priceLevel: 3,
-                            stars: 5,
-                            description: 'Descrição da atividade exemplo'
-                        }}
-                        added={false}
-                        onAddActivity={handleManagerActivities}
-                    />
-                    <CardAtividade theme={theme}
-                        atividade={{
-                            id: 1,
-                            day: selectedDay,
-                            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsxYS84-qOB8dVRRYvX3Q1n9salZ9zh0yt7DTgtYmZuT3_zlXBvUf1Bq2D&s=10',
-                            name: 'Shopping Jaraguá',
-                            startTime: '',
-                            endTime: '',
-                            priceLevel: 3,
-                            stars: 5,
-                            description: 'Descrição da atividade exemplo'
-                        }}
-                        added={false}
-                        onAddActivity={handleManagerActivities}
-                    />
+                        {loading && (
+                            <Text className={`text-base ${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                                Carregando atividades...
+                            </Text>
+                        )}
+
+                        {places.length > 0 && !loading && !error &&
+                            places.map((activity) => (
+                                <CardAtividade
+                                    key={activity.id}
+                                    atividade={{
+                                        id: activity.id,
+                                        day: selectedDay,
+                                        image: activity.image,
+                                        name: activity.name,
+                                        startTime: activity.startTime,
+                                        endTime: activity.endTime,
+                                        priceLevel: activity.priceLevel,
+                                        stars: activity.stars,
+                                        description: activity.description
+                                    }}
+                                    theme={theme}
+                                    onAddActivity={(day, timeOfDay, activity) => handleManagerActivities(day, timeOfDay, activity)}
+                                    added={
+                                        Boolean(morningActivities[selectedDay]?.activities.some(a => a.name === activity.name) ||
+                                            afterNoonActivities[selectedDay]?.activities.some(a => a.name === activity.name) ||
+                                            nightActivities[selectedDay]?.activities.some(a => a.name === activity.name) ||
+                                            earlyMorningActivities[selectedDay]?.activities.some(a => a.name === activity.name)
+                                        )
+                                    }
+                                />
+                            ))}
+                    </View>
+                </ScrollView>
+            ) : (
+                <View>
+                    <Text className={`text-base ${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                        Nenhuma atividade encontrada para o destino selecionado.
+                    </Text>
                 </View>
-            </ScrollView>
+            )
+            }
+            {error && (
+                <Text className={`text-base ${theme === 'light' ? 'text-red-500' : 'text-red-500'}`}>
+                    Ocorreu um erro ao buscar as atividades. Por favor, tente novamente.
+                </Text>
+            )}
 
-            <Button onPress={() => { }} theme={theme} variant='dashed'>
+            <Button onPress={() => router.push('/criar-roteiro/Steps/AdicionarAtividade')} theme={theme} variant='dashed'>
                 <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
                     Adicionar atividade
                 </Text>
@@ -271,7 +274,9 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                         {activity.name}: {activity.startTime} - {activity.endTime}
                     </Text>
 
-                    <MaterialIcons name='close' color='white' size={20} />
+                    <Pressable onPress={() => handleManagerActivities(activity.day, 'morning', activity)}>
+                        <MaterialIcons name='close' color='white' size={20} />
+                    </Pressable>
                 </Button>
             ))}
 
@@ -287,7 +292,9 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                         {activity.name}: {activity.startTime} - {activity.endTime}
                     </Text>
 
-                    <MaterialIcons name='close' color='white' size={20} />
+                    <Pressable onPress={() => handleManagerActivities(activity.day, 'afternoon', activity)}>
+                        <MaterialIcons name='close' color='white' size={20} />
+                    </Pressable>
                 </Button>
             ))}
 
@@ -303,7 +310,10 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                         {activity.name}: {activity.startTime} - {activity.endTime}
                     </Text>
 
-                    <MaterialIcons name='close' color='white' size={20} />
+
+                    <Pressable onPress={() => handleManagerActivities(activity.day, 'night', activity)}>
+                        <MaterialIcons name='close' color='white' size={20} />
+                    </Pressable>
                 </Button>
             ))}
 
@@ -319,7 +329,10 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                         {activity.name}: {activity.startTime} - {activity.endTime}
                     </Text>
 
-                    <MaterialIcons name='close' color='white' size={20} />
+
+                    <Pressable onPress={() => handleManagerActivities(activity.day, 'earlyMorning', activity)}>
+                        <MaterialIcons name='close' color='white' size={20} />
+                    </Pressable>
                 </Button>
             ))}
 

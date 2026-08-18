@@ -1,15 +1,14 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { CardAtividadeProps } from '@/interfaces/CardAtividade'
 import { AppDescription, AppText, AppTitle } from './TextApp'
 import { MaterialIcons } from '@expo/vector-icons'
 import Card from './Card'
 import { Button } from './Button'
 import { useForm } from 'react-hook-form'
-import ModalTime from './ModalTime'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Atividade } from '@/interfaces/Atividade'
+import ModalAtividadeTime from './ModalAtividadeTime'
 
 const formSchema = z.object({
     startTime: z.string().min(1, { message: "Horário de início é obrigatório" }),
@@ -85,14 +84,14 @@ const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividade
                                 </AppText>
                             </View>
                         </View>
-                        {addedActivity ? (
-                            <Button onPress={handleAddActivity} variant={addedActivity ? 'outline' : 'default'} theme={theme} className='px-1 py-1 rounded-md'>
+                        {added ? (
+                            <Button onPress={handleAddActivity} variant={added ? 'outline' : 'default'} theme={theme} className='px-1 py-1 rounded-md'>
                                 <Text className={`text-sm text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
                                     <MaterialIcons name="close" color={'white'} size={16} />
                                 </Text>
                             </Button>
                         ) : (
-                            <Button onPress={handleAddActivity} variant={addedActivity ? 'outline' : 'default'} theme={theme} className='px-1 py-1 rounded-md'>
+                            <Button onPress={handleAddActivity} variant={added ? 'outline' : 'default'} theme={theme} className='px-1 py-1 rounded-md'>
                                 <Text className={`text-sm text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
                                    <MaterialIcons name="add" color={'white'} size={16} />
                                 </Text>
@@ -102,7 +101,7 @@ const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividade
                     </View>
                 </View>
             </Card>
-            {showTimePicker && <ModalTime setAddedActivity={handleSetAddedActivity} activity={atividade} onConfirm={onAddActivity} reset={reset} onClose={handleCloseModal} handleSubmit={handleSubmit} startTime='startTime' endTime='endTime' theme={theme} control={control} />}
+            {showTimePicker && <ModalAtividadeTime setAddedActivity={handleSetAddedActivity} activity={atividade} onConfirm={onAddActivity} reset={reset} onClose={handleCloseModal} handleSubmit={handleSubmit} startTime='startTime' endTime='endTime' theme={theme} control={control} />}
         </>
 
     )

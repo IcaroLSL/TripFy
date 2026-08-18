@@ -22,7 +22,7 @@ type ModalTimeProps<T extends FieldValues> = {
     onConfirm: (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => void;
 };
 
-function ModalTime<T extends FieldValues>({ control, startTime, endTime, theme, handleSubmit, onClose, reset, onConfirm, activity, setAddedActivity }: ModalTimeProps<T>) {
+function ModalAtividadeTime<T extends FieldValues>({ control, startTime, endTime, theme, handleSubmit, onClose, reset, onConfirm, activity, setAddedActivity }: ModalTimeProps<T>) {
 
     const checkTimeOfDay = (time: string): 'morning' | 'afternoon' | 'night' | 'earlyMorning' => {
         const [hours, minutes] = time.split(':').map(Number);
@@ -42,7 +42,6 @@ function ModalTime<T extends FieldValues>({ control, startTime, endTime, theme, 
     const onSubmit = (data: T) => {
         setAddedActivity(true);
         const timeOfDay = checkTimeOfDay(data[startTime] as string);
-        console.log('Time of Day:', timeOfDay);
         if (onConfirm) {
             const newActivity: Atividade = {
                 ...activity,
@@ -76,4 +75,4 @@ function ModalTime<T extends FieldValues>({ control, startTime, endTime, theme, 
     )
 }
 
-export default ModalTime
+export default ModalAtividadeTime

@@ -106,6 +106,9 @@ const TimeField = <T extends FieldValues>({
           theme: "dark",
           contentContainer: {
             width: "90%",
+            // borderColor: "#3b82f6",
+            // borderWidth: 1,
+            // borderRadius: 8,
           },
           pickerItem:{
             color: "#9ca3af",
@@ -123,7 +126,7 @@ const TimeField = <T extends FieldValues>({
             paddingHorizontal: 16,
             gap: 12,
           },
-          confirmButton: { color: "#FFFFFF", backgroundColor: "#3b82f6" },
+          confirmButton: { color: "#FFFFFF", backgroundColor: "#2563eb" },
           cancelButton: { color: "#FFFFFF", backgroundColor: "transparent", borderColor: "#d1d5db" },
         }}
         visible={showPicker}
