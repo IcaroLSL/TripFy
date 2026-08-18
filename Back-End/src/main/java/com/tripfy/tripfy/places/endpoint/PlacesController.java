@@ -8,6 +8,8 @@ import com.tripfy.tripfy.places.usecase.SearchPlacesUseCase;
 import com.tripfy.tripfy.places.usecase.SearchPlacesUseCase.PlacesPageResult;
 import com.tripfy.tripfy.places.dto.PlaceTypeCatalogDTO;
 import com.tripfy.tripfy.places.gateway.PlaceTypeCatalog;
+import com.tripfy.tripfy.places.dto.PositionResponse;
+import com.tripfy.tripfy.places.gateway.PositionGateway;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,10 +26,12 @@ public class PlacesController {
 
     private final SearchPlacesUseCase searchPlacesUseCase;
     private final PlaceTypeCatalog placeTypeCatalog;
+    private final PositionGateway positionGateway;
 
-    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, PlaceTypeCatalog placeTypeCatalog) {
+    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, PlaceTypeCatalog placeTypeCatalog, PositionGateway positionGateway) {
         this.searchPlacesUseCase = searchPlacesUseCase;
         this.placeTypeCatalog = placeTypeCatalog;
+        this.positionGateway = positionGateway;
     }
 
     @GetMapping("/places")
@@ -69,5 +73,19 @@ public class PlacesController {
         System.out.println("chamando endpoint de listagem de tipos de lugares");
 
         return ResponseEntity.ok(placeTypeCatalog.catalog());
+    }
+
+    @GetMapping("/places/position")
+    public ResponseEntity<PositionResponse> getCityByPosition(
+            @RequestParam String latitude,
+            @RequestParam String longitude,
+            @AuthenticationPrincipal AuthenticatedUser user) {
+
+        System.out.println("chamando endpoint de busca de lugar por posição");
+
+        PositionResponse positionResponse =
+                positionGateway.getPosition(latitude, longitude);
+
+        return ResponseEntity.ok(positionResponse);
     }
 }
