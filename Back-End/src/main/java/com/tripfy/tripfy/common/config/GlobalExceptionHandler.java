@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -16,15 +18,20 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolation(ConstraintViolationException ex) {
         Map<String, String> fieldErrors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                fieldErrors.put(error.getField(), error.getDefaultMessage())
-        );
+
+        ex.getConstraintViolations().forEach(violation -> {
+            String field = violation.getPropertyPath().toString();
+            String fieldName = field.contains(".")
+                ? field.substring(field.lastIndexOf('.') + 1)
+                : field;
+            fieldErrors.put(fieldName, violation.getMessage());
+        });
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body(
-                HttpStatus.BAD_REQUEST, "Erro de validação", fieldErrors
+            HttpStatus.BAD_REQUEST, "Erro de validação", fieldErrors
         ));
     }
 

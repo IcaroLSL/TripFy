@@ -2,8 +2,10 @@ package com.tripfy.tripfy.infra.google.places.dto;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 
+import java.util.Arrays;
+
 public enum PriceLevel {
-    PRICE_LEVEL_UNSPECIFIED(0),
+    PRICE_LEVEL_UNSPECIFIED(null),
     PRICE_LEVEL_FREE(0),
     PRICE_LEVEL_INEXPENSIVE(1),
     PRICE_LEVEL_MODERATE(2),
@@ -17,5 +19,13 @@ public enum PriceLevel {
 
     PriceLevel(Integer value) {
         this.value = value;
+    }
+
+    public static PriceLevel fromValue(Integer value) {
+        return Arrays.stream(values())
+            .filter(pl -> pl != PRICE_LEVEL_UNSPECIFIED && pl != UNKNOWN)
+            .filter(pl -> pl.value.equals(value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("priceLevel inválido: " + value));
     }
 }
