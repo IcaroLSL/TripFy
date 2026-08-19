@@ -34,7 +34,7 @@ public class GooglePlacesGateway implements PlacesGateway {
     private static final String FIELD_MASK =
         "places.displayName,places.formattedAddress,places.types," +
         "places.nationalPhoneNumber,places.websiteUri,places.rating," +
-        "places.priceLevel,places.location,nextPageToken";
+        "places.priceLevel,places.location,places.photos,nextPageToken";
 
     private static final double SEARCH_RADIUS_METERS = 5000.0;
 
@@ -124,7 +124,8 @@ public class GooglePlacesGateway implements PlacesGateway {
                 p.rating(),
                 p.priceLevel()   != null ? p.priceLevel().value     : null,
                 p.location()     != null ? p.location().latitude()  : null,
-                p.location()     != null ? p.location().longitude() : null
+                p.location()     != null ? p.location().longitude() : null,
+                p.photos()       != null ? p.photos().stream().map(GooglePlacesResponseDTO.Photos::name).toList(): List.of()
             ))
             .toList();
 

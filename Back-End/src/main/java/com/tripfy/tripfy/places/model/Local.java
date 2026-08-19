@@ -11,5 +11,6 @@ public record Local(
     Double       rating,
     Integer      priceLevel,
     Double       latitude,
-    Double       longitude
+    Double       longitude,
+    List<String>   imageReferences
 ) {}

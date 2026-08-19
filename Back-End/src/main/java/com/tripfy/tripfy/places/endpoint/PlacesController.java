@@ -69,7 +69,8 @@ public class PlacesController {
             local.rating(),
             local.priceLevel(),
             local.latitude(),
-            local.longitude()
+            local.longitude(),
+            local.imageReferences()
         );
     }
 
