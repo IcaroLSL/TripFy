@@ -9,6 +9,7 @@ public final class PlaceResponseMapper {
 
     public static PlaceResponse toResponse(Local local) {
         return new PlaceResponse(
+            local.publicId(),
             local.name(),
             local.address(),
             local.types(),

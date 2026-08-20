@@ -11,6 +11,7 @@ public record GooglePlacesResponseDTO(
 ) {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record PlaceDTO(
+        String           id,
         DisplayName      displayName,
         String           formattedAddress,
         List<String>     types,

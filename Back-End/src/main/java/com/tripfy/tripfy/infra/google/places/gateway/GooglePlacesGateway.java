@@ -33,7 +33,7 @@ public class GooglePlacesGateway implements PlacesGateway {
     }
 
     private static final String FIELD_MASK =
-        "places.displayName,places.formattedAddress,places.types," +
+        "places.id,places.displayName,places.formattedAddress,places.types," +
         "places.nationalPhoneNumber,places.websiteUri,places.rating," +
         "places.priceLevel,places.location,places.photos,nextPageToken";
 
@@ -123,6 +123,7 @@ public class GooglePlacesGateway implements PlacesGateway {
         }
 
         List<Local> places = response.places().stream().map(p -> new Local(
+                p.id(),
                 p.displayName()  != null ? p.displayName().text()                                                 : null,
                 p.formattedAddress(),
                 p.types(),
