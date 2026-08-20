@@ -20,9 +20,9 @@ public class SearchPlacesUseCase {
     private final PlacesGateway         placesGateway;
     private final PlacesPaginationCache paginationCache;
 
-    public PlacesPageResult execute(String userId, String location, int page, int limit, List<String> types, Double minRating) {
+    public PlacesPageResult execute(String userId, String location, int page, int limit, List<String> types, Double minRating, List<Integer> priceLevels) {
 
-        String cacheKey = buildCacheKey(userId, location, limit, types, minRating);
+        String cacheKey = buildCacheKey(userId, location, limit, types, minRating, priceLevels);
 
         List<Local> buffer = new ArrayList<>();
 
@@ -49,11 +49,11 @@ public class SearchPlacesUseCase {
             PlacesGateway.PlacesResult result;
 
             if (page == 1 && buffer.isEmpty()) {
-                result = placesGateway.searchByLocation(location, types, minRating);
+                result = placesGateway.searchByLocation(location, types, minRating, priceLevels);
             } else {
                 var token = paginationCache.getNextPageToken(cacheKey);
                 if (token.isEmpty()) break;
-                result = placesGateway.searchByLocationWithToken(location, types, token.get(), minRating);
+                result = placesGateway.searchByLocationWithToken(location, types, token.get(), minRating, priceLevels);
             }
 
             buffer.addAll(result.places());
@@ -82,15 +82,17 @@ public class SearchPlacesUseCase {
         return new PlacesPageResult(result, hasMore);
     }
 
-    private String buildCacheKey(String userId, String location, int limit, List<String> types, Double minRating) {
+    private String buildCacheKey(String userId, String location, int limit, List<String> types, Double minRating, List<Integer> priceLevels) {
         String typesPart = (types == null || types.isEmpty()) ? "default" : types.stream().sorted().reduce((a, b) -> a + "-" + b).orElse("default");
         String ratingPart = (minRating == null) ? "none" : minRating.toString();
+        String priceLevelsPart = (priceLevels == null || priceLevels.isEmpty()) ? "none" : priceLevels.stream().sorted().map(String::valueOf).reduce((a, b) -> a + "-" + b).orElse("none");
         
         return userId + ":"
             + location.toLowerCase().replaceAll("\\s+", "_")
             + ":limit=" + limit
             + ":types=" + typesPart
-            + ":minRating=" + minRating;
+            + ":minRating=" + minRating
+            + ":priceLevels=" + priceLevelsPart;
     }
 
     public record PlacesPageResult(List<Local> places, boolean hasMore) {}

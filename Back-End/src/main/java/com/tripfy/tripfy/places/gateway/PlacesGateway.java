@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface PlacesGateway {
 
-    PlacesResult searchByLocation(String location, List<String> types, Double minRating);
-    PlacesResult searchByLocationWithToken(String location, List<String> types, String pageToken, Double minRating);
+    PlacesResult searchByLocation(String location, List<String> types, Double minRating, List<Integer> priceLevels);
+    PlacesResult searchByLocationWithToken(String location, List<String> types, String pageToken, Double minRating, List<Integer> priceLevels);
 
     record PlacesResult(
         List<Local>      places,

@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 
 import java.util.List;
 
@@ -49,12 +51,13 @@ public class PlacesController {
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) List<String> types,
             @RequestParam(required = false) @DecimalMin(value = "0.0", message = "minRating deve ser maior ou igual a 0.0") @DecimalMax(value = "5.0", message = "minRating deve ser menor ou igual a 5.0") Double minRating,
+            @RequestParam(required = false) List<@Min(value = 0, message = "priceLevel deve ser maior ou igual a 0") @Max(value = 4, message = "priceLevel deve ser menor ou igual a 4") Integer> priceLevels,
             @AuthenticationPrincipal AuthenticatedUser user) {
         
         System.out.println("chamando endpoint de busca de lugares");
 
         List<String> validTypes = placeTypeCatalog.filterValid(types);
-        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, validTypes, minRating);
+        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, validTypes, minRating, priceLevels);
 
         List<PlaceResponse> places = pageResult.places().stream().map(PlaceResponseMapper::toResponse).toList();
 

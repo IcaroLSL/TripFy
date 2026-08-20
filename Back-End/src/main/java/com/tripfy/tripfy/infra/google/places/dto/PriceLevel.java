@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import java.util.Arrays;
 
 public enum PriceLevel {
-    PRICE_LEVEL_UNSPECIFIED(null),
     PRICE_LEVEL_FREE(0),
     PRICE_LEVEL_INEXPENSIVE(1),
     PRICE_LEVEL_MODERATE(2),
     PRICE_LEVEL_EXPENSIVE(3),
     PRICE_LEVEL_VERY_EXPENSIVE(4),
 
+    PRICE_LEVEL_UNSPECIFIED(null),
     @JsonEnumDefaultValue
     UNKNOWN(null);
 
