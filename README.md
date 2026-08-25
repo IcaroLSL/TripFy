@@ -3,7 +3,7 @@ TripFy — Bora viajar.
 
 Descrição
 -------
-VoyaGo é um aplicativo para montar roteiros de viagem automaticamente a partir de destinos, datas e preferências do usuário. Este repositório contém dois subprojetos: o back-end (Java/Spring Boot) responsável por gerar e armazenar roteiros, e o front-end (React Native + Expo) para experiência mobile.
+TripFy é um aplicativo para montar roteiros de viagem automaticamente a partir de destinos, datas e preferências do usuário. Este repositório contém dois subprojetos: o back-end (Java/Spring Boot) responsável por gerar e armazenar roteiros, e o front-end (React Native + Expo) para experiência mobile.
 
 Estrutura do repositório
 ------------------------
