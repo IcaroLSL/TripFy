@@ -103,7 +103,7 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             <View className='flex flex-row justify-center gap-4'>
                 <Button className='w-[40%] flex self-end' theme={theme} onPress={handleSubmit(onSubmit)} disabled={currentStep >= 5}>
                     <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
-                        Próximo
+                        Continuar
                     </Text>
                 </Button>
             </View>

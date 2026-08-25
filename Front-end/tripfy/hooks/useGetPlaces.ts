@@ -32,7 +32,7 @@ export function useGetPlaces(limit: number = 10) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const getPlaces = useCallback(async (placesPayload: Omit<Roteiro, 'startDate' | 'endDate' | 'orcamento' | 'avaliacaoMinima' | 'distanciaMaxima' | 'morningActivities' | 'afternoonActivities' | 'nightActivities' | 'earlyMorningActivities'>, page: number): Promise<Atividade[]> => {
+    const getPlaces = useCallback(async (placesPayload: Pick<Roteiro, 'tags' |'destino'>, page: number): Promise<Atividade[]> => {
         try {
             const accessToken = await secureAuthStorage.getAccessToken();
             if (!accessToken) {

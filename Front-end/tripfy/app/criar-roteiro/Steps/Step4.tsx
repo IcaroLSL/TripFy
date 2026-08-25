@@ -291,14 +291,14 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 {currentStep > 1 && (
                     <Button variant='outline' className='w-[40%] flex self-start' theme={theme} onPress={() => { setCurrentStep(currentStep - 1); }} disabled={currentStep <= 1}>
                         <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
-                            Anterior
+                            Voltar
                         </Text>
                     </Button>
                 )}
 
                 <Button className='w-[40%] flex self-end' theme={theme} onPress={() => { setCurrentStep(currentStep + 1); }} disabled={currentStep >= 5}>
                     <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
-                        Próximo
+                        Continuar
                     </Text>
                 </Button>
             </View>
