@@ -28,13 +28,29 @@ const Step5 = ({ theme, roteiroData, setRoteiroData, currentStep, setCurrentStep
         },
     })
 
+    const onSubmit = (data: FormData) => {
+
+        console.log({
+            ...roteiroData,
+            name: data.nome,
+            privicyType: selectedPrivacy,
+        })
+        setRoteiroData({
+            ...roteiroData,
+            name: data.nome,
+            privicyType: selectedPrivacy,
+        })
+
+    }
+
     return (
         <View className='gap-4'>
             <AppTitle theme={theme}>Revise e salve</AppTitle>
             <AppDescription theme={theme}>Confira antes de publicar seu roteiro</AppDescription>
 
             <ScrollView
-                style={{ flex: 1, maxHeight: 475, gap: 4 }}
+                style={{ 
+                     maxHeight: 475, gap: 4 }}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingTop: 16, paddingBottom: 24, flexGrow: 1 }}
             >
@@ -80,7 +96,7 @@ const Step5 = ({ theme, roteiroData, setRoteiroData, currentStep, setCurrentStep
                     </Button>
                 )}
 
-                <Button className='w-[40%] flex self-end' theme={theme} onPress={() => { }} disabled={currentStep > 5}>
+                <Button className='w-[40%] flex self-end' theme={theme} onPress={handleSubmit(onSubmit)} disabled={currentStep > 5}>
                     <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
                         Salvar Roteiro
                     </Text>

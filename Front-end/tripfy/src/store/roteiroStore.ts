@@ -11,6 +11,8 @@ export const useRoteiroStore = create<StepProps>((set) => ({
     currentStep: 1,
     setCurrentStep: (step: number) => set((state) => ({ ...state, currentStep: step })),
     roteiroData: {
+        name: '',
+        privicyType: 'PRIVADO',
         destino: '',
         startDate: null,
         endDate: null,

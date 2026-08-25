@@ -1,6 +1,8 @@
 import { Atividade } from "./Atividade";
 
 export interface Roteiro {
+  name: string;
+  privicyType: 'PRIVADO' | 'PUBLICO' | 'COLABORATIVO';
   destino: string;
   startDate: Date | null;
   endDate: Date | null;
