@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import ModalComponent from './Modal'
-import TimeField from './FormFields/TimeField'
+import ModalComponent from '../ui/Modal'
+import TimeField from '../ui/FormFields/TimeField'
 import { Control, FieldPath, FieldValues, UseFormHandleSubmit, UseFormReset } from 'react-hook-form'
-import { Button } from './Button'
+import { Button } from '../ui/Button'
 import { Atividade } from '@/interfaces/Atividade'
 import { set } from 'zod'
 

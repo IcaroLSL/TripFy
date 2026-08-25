@@ -1,7 +1,7 @@
 import { View, Text, useColorScheme } from 'react-native'
 import React, { useState } from 'react'
 import { ScreenContent } from '../../components/ScreenContent'
-import StepViewer from '../../components/ui/StepViewer';
+import StepViewer from '../../components/CriacaoRoteiro/StepViewer';
 import { Button } from '../../components/ui/Button';
 import Divider from '../../components/ui/Divider';
 import Step1 from './Steps/Step1';
@@ -9,19 +9,13 @@ import Step2 from './Steps/Step2';
 import Step3 from './Steps/Step3';
 import { Roteiro } from '@/interfaces/Roteiro';
 import Step4 from './Steps/Step4';
+import { useRoteiroStore } from '@/store/roteiroStore';
+import Step5 from './Steps/Step5';
 
 const CriarRoteiro = () => {
+  const {setCurrentStep, currentStep, roteiroData, setRoteiroData} = useRoteiroStore()
   const theme = useColorScheme() || 'light';
-  const [currentStep, setCurrentStep] = React.useState(1);
   const [disabledNext, setDisabledNext] = useState(false);
-  const [roteiroData, setRoteiroData] = useState<Roteiro>({
-    destino: '',
-    startDate: new Date(),
-    endDate: new Date(),
-    atividades: [],
-    orcamento: '',
-    avaliacaoMinima: '',
-  })
 
   return (
     <ScreenContent>
@@ -43,6 +37,9 @@ const CriarRoteiro = () => {
         <Step4 theme={theme} setDisabledNext={setDisabledNext} roteiroData={roteiroData} setRoteiroData={setRoteiroData} currentStep={currentStep} setCurrentStep={setCurrentStep} />
       )}
 
+      {currentStep === 5 && (
+        <Step5 theme={theme} setDisabledNext={setDisabledNext} roteiroData={roteiroData} setRoteiroData={setRoteiroData} currentStep={currentStep} setCurrentStep={setCurrentStep} />
+      )}
 
     </ScreenContent>
   )

@@ -2,7 +2,7 @@ import { apiClient } from "@/instances/apiClient"
 import { secureAuthStorage } from "@/services/secureAuthStorage"
 import { useAuthStore } from "@/store/authStore"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { useCallback, useState } from "react"
 
 interface PostLoginResponse {
@@ -52,9 +52,11 @@ export function usePostLogin(): PostLoginResponse {
             setUser(response.data)
             await secureAuthStorage.saveTokens(response.data.accessToken, response.data.refreshToken);
             return true
-        } catch (err) {
-            console.log(err)
-            setError("Failed to login with sign in")
+        } catch (err: AxiosError | any) {
+            const errorMessage = err.response?.data?.error || "Erro desconhecido";
+
+            console.log(errorMessage)
+            setError(errorMessage)
             return false
         } finally {
             setLoading(false)

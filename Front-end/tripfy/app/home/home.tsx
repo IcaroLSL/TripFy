@@ -46,9 +46,10 @@ export default function Home() {
   ];
 
   return (
+    <>
       <ScreenContent>
         <View className='flex flex-row w-full gap-4'>
-          <Search theme={theme}  className='w-full'/>
+          <Search theme={theme} className='w-full' />
           <View className={`rounded-full items-center p-2 ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-800'}`}>
             <MaterialIcon name='notifications' size={24} color={theme === 'light' ? '#000' : '#fff'} />
           </View>
@@ -56,5 +57,6 @@ export default function Home() {
         <CarrosselRoteiros theme={theme} titulo='Perto de Você' descricao='Raio de 50km da sua localização' listaRoteiros={roteiros} />
         <CarrosselRoteiros theme={theme} titulo='Mais Bem Avaliados' descricao='Nota Acima de 4.5' listaRoteiros={roteiros} />
       </ScreenContent>
+    </>
   );
 }

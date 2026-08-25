@@ -4,104 +4,32 @@ import { StepProps } from '@/interfaces/StepProps'
 import Divider from '../../../components/ui/Divider'
 import { Button } from '../../../components/ui/Button'
 import { AppDescription, AppTitle } from '../../../components/ui/TextApp'
-import CardAtividade from '../../../components/ui/CardAtividade'
+import CardAtividade from '../../../components/CriacaoRoteiro/CardAtividade'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Atividade } from '@/interfaces/Atividade'
 import { useGetPlaces } from '../../../hooks/useGetPlaces'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
-import { router } from 'expo-router'
-
-
+import { router, useLocalSearchParams } from 'expo-router'
 
 interface AtividadesRoteiro {
     activities: Atividade[];
 }
 
-const activities: Atividade[] = [
-    {
-        id: 1,
-        day: 0,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
-        name: 'Praia do Meio',
-        startTime: '',
-        endTime: '',
-        priceLevel: 3,
-        stars: 5,
-        description: 'Descrição da atividade exemplo',
-    },
-    {
-        id: 2,
-        day: 0,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHzhGHbChZMwDEMsqT9tv58DsvXqcgqcsYKG0tNXjzFg&s=10',
-        name: 'Bar do Português',
-        startTime: '',
-        endTime: '',
-        priceLevel: 3,
-        stars: 5,
-        description: 'Descrição da atividade exemplo',
-    },
-    {
-        id: 3,
-        day: 0,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE1xwFHEtfu7cCaDBXocSAZUqhyP2YuDuRbjMu5V4sSnJK-kG3L4PpkJEx&s=10',
-        name: 'Parque do Oeste',
-        startTime: '',
-        endTime: '',
-        priceLevel: 3,
-        stars: 5,
-        description: 'Descrição da atividade exemplo',
-    },
-    {
-        id: 4,
-        day: 0,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS-gGIxkpjdfwhWHKTZTIELWLn0NmChPYxRUFnaW-Y7A&s=10',
-        name: 'Pub 8',
-        startTime: '',
-        endTime: '',
-        priceLevel: 3,
-        stars: 5,
-        description: 'Descrição da atividade exemplo',
-    },
-    {
-        id: 5,
-        day: 0,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSFSI00xdY4mh-zeCv1LX_U18aPVGnN3qOSKFqWojggQyy8PlBvj7E82M&s=10',
-        name: 'Biblioteca',
-        startTime: '',
-        endTime: '',
-        priceLevel: 3,
-        stars: 5,
-        description: 'Descrição da atividade exemplo',
-    },
-    {
-        id: 6,
-        day: 0,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsxYS84-qOB8dVRRYvX3Q1n9salZ9zh0yt7DTgtYmZuT3_zlXBvUf1Bq2D&s=10',
-        name: 'Shopping Jaraguá',
-        startTime: '',
-        endTime: '',
-        priceLevel: 3,
-        stars: 5,
-        description: 'Descrição da atividade exemplo',
-    },
-]
-
 const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
     const { getPlaces, loading, error } = useGetPlaces()
     const [places, setPlaces] = useState<Atividade[]>([]);
     const [days, setDays] = useState<number[]>([]);
-    const [selectedDay, setSelectedDay] = useState<number>(roteiroData.startDate.getDate() || 1);
-    const [morningActivities, setMorningActivities] = useState<Record<number, AtividadesRoteiro>>({});
-    const [afterNoonActivities, setAfterNoonActivities] = useState<Record<number, AtividadesRoteiro>>({});
-    const [nightActivities, setNightActivities] = useState<Record<number, AtividadesRoteiro>>({});
-    const [earlyMorningActivities, setEarlyMorningActivities] = useState<Record<number, AtividadesRoteiro>>({});
+    const [selectedDay, setSelectedDay] = useState<number>(Number(roteiroData?.startDate ? roteiroData.startDate.getDate() : 1));
+    const [morningActivities, setMorningActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.morningActivities ? roteiroData.morningActivities : {});
+    const [afterNoonActivities, setAfterNoonActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.afternoonActivities ? roteiroData.afternoonActivities : {});
+    const [nightActivities, setNightActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.nightActivities ? roteiroData.nightActivities : {});
+    const [earlyMorningActivities, setEarlyMorningActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.earlyMorningActivities ? roteiroData.earlyMorningActivities : {});
 
     useEffect(() => {
         const fetchPlaces = async () => {
             try {
                 const fetchedPlaces = await getPlaces({
                     destino: roteiroData.destino,
-                    atividades: roteiroData.atividades,
+                    tags: roteiroData.tags,
                 }, 1);
                 setPlaces(fetchedPlaces);
             } catch (error) {
@@ -120,6 +48,26 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
         }
     }, [roteiroData])
 
+    // useEffect(() => {
+    //     if (!params.addedActivity) return
+
+    //     try {
+    //         const parsedActivity = JSON.parse(params.addedActivity) as Atividade
+    //         const day = Number(params.selectedDay ?? selectedDay)
+    //         const timeBucket: 'morning' | 'afternoon' | 'night' | 'earlyMorning' = (() => {
+    //             if (!parsedActivity.startTime) return 'morning'
+    //             const [hours] = parsedActivity.startTime.split(':').map(Number)
+    //             if (hours < 5) return 'earlyMorning'
+    //             if (hours < 12) return 'morning'
+    //             if (hours < 18) return 'afternoon'
+    //             return 'night'
+    //         })()
+
+    //         handleManagerActivities(day, timeBucket, parsedActivity)
+    //     } catch (error) {
+    //         console.error('Erro ao adicionar atividade retornada:', error)
+    //     }
+    // }, [params.addedActivity, params.selectedDay])
 
     const handleManagerActivities = (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => {
         let updatedActivities: Record<number, AtividadesRoteiro> = {};
@@ -256,7 +204,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 </Text>
             )}
 
-            <Button onPress={() => router.push('/criar-roteiro/Steps/AdicionarAtividade')} theme={theme} variant='dashed'>
+            <Button onPress={() => router.push({ pathname: '/criar-roteiro/Steps/AdicionarAtividade', params: { selectedDay } })} theme={theme} variant='dashed'>
                 <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
                     Adicionar atividade
                 </Text>

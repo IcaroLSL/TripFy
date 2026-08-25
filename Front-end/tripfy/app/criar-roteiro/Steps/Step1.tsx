@@ -13,14 +13,15 @@ import { set, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Location from 'expo-location';
 import { de } from 'zod/v4/locales';
+import { useConvertLocation } from '../../../hooks/useConvertLocation';
 
 
 const formSchema = z.object({
     destino: z.string().min(1, { message: "Destino é obrigatório" }),
     data: z.object({
         startDate: z.date({ message: "Data de Início é obrigatória" }),
-        endDate: z.date({ message: "Data de Fim é obrigatória" }),
-    }).refine((data) => data.startDate <= data.endDate, {
+        endDate: z.date({ message: "Data de Fim é obrigatória" }).nullable(),
+    }).refine((data) => data.startDate <= data.endDate!, {
         message: "Data de início deve ser menor ou igual à data de fim",
         path: ["endDate"],
     }),
@@ -29,14 +30,16 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
+    const {convertLocation, error, loading} = useConvertLocation()
     const [errorLocation, setErrorLocation] = useState<string | null>(null);
+    const [location, setLocation] = useState<string | null>(null);
     const { control, handleSubmit, setValue, watch, setError } = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             destino: '',
             data: {
                 startDate: new Date(),
-                endDate: new Date(),
+                endDate: null,
             },
         },
         mode: 'onBlur',
@@ -48,10 +51,18 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             setErrorLocation('Permission to access location was denied');
             return;
         }
-
-        let location = await Location.getCurrentPositionAsync({});
-        console.log('Current location:', location);
-        setValue('destino', location.coords.latitude + ', ' + location.coords.longitude);
+        try{
+            const location = await Location.getCurrentPositionAsync({});
+            console.log('Current location:', location);
+            const locationName = await convertLocation(location.coords.latitude, location.coords.longitude);
+            if(locationName){
+                setValue('destino', locationName);
+            } else {
+                setValue('destino', location.coords.latitude + ', ' + location.coords.longitude);
+            }
+        } catch (error) {
+            console.error('Error getting current location:', error);
+        }
     }
 
     const onSubmit = (data: FormData) => {

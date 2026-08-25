@@ -9,8 +9,8 @@ import { Button } from '../../../components/ui/Button'
 import Divider from '../../../components/ui/Divider'
 
 const Step3 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
-    const [selectedPriceRange, setSelectedPriceRange] = React.useState<string | null>(null);
-    const [selectedRating, setSelectedRating] = React.useState<string | null>(null);
+    const [selectedPriceRange, setSelectedPriceRange] = React.useState<string | null>(roteiroData.orcamento || null);
+    const [selectedRating, setSelectedRating] = React.useState<string | null>(roteiroData.avaliacaoMinima || null);
 
     const onSubmit = () => {
         setCurrentStep(currentStep + 1);
@@ -65,24 +65,16 @@ const Step3 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
 
             <AppTitle theme={theme}>Avaliação mínima</AppTitle>
 
-            <View
-                className={`rounded-2xl border ${theme === "light"
-                    ? "border-gray-200 bg-white"
-                    : "border-blue-600 bg-[#1D2235]"
-                    }`}
-            >
-                <View className="flex-row">
-                    {["Sem filtro", "3", "4", "4.5"].map((item, index) => (
+
+                <View className="flex-row gap-4  flex-wrap items-center">
+                    {['Sem filtro', '1★+', '2★+', '3★+', '4★+', '5★'].map((item, index) => (
                         <Pressable
                             key={item}
-                            className={`flex-1 ${selectedRating === item ? "bg-blue-600" : theme === "light" ? "bg-white" : "bg-[#1D2235]"
-                                } ${index === 0 ? "rounded-l-md" : index === 3 ? "rounded-r-md" : ""
-                                } items-center justify-center py-4 ${index !== 0
-                                    ? theme === "light"
-                                        ? "border-l border-gray-200"
-                                        : "border-l border-blue-600"
-                                    : ""
-                                }`}
+                            className={`flex flex-row p-2  ${selectedRating === item ? "bg-blue-600" : theme === "light" ? "bg-white" : "bg-[#1D2235]"
+                                } 
+                                items-center  
+                                rounded-full
+                                `}
                             onPress={() => setSelectedRating(item)}
                         >
                             <Text
@@ -93,12 +85,11 @@ const Step3 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                                         : "text-white"
                                     }`}
                             >
-                                {item} {item === "Sem filtro" ? "" : <MaterialIcons name='star' size={16} color={'yellow'} />}
+                                {item} 
                             </Text>
                         </Pressable>
                     ))}
                 </View>
-            </View>
 
             <Divider theme={theme} />
 

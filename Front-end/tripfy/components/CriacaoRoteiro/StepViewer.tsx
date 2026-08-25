@@ -12,7 +12,7 @@ const StepViewer = ({ totalSteps, currentStep }: StepViewerProps) => {
       {Array.from({ length: totalSteps }).map((_, index) => (
         <View
           key={index}
-          className={`w-16 h-3  rounded-full ${index + 1 === currentStep ? 'bg-blue-600' : 'bg-gray-300'}`}
+          className={`w-16 h-3  rounded-full ${index + 1 <= currentStep ? 'bg-blue-600' : 'bg-gray-300'}`}
         />
       ))}
     </View>
