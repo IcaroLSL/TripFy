@@ -2,6 +2,7 @@ package com.tripfy.tripfy.infra.google.places.gateway;
 
 import com.tripfy.tripfy.infra.google.places.dto.GoogleGeocodeResponseDTO;
 import com.tripfy.tripfy.infra.google.places.dto.GooglePlacesResponseDTO;
+import com.tripfy.tripfy.infra.google.places.dto.PriceLevel;
 import com.tripfy.tripfy.places.gateway.PlaceTypeCatalog;
 import com.tripfy.tripfy.places.gateway.PlacesGateway;
 import com.tripfy.tripfy.places.model.Local;
@@ -32,9 +33,9 @@ public class GooglePlacesGateway implements PlacesGateway {
     }
 
     private static final String FIELD_MASK =
-        "places.displayName,places.formattedAddress,places.types," +
+        "places.id,places.displayName,places.formattedAddress,places.types," +
         "places.nationalPhoneNumber,places.websiteUri,places.rating," +
-        "places.priceLevel,places.location,nextPageToken";
+        "places.priceLevel,places.location,places.photos,nextPageToken";
 
     private static final double SEARCH_RADIUS_METERS = 5000.0;
 
@@ -58,15 +59,15 @@ public class GooglePlacesGateway implements PlacesGateway {
     }
 
     @Override
-    public PlacesResult searchByLocation(String location, List<String> types) {
+    public PlacesResult searchByLocation(String location, List<String> types, Double minRating, List<Integer> priceLevels) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), null));
+        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), null, minRating, priceLevels));
     }
 
     @Override
-    public PlacesResult searchByLocationWithToken(String location, List<String> types, String pageToken) {
+    public PlacesResult searchByLocationWithToken(String location, List<String> types, String pageToken, Double minRating, List<Integer> priceLevels) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), pageToken));
+        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), pageToken, minRating, priceLevels));
     }
 
     private String buildTextQuery(List<String> types, String location) {
@@ -81,8 +82,7 @@ public class GooglePlacesGateway implements PlacesGateway {
         return labels + " em " + location;
     }
 
-    private Map<String, Object> buildRequestBody(String location, List<String> types,
-                                                  Double lat, Double lng, String pageToken) {
+    private Map<String, Object> buildRequestBody(String location, List<String> types, Double lat, Double lng, String pageToken, Double minRating, List<Integer> priceLevels) {
         var center       = Map.of("latitude", lat, "longitude", lng);
         var circle       = Map.of("center", center, "radius", SEARCH_RADIUS_METERS);
         var locationBias = Map.of("circle", circle);
@@ -98,6 +98,14 @@ public class GooglePlacesGateway implements PlacesGateway {
             body.put("pageToken", pageToken);
         }
 
+        if (minRating != null) {
+            body.put("minRating", minRating);
+        }
+
+        if (priceLevels != null && !priceLevels.isEmpty()) {
+            List<String> googlePriceLevels = priceLevels.stream().map(PriceLevel::fromValue).map(Enum::name).toList();
+            body.put("priceLevels", googlePriceLevels);
+        }
         return body;
     }
 
@@ -114,19 +122,19 @@ public class GooglePlacesGateway implements PlacesGateway {
             return new PlacesResult(List.of(), Optional.empty());
         }
 
-        List<Local> places = response.places().stream()
-            .map(p -> new Local(
-                p.displayName()  != null ? p.displayName().text()   : null,
+        List<Local> places = response.places().stream().map(p -> new Local(
+                p.id(),
+                p.displayName()  != null ? p.displayName().text()                                                 : null,
                 p.formattedAddress(),
                 p.types(),
                 p.nationalPhoneNumber(),
                 p.websiteUri(),
                 p.rating(),
-                p.priceLevel()   != null ? p.priceLevel().value     : null,
-                p.location()     != null ? p.location().latitude()  : null,
-                p.location()     != null ? p.location().longitude() : null
-            ))
-            .toList();
+                p.priceLevel()   != null ? p.priceLevel().value                                                   : null,
+                p.location()     != null ? p.location().latitude()                                                : null,
+                p.location()     != null ? p.location().longitude()                                               : null,
+                p.photos()       != null ? p.photos().stream().map(GooglePlacesResponseDTO.Photos::name).toList() : List.of()
+            )).toList();
 
         return new PlacesResult(places, Optional.ofNullable(response.nextPageToken()));
     }

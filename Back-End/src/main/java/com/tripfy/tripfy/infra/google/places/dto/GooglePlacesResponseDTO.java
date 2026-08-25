@@ -11,6 +11,7 @@ public record GooglePlacesResponseDTO(
 ) {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record PlaceDTO(
+        String           id,
         DisplayName      displayName,
         String           formattedAddress,
         List<String>     types,
@@ -18,7 +19,8 @@ public record GooglePlacesResponseDTO(
         String           websiteUri,
         Double           rating,
         PriceLevel       priceLevel,
-        LocationDTO      location
+        LocationDTO      location,
+        List<Photos>     photos
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -26,4 +28,7 @@ public record GooglePlacesResponseDTO(
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record LocationDTO(Double latitude, Double longitude) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Photos(String name) {}
 }
