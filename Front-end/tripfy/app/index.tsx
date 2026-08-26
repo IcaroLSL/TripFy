@@ -18,6 +18,8 @@ import { SwitchField } from '../components/ui/FormFields/SwitchField';
 import { usePostLogin } from '../hooks/usePostLogin';
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useAuthStore } from '@/store/authStore';
+import { use, useEffect } from 'react';
 
 const formSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -30,6 +32,7 @@ type FormData = z.infer<typeof formSchema>
 export default function App() {
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
   const { signInLogin, oAuthLogin, loading, error } = usePostLogin()
+  const { hydrate, isHydrated } = useAuthStore()
   const { control, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,6 +41,20 @@ export default function App() {
       rememberMe: false,
     }
   })
+
+  useEffect(() => {
+    console.log('Checking authentication status...')
+
+    const checkAuth = async () => {
+      console.log('Checking authentication status...')
+      const hydrated = await hydrate()
+      console.log('Hydration result:', hydrated)
+      if (hydrated) {
+        router.push('/home/home')
+      }
+    }
+    checkAuth()
+  }, [])
 
   const handleSignIn = async (data: FormData) => {
     const success = await signInLogin(data);

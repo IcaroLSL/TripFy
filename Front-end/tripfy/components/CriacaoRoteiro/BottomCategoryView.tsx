@@ -195,7 +195,7 @@ const BottomCategoryView = ({ theme, onClose, onCategorySelect, selectedCategori
                     </Button>
 
                     <Button theme={theme} className='w-[50%]' onPress={() => { }}>
-                        <AppText theme={theme}>
+                        <AppText className='text-white' theme={theme}>
                             Ver x resultados
                         </AppText>
                     </Button>

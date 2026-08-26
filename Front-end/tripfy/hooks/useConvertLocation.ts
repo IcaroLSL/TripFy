@@ -1,6 +1,7 @@
 import { apiClient } from "@/instances/apiClient";
 import { secureAuthStorage } from "@/services/secureAuthStorage";
 import { useAuthStore } from "@/store/authStore";
+import { AxiosError } from "axios";
 import React from "react";
 
 interface ConvertLocationResponse {
@@ -40,8 +41,10 @@ export function useConvertLocation(): UseConvertLocationResult {
             setLocation(response.data.name);
 
             return response.data.name;
-        } catch (error) {
-            setError("Error occurred while converting location");
+        } catch (error: AxiosError | any) {
+            const errorMessage = error.response?.data?.error || "Erro desconhecido";
+
+            setError(errorMessage || "Error occurred while converting location");
             return null;
         } finally {
             setLoading(false);

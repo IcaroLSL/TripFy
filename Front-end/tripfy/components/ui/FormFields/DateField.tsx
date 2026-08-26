@@ -78,9 +78,10 @@ export function DateField<T extends FieldValues>({
       selected_label: `text-white font-semibold`,
       
       // Range fill (for range mode)
-      range_fill: `${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'} rounded-none`,
-      range_fill_weekstart: `${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'} rounded-l-lg`,
-      range_fill_weekend: `${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'} rounded-r-lg`,
+      range_today: `${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'}`,
+      range_fill: `${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'}`,
+      range_fill_weekstart: `${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'} `,
+      range_fill_weekend: `${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-100'} `,
       
       // Disabled dates
       disabled: `${theme === 'dark' ? 'text-gray-600' : 'text-gray-300'} opacity-50 rounded-lg`,

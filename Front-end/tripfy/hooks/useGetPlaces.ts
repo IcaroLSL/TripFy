@@ -22,17 +22,24 @@ interface PlaceApiResponse {
     hasNextPage: boolean;
 }
 
+
+interface PlacesParams {
+    tags: string[];
+    destino: string;
+    priceLevels: string[];
+    minRating: string
+}
 export interface useGetPlacesReturn {
     loading: boolean;
     error: string | null;
-    getPlaces: (placesPayload: Roteiro, page: number) => Promise<Atividade[]>;
+    getPlaces: (placesPayload: PlacesParams, page: number) => Promise<Atividade[]>;
 }
 
 export function useGetPlaces(limit: number = 10) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const getPlaces = useCallback(async (placesPayload: Pick<Roteiro, 'tags' |'destino'>, page: number): Promise<Atividade[]> => {
+    const getPlaces = useCallback(async (placesPayload: PlacesParams, page: number): Promise<Atividade[]> => {
         try {
             const accessToken = await secureAuthStorage.getAccessToken();
             if (!accessToken) {
@@ -48,6 +55,8 @@ export function useGetPlaces(limit: number = 10) {
                     page: page,
                     limit: limit,
                     tags: placesPayload.tags,
+                    priceLevels: Number(placesPayload.priceLevels),
+                    minRating: Number(placesPayload.minRating)
                 },
                 headers: {
                     Authorization: `Bearer ${accessToken}`,

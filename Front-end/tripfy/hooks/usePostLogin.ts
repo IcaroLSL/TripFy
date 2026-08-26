@@ -34,9 +34,11 @@ export function usePostLogin(): PostLoginResponse {
             await secureAuthStorage.saveTokens(data.accessToken, data.refreshToken);
             setUser(data.user);
             return true;
-        } catch (err) {
+        } catch (err: any) {
+            const errorMessage = err.response?.data?.error || "Erro desconhecido";
+
             console.log("OAuth login error:", err);
-            setError('Failed to login with OAuth');
+            setError(errorMessage || "Failed to login with OAuth");
             return false;
         } finally {
             setLoading(false);

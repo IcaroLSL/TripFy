@@ -57,7 +57,7 @@ const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, 
                     <View className='flex flex-row gap-4'>
                         {listPrices.map((price, index) => (
                             <View key={index} className={`border border-blue-500 py-2 px-4 rounded-full items-center ${selectedPrice.includes(price) ? 'bg-blue-500' : ''}`} onTouchEnd={() => handleSelectPrice(price)}>
-                                <AppText theme={theme}>
+                                <AppText className={`${selectedPrice.includes(price) ? 'text-white' : 'text-black'}`} theme={theme}>
                                     {price}
                                 </AppText>
                             </View>
@@ -73,7 +73,7 @@ const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, 
                     <View className='flex flex-row gap-4 flex-wrap items-center'>
                         {listRatings.map((rating, index) => (
                             <View key={index} className={`border border-blue-500 py-2 px-4 rounded-full items-center ${selectedRatings.includes(rating) ? 'bg-blue-500' : ''}`} onTouchEnd={() => handleSelectRating(rating)}>
-                                <AppText theme={theme}>
+                                <AppText theme={theme} className={`${selectedRatings.includes(rating) ? 'text-white' : 'text-black'}`}>
                                     {rating}
                                 </AppText>
                             </View>
@@ -84,12 +84,12 @@ const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, 
                 <View className='flex-1 flex-row gap-4 items-center justify-center w-full'>
                     <Button theme={theme} className='w-[50%]' variant='outline' onPress={() => { }}>
                         <AppText theme={theme}>
-                            limpar Filtro
+                            Limpar filtro
                         </AppText>
                     </Button>
 
                     <Button disabled={selectedRatings.length === 0 || selectedPrice.length === 0} theme={theme} className='w-[50%]' onPress={() => { }}>
-                        <AppText theme={theme}>
+                        <AppText className='text-white' theme={theme}>
                             Ver x resultados
                         </AppText>
                     </Button>

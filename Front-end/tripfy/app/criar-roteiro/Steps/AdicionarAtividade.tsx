@@ -17,6 +17,7 @@ import ModalAtividadeTime from '../../../components/CriacaoRoteiro/ModalAtividad
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod.js'
 import z from 'zod'
 import { Atividade } from '@/interfaces/Atividade'
+import { useGetPlaces } from '../../../hooks/useGetPlaces'
 
 const formSchema = z.object({
     startTime: z.string().min(1, { message: "Horário de início é obrigatório" }),
@@ -28,6 +29,8 @@ type FormData = z.infer<typeof formSchema>;
 const AdicionarAtividade = () => {
     const { roteiroData, setRoteiroData, theme } = useRoteiroStore()
     const { selectedDay } = useLocalSearchParams()
+    const { getPlaces, loading, error } = useGetPlaces()
+    const [places, setPlaces] = useState<Atividade[]>([]);
     const [showBottomCategoriesView, setShowBottomCategoriesView] = useState<boolean>(false)
     const [showBottomRatingPriceView, setShowBottomRatingPriceView] = useState<boolean>(false)
     const [showModalTime, setShowModalTime] = useState<boolean>(false)
@@ -43,6 +46,26 @@ const AdicionarAtividade = () => {
         },
     });
 
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const convertedPriceLevels = selectedPrice.map(price => convertPriceRangeToNumber(price));
+                const convertedMinRatings = selectedRatings.map(rating => convertRatingToNumber(rating));
+                console.log('Converted Price Levels:', convertedPriceLevels);
+                console.log('Converted Min Ratings:', convertedMinRatings);
+                const fetchedPlaces = await getPlaces({
+                    destino: roteiroData.destino,
+                    tags: selectedCategories.flatMap((cat) => cat.tags),
+                    priceLevels: convertedPriceLevels,
+                    minRating: roteiroData.avaliacaoMinima || '0',
+                }, 1);
+                setPlaces(fetchedPlaces);
+            } catch (error) {
+                console.error("Error fetching places:", error);
+            }
+        };
+        fetchPlaces()
+    }, [])
 
     useEffect(() => {
         console.log('selectedCategories', selectedCategories)
@@ -50,8 +73,45 @@ const AdicionarAtividade = () => {
         console.log('selectedRatings', selectedRatings)
     }, [selectedCategories, selectedPrice, selectedRatings])
 
+
+    const convertPriceRangeToNumber = (priceRange: string | null): string => {
+        switch (priceRange) {
+            case 'Grátis':
+                return '0';
+            case '$':
+                return '1';
+            case '$$':
+                return '2';
+            case '$$$':
+                return '3';
+            case '$$$$':
+                return '4';
+            default:
+                return '0';
+        }
+    };
+
+    const convertRatingToNumber = (rating: string | null): string => {
+        switch (rating) {
+            case 'Sem filtro':
+                return '0';
+            case '1★+':
+                return '1';
+            case '2★+':
+                return '2';
+            case '3★+':
+                return '3';
+            case '4★+':
+                return '4';
+            case '5★+':
+                return '5';
+            default:
+                return '0';
+        }
+    };
+
     const handleManagerActivities = (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => {
-        let updatedActivities: Record<number, {activities: Atividade[]}> = {};
+        let updatedActivities: Record<number, { activities: Atividade[] }> = {};
 
         switch (timeOfDay) {
             case 'morning':
@@ -105,7 +165,7 @@ const AdicionarAtividade = () => {
                     </View>
 
                     <TouchableOpacity className='rounded-full border border-blue-500 p-1' onPress={() => router.back()}>
-                        <MaterialIcons name="close" size={20} color="white" />
+                        <MaterialIcons name="close" size={20} color={`${theme === 'light' ? 'black' : 'white'}`} />
                     </TouchableOpacity>
                 </View>
                 <View className='flex self-center'>
@@ -127,19 +187,19 @@ const AdicionarAtividade = () => {
                     }}
                 >
                     <Button onPress={() => setShowBottomCategoriesView(true)} theme={theme} className='flex-row justify-between items-center rounded-md'>
-                        <AppText theme={theme}>
+                        <AppText className='text-white' theme={theme}>
                             Categorias · {selectedCategories.length}
                         </AppText>
 
                         <MaterialIcons
                             name="arrow-drop-down"
                             size={20}
-                            color={theme === 'light' ? 'black' : 'white'}
+                            color={theme === 'light' ? 'white' : 'white'}
                         />
                     </Button>
 
                     <Button onPress={() => setShowBottomRatingPriceView(true)} theme={theme} className='flex-row justify-between items-center rounded-md'>
-                        <AppText theme={theme}>
+                        <AppText className='text-white' theme={theme}>
                             Preço · {selectedPrice.length === 1 ? (
                                 selectedPrice[0]
                             ) :
@@ -152,19 +212,19 @@ const AdicionarAtividade = () => {
                         <MaterialIcons
                             name="arrow-drop-down"
                             size={20}
-                            color={theme === 'light' ? 'black' : 'white'}
+                            color={theme === 'light' ? 'white' : 'white'}
                         />
                     </Button>
 
                     <Button onPress={() => setShowBottomRatingPriceView(true)} theme={theme} className='flex-row  justify-between items-center rounded-md'>
-                        <AppText theme={theme}>
+                        <AppText className='text-white' theme={theme}>
                             Avaliação · 4★+
                         </AppText>
 
                         <MaterialIcons
                             name="arrow-drop-down"
                             size={20}
-                            color={theme === 'light' ? 'black' : 'white'}
+                            color={theme === 'light' ? 'white' : 'white'}
                         />
                     </Button>
                 </ScrollView>
@@ -185,30 +245,34 @@ const AdicionarAtividade = () => {
                 </View>
 
                 <ScrollView>
-                    <Button className='flex flex-row justify-between gap-2 items-center' onPress={() => { }} theme={theme} variant='outline'>
-                        <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10' }} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
-                        <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={2} ellipsizeMode='tail'>
-                            Esportes · Complexo esportivo — Grátis · 4.1★ · 3.4 km
-                        </Text>
+                    {places.map((place) => (
+                        <Button className='flex flex-row justify-between gap-2 items-center' onPress={() => { }} theme={theme} variant='outline'>
+                            <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10' }} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
-                        <Pressable onPress={() => {
-                            setSelectedActivity({
-                                id: 0,
-                                name: 'Esportes · Complexo esportivo',
-                                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
-                                day: Number(selectedDay),
-                                startTime: '',
-                                endTime: '',
-                                priceLevel: 0,
-                                stars: 4.1,
-                                description: 'Complexo esportivo com quadras, campos e áreas de lazer para atividades físicas e recreação.',
-                            });
-                            setShowModalTime(true);
-                        }} className='border border-blue-700 rounded-full p-0.5'>
-                            <MaterialIcons name='add' color='white' size={20} />
-                        </Pressable>
-                    </Button>
+                            <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={2} ellipsizeMode='tail'>
+                                {place.name} — {place.priceLevel} · {place.stars}★ · 
+                            </Text>
+
+                            <Pressable onPress={() => {
+                                setSelectedActivity({
+                                    id: 0,
+                                    name: place.name,
+                                    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
+                                    day: Number(selectedDay),
+                                    startTime: '',
+                                    endTime: '',
+                                    priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
+                                    stars: place.stars !== null ? place.stars : 0,
+                                    description: 'Complexo esportivo com quadras, campos e áreas de lazer para atividades físicas e recreação.',
+                                });
+                                setShowModalTime(true);
+                            }} className='border border-blue-700 rounded-full p-0.5'>
+                                <MaterialIcons name='add' color={`${theme === 'light' ? 'black' : 'white'}`} size={20} />
+                            </Pressable>
+                        </Button>
+                    ))}
+
                 </ScrollView>
 
             </ScreenContent>

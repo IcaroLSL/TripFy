@@ -34,7 +34,7 @@ const FooterBar = () => {
 
                 <TouchableOpacity className={`p-4  ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { }}>
                     <View>
-                        <MateriaIcon name="flight" size={24} color="#FFFFFF" />
+                        <MateriaIcon name="flight" size={24} color={theme === 'light' ? '#1A1A2E' : '#FFFFFF'} />
                     </View>
                 </TouchableOpacity>
 

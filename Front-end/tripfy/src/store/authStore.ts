@@ -12,7 +12,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
-  hydrate: () => Promise<void>;   // <- novo
+  hydrate: () => Promise<boolean>;   // <- novo
   signOut: () => Promise<void>;
 }
 
@@ -28,16 +28,19 @@ export const useAuthStore = create<AuthState>((set) => ({
   hydrate: async () => {
     try {
       const token = await secureAuthStorage.getAccessToken();
+      console.log(token)
       if (!token) {
-        set({ isHydrated: true });
-        return;
+        set({ isHydrated: false });
+        return false;
       }
       apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
       const { data } = await apiClient.get('/v1/auth/me');
       set({ user: data, isHydrated: true });
+      return true;
     } catch {
       await secureAuthStorage.clear();
       set({ user: null, isHydrated: true });
+      return false;
     }
   },
 

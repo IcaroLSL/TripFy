@@ -30,6 +30,8 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 const fetchedPlaces = await getPlaces({
                     destino: roteiroData.destino,
                     tags: roteiroData.tags,
+                    priceLevels: [roteiroData.orcamento],
+                    minRating: roteiroData.avaliacaoMinima
                 }, 1);
                 setPlaces(fetchedPlaces);
             } catch (error) {

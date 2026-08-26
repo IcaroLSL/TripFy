@@ -12,16 +12,15 @@ import { StepProps } from '../../../src/interfaces/StepProps';
 import { set, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Location from 'expo-location';
-import { de } from 'zod/v4/locales';
 import { useConvertLocation } from '../../../hooks/useConvertLocation';
 
 
 const formSchema = z.object({
     destino: z.string().min(1, { message: "Destino é obrigatório" }),
     data: z.object({
-        startDate: z.date({ message: "Data de Início é obrigatória" }),
+        startDate: z.date({ message: "Data de Início é obrigatória" }).nullable(),
         endDate: z.date({ message: "Data de Fim é obrigatória" }).nullable(),
-    }).refine((data) => data.startDate <= data.endDate!, {
+    }).refine((data) => data.startDate! <= data.endDate!, {
         message: "Data de início deve ser menor ou igual à data de fim",
         path: ["endDate"],
     }),
@@ -30,15 +29,15 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
-    const {convertLocation, error, loading} = useConvertLocation()
+    const { convertLocation, error, loading } = useConvertLocation()
     const [errorLocation, setErrorLocation] = useState<string | null>(null);
-    const [location, setLocation] = useState<string | null>(null);
+    const [loadingLocation, setLoadingLocation] = useState<boolean>(false);
     const { control, handleSubmit, setValue, watch, setError } = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             destino: '',
             data: {
-                startDate: new Date(),
+                startDate: null,
                 endDate: null,
             },
         },
@@ -46,22 +45,29 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
     });
 
     const handleGetLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            setErrorLocation('Permission to access location was denied');
-            return;
-        }
-        try{
+        try {
+            setLoadingLocation(true);
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorLocation('Permission to access location was denied');
+                return;
+            }
             const location = await Location.getCurrentPositionAsync({});
             console.log('Current location:', location);
             const locationName = await convertLocation(location.coords.latitude, location.coords.longitude);
-            if(locationName){
+            if (locationName) {
+                setLoadingLocation(false);
+                setErrorLocation(null);
                 setValue('destino', locationName);
             } else {
+                setLoadingLocation(false);
+                setErrorLocation('Could not convert location to address');
                 setValue('destino', location.coords.latitude + ', ' + location.coords.longitude);
             }
         } catch (error) {
             console.error('Error getting current location:', error);
+            setLoadingLocation(false);
+            setErrorLocation('Error getting current location');
         }
     }
 
@@ -84,7 +90,7 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                     <MaterialIcon name='location-on' size={16} color="red" />
 
                     <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
-                        Usar minha localização atual
+                        {loading || loadingLocation ? 'Pegando a localização...' : 'Usar minha localização atual'}
                     </Text>
                 </View>
             </Button>
@@ -98,10 +104,14 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 <DateField mode='range' theme={theme} control={control} name="data" placeholder="Selecione a data de início e fim" />
             </View>
 
+            <View>
+                <AppText theme={theme}> {errorLocation || error}</AppText>
+            </View>
+
             <Divider theme={theme} />
 
             <View className='flex flex-row justify-center gap-4'>
-                <Button className='w-[40%] flex self-end' theme={theme} onPress={handleSubmit(onSubmit)} disabled={currentStep >= 5}>
+                <Button className='w-[40%] flex self-end' theme={theme} onPress={handleSubmit(onSubmit)} disabled={loading || loadingLocation || currentStep >= 5}>
                     <Text className={`text-base text-center items-center ${theme === 'light' ? 'text-white' : 'text-white'}`}>
                         Continuar
                     </Text>

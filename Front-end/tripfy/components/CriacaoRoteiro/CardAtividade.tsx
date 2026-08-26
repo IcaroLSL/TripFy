@@ -72,7 +72,7 @@ const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividade
                                     ))}
                                 </View>
                             ) : (
-                                <AppText theme={theme} className={theme === 'light' ? 'text-gray-600' : 'text-gray-400'}>
+                                <AppText theme={theme}>
                                     Não disponível
                                 </AppText>
                             )}

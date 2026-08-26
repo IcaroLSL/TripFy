@@ -29,7 +29,7 @@ export function TextField<T extends FieldValues>({
                                 <MaterialIcons name={icon} size={20} color={theme === 'dark' ? 'white' : 'black'} />
                             )}
                             <TextInput
-                                className='text-white placeholder:text-white'
+                                className={`${theme === 'dark' ? 'text-white placeholder:text-white' : 'text-black placeholder:text-gray-500'}`}
                                 placeholder={placeholder}
                                 onChangeText={onChange}
                                 value={value}
