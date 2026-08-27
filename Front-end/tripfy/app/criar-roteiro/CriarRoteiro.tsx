@@ -18,7 +18,7 @@ const CriarRoteiro = () => {
   const [disabledNext, setDisabledNext] = useState(false);
 
   return (
-    <ScreenContent>
+    <ScreenContent tabIndex={2}>
       <StepViewer totalSteps={5} currentStep={currentStep} />
 
       {currentStep === 1 && (

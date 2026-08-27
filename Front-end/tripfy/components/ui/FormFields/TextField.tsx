@@ -24,12 +24,12 @@ export function TextField<T extends FieldValues>({
                 name={name}
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <>
-                        <View className={`flex-row items-center justify-start border min-w-full gap-2 w-full max-w-full py-2 px-4 rounded-md ${theme === 'dark' ? ' border-blue-500 text-white placeholder:text-white' : 'bg-white border-gray-300 text-black'} ${error && 'border-red-500'}`}>
+                        <View className={`flex-row items-center justify-start border min-w-full gap-2 w-full max-w-full py-2 px-4 rounded-md ${theme === 'dark' ? ' border-blue-600 text-white placeholder:text-white' : 'bg-white border-gray-300 text-black'} ${error && 'border-red-500'}`}>
                             {icon && (
                                 <MaterialIcons name={icon} size={20} color={theme === 'dark' ? 'white' : 'black'} />
                             )}
                             <TextInput
-                                className={`${theme === 'dark' ? 'text-white placeholder:text-white' : 'text-black placeholder:text-gray-500'}`}
+                                className={`w-full ${theme === 'dark' ? 'text-white placeholder:text-white' : 'text-black placeholder:text-gray-500'}`}
                                 placeholder={placeholder}
                                 onChangeText={onChange}
                                 value={value}

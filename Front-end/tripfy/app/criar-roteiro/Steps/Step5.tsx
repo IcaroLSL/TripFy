@@ -12,6 +12,7 @@ import { CATEGORIAS_ATIVIDADE } from '@/constants/ActivitiesTag'
 import PrivacySelector from '../../../components/CriacaoRoteiro/PrivacySelector'
 import Divider from '../../../components/ui/Divider'
 import { Button } from '../../../components/ui/Button'
+import { router } from 'expo-router'
 
 const formSchema = z.object({
     nome: z.string().min(1, { message: 'O nome do roteiro é obrigatório' }).max(50, { message: 'O nome do roteiro deve ter no máximo 50 caracteres' }),
@@ -40,6 +41,8 @@ const Step5 = ({ theme, roteiroData, setRoteiroData, currentStep, setCurrentStep
             name: data.nome,
             privicyType: selectedPrivacy,
         })
+
+        router.push('/meus-roteiros/MeusRoteiros')
 
     }
 

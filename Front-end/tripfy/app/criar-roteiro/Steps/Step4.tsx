@@ -9,6 +9,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Atividade } from '@/interfaces/Atividade'
 import { useGetPlaces } from '../../../hooks/useGetPlaces'
 import { router, useLocalSearchParams } from 'expo-router'
+import Card from '../../../components/ui/Card'
 
 interface AtividadesRoteiro {
     activities: Atividade[];
@@ -217,7 +218,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             )}
 
             {morningActivities[selectedDay]?.activities.map((activity, index) => (
-                <Button key={index} className='flex flex-row justify-between gap-2 items-center' onPress={() => { }} theme={theme} variant='outline'>
+                <Card key={index} className={`flex flex-row justify-between items-center p-4 rounded-md`} theme={theme}>
                     <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
@@ -227,7 +228,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                     <Pressable onPress={() => handleManagerActivities(activity.day, 'morning', activity)}>
                         <MaterialIcons name='close' color='white' size={20} />
                     </Pressable>
-                </Button>
+                </Card>
             ))}
 
             {afterNoonActivities[selectedDay] && afterNoonActivities[selectedDay].activities.length > 0 && (

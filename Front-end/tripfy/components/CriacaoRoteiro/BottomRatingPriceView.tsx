@@ -14,9 +14,9 @@ interface BottomRatingPriceViewProps extends DefaultProps {
     selectedRatings: string[]
 }
 
-const listPrices: string[] = ['Grátis', '$', '$$', '$$$', '$$$$']
+const listPrices: string[] = ['0', '1', '2', '3', '4']
 
-const listRatings: string[] = ['Sem filtro', '1★+', '2★+', '3★+', '4★+', '5★']
+const listRatings: string[] = ['0', '1', '2', '3', '4', '5']
 
 const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, selectedPrice, selectedRatings }: BottomRatingPriceViewProps) => {
 
@@ -58,7 +58,11 @@ const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, 
                         {listPrices.map((price, index) => (
                             <View key={index} className={`border border-blue-500 py-2 px-4 rounded-full items-center ${selectedPrice.includes(price) ? 'bg-blue-500' : ''}`} onTouchEnd={() => handleSelectPrice(price)}>
                                 <AppText className={`${selectedPrice.includes(price) ? 'text-white' : 'text-black'}`} theme={theme}>
-                                    {price}
+                                    {price === '0' ? 'Grátis' : 
+                                    price === '1' ? '$' :
+                                    price === '2' ? '$$' :
+                                    price === '3' ? '$$$' :
+                                    price === '4' ? '$$$$' : ''}
                                 </AppText>
                             </View>
                         ))}
@@ -74,7 +78,7 @@ const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, 
                         {listRatings.map((rating, index) => (
                             <View key={index} className={`border border-blue-500 py-2 px-4 rounded-full items-center ${selectedRatings.includes(rating) ? 'bg-blue-500' : ''}`} onTouchEnd={() => handleSelectRating(rating)}>
                                 <AppText theme={theme} className={`${selectedRatings.includes(rating) ? 'text-white' : 'text-black'}`}>
-                                    {rating}
+                                    {rating === '0' ? 'Sem filtro' : rating === '1' ? '1★+' : rating === '2' ? '2★+' : rating === '3' ? '3★+' : rating === '4' ? '4★+' : '5★'}
                                 </AppText>
                             </View>
                         ))}

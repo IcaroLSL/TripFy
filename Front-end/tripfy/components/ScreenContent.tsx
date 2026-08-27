@@ -7,9 +7,10 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 interface ScreenContentProps {
   children?: React.ReactNode;
   footerBar?: boolean
+  tabIndex?: number
 }
 
-export const ScreenContent: React.FC<ScreenContentProps> = ({ children, footerBar = true }) => {
+export const ScreenContent: React.FC<ScreenContentProps> = ({ children, footerBar = true, tabIndex }) => {
   const theme: 'light' | 'dark' = useColorScheme() || 'light';
   return (
     <SafeAreaProvider>
@@ -25,7 +26,7 @@ export const ScreenContent: React.FC<ScreenContentProps> = ({ children, footerBa
           </View>
         </ScrollView>
 
-        {footerBar && <FooterBar />}
+        {footerBar && <FooterBar tabIndex={tabIndex} />}
       </SafeAreaView>
     </SafeAreaProvider>
   );

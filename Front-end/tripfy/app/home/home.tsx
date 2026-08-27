@@ -47,7 +47,7 @@ export default function Home() {
 
   return (
     <>
-      <ScreenContent>
+      <ScreenContent tabIndex={0}>
         <View className='flex flex-row w-full gap-4'>
           <Search theme={theme} className='w-full' />
           <View className={`rounded-full items-center p-2 ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-800'}`}>
