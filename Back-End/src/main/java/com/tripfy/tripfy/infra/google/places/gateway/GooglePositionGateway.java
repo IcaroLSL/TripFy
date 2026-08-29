@@ -1,11 +1,13 @@
 package com.tripfy.tripfy.infra.google.places.gateway;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tripfy.tripfy.places.dto.PositionResponse;
 import com.tripfy.tripfy.places.gateway.PositionGateway;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
