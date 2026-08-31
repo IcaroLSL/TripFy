@@ -12,13 +12,13 @@ const FooterBar = ({ tabIndex }: { tabIndex?: number }) => {
     return (
         <SafeAreaView edges={['bottom']} className={`w-full ${theme === 'light' ? 'bg-[#FFFFFF]' : 'bg-[#1A1A2E]'}`}>
             <View className='w-full items-center px-8 justify-between flex self-end flex-row py-2'>
-                <TouchableOpacity className={`p-4 ${tabIndex === 0 ? 'bg-blue-900' : ''} ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => router.push('/home/home')} >
+                <TouchableOpacity className={`p-4 ${tabIndex === 0 ? 'bg-blue-900/40' : ''} ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => router.push('/home/home')} >
                     <View>
                         <MateriaIcon name="home" size={24} color={theme === 'light' ? '#1A1A2E' : '#FFFFFF'} />
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity className={`p-4 ${tabIndex === 1 ? 'bg-blue-900' : ''} ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { }}>
+                <TouchableOpacity className={`p-4 ${tabIndex === 1 && 'bg-blue-900' } ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { }}>
                     <View>
                         <MateriaIcon name="favorite" size={24} color={theme === 'light' ? '#1A1A2E' : '#FFFFFF'} />
                     </View>
@@ -31,10 +31,9 @@ const FooterBar = ({ tabIndex }: { tabIndex?: number }) => {
                     </View>
                 </TouchableOpacity>
 
-
-                <TouchableOpacity className={`p-4 ${tabIndex === 3 ? 'bg-blue-900' : ''} ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-md`} onPress={() => { router.push('/meus-roteiros/MeusRoteiros') }}>
+                <TouchableOpacity className={`p-4 ${tabIndex === 3 && `${theme === 'light' ? 'bg-blue-600' : 'bg-blue-900/40'}`} ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { router.push('/meus-roteiros/MeusRoteiros') }}>
                     <View>
-                        <MateriaIcon name="flight" size={24} color={theme === 'light' ? '#1A1A2E' : '#FFFFFF'} />
+                        <MateriaIcon name="flight" size={24} color={theme === 'light' ? `${tabIndex === 3 ? '#FFFFFF' : '#1A1A2E'}` : '#FFFFFF'} />
                     </View>
                 </TouchableOpacity>
 

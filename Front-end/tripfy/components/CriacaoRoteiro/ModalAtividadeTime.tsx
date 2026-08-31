@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ModalComponent from '../ui/Modal'
 import TimeField from '../ui/FormFields/TimeField'
-import { Control, FieldPath, FieldValues, UseFormHandleSubmit, UseFormReset } from 'react-hook-form'
+import { Control, FieldError, FieldErrors, FieldPath, FieldValues, UseFormHandleSubmit, UseFormReset } from 'react-hook-form'
 import { Button } from '../ui/Button'
 import { Atividade } from '@/interfaces/Atividade'
 import { set } from 'zod'
@@ -13,6 +13,7 @@ type ModalTimeProps<T extends FieldValues> = {
     control: Control<T>;
     startTime: FieldPath<T>;
     endTime: FieldPath<T>;
+    errors: FieldErrors<T>;
     handleSubmit: UseFormHandleSubmit<T>;
     reset: UseFormReset<T>;
     theme: 'light' | 'dark';
@@ -22,7 +23,7 @@ type ModalTimeProps<T extends FieldValues> = {
     onConfirm: (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => void;
 };
 
-function ModalAtividadeTime<T extends FieldValues>({ control, startTime, endTime, theme, handleSubmit, onClose, reset, onConfirm, activity, setAddedActivity }: ModalTimeProps<T>) {
+function ModalAtividadeTime<T extends FieldValues>({ errors, control, startTime, endTime, theme, handleSubmit, onClose, reset, onConfirm, activity, setAddedActivity }: ModalTimeProps<T>) {
 
     const checkTimeOfDay = (time: string): 'morning' | 'afternoon' | 'night' | 'earlyMorning' => {
         const [hours, minutes] = time.split(':').map(Number);
@@ -54,11 +55,24 @@ function ModalAtividadeTime<T extends FieldValues>({ control, startTime, endTime
         reset();
     }
 
+    useEffect(() => {
+        console.log('ModalAtividadeTime errors:', errors)
+    })
+
     return (
         <ModalComponent title='Selecione um horário' onClose={onClose} visible={true}>
             <View className='gap-4'>
                 <View className='flex flex-row w-full gap-4 flex-1'>
                     <View className='flex-1 gap-2'>
+
+                        {errors[startTime] && <Text className={`text-red-500 font-bold ${theme === 'light' ? 'text-red-600' : 'text-red-400'}`}>
+                            {errors[startTime]?.message as string}
+                        </Text>}
+
+                        {errors[endTime] && <Text className={`text-red-500 font-bold `}>
+                            {errors[endTime]?.message as string}
+                        </Text>}
+
                         <Text className={theme === 'light' ? 'text-black' : 'text-white'}>
                             Início e fim
                         </Text>

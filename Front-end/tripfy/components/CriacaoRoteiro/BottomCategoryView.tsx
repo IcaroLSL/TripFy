@@ -5,14 +5,17 @@ import { DefaultProps } from '@/interfaces/DefaultProps'
 import { AppDescription, AppText, AppTitle } from '../ui/TextApp'
 import { CategoriaAtividade, CATEGORIAS_ATIVIDADE } from '@/constants/ActivitiesTag'
 import { Button } from '../ui/Button'
+import { set } from 'zod'
 
 interface BottomCategoryViewProps extends DefaultProps {
     onClose: (boolean: boolean) => void
     onCategorySelect: React.Dispatch<React.SetStateAction<CategoriaAtividade[]>>
     selectedCategories: CategoriaAtividade[]
+    total: number
+    loadingPlaces: boolean
 }
 
-const BottomCategoryView = ({ theme, onClose, onCategorySelect, selectedCategories }: BottomCategoryViewProps) => {
+const BottomCategoryView = ({ theme, onClose, onCategorySelect, selectedCategories, total, loadingPlaces }: BottomCategoryViewProps) => {
     const [isSelected, setIsSelected] = useState<string>('');
 
     const selectedCategory = CATEGORIAS_ATIVIDADE.find(c => c.name === isSelected);
@@ -21,14 +24,25 @@ const BottomCategoryView = ({ theme, onClose, onCategorySelect, selectedCategori
     const totalSubcategories = selectedCategory?.tags?.length ?? 0;
 
     const handleToggleCategory = (category: CategoriaAtividade) => {
-        const exist: boolean = selectedCategories.find(c => c.name === category.name) ? true : false;
-        if (exist === false) {
-            onCategorySelect((prev) => {
-                return [...prev, { ...category, tags: [...category.tags] }];
-            });
-        }
+        const isCategorySelected = selectedCategories.some(c => c.name === category.name);
 
-        setIsSelected(prev => (prev === category.name ? '' : category.name));
+        if (isSelected === category.name) {
+            // Se clicar na categoria selecionada, desmarca tudo e fecha
+            setIsSelected('');
+            onCategorySelect((prev) =>
+                prev.filter(c => c.name !== category.name)
+            );
+        } else {
+            // Se clicar em uma nova categoria, abre ela
+            setIsSelected(category.name);
+
+            if (!isCategorySelected) {
+                onCategorySelect((prev) => [
+                    ...prev,
+                    { ...category, tags: [...category.tags] }
+                ]);
+            }
+        }
     };
 
     const handleToggleSubcategory = (tag: string) => {
@@ -56,7 +70,7 @@ const BottomCategoryView = ({ theme, onClose, onCategorySelect, selectedCategori
     };
 
     return (
-        <BottomSheetComponent onClose={onClose} theme={theme}>
+        <BottomSheetComponent index={2} onClose={onClose} theme={theme}>
             <View className='gap-4'>
 
                 <View className='flex flex-row justify-between items-center'>
@@ -188,15 +202,15 @@ const BottomCategoryView = ({ theme, onClose, onCategorySelect, selectedCategori
 
 
                 <View className='flex-1 flex-row gap-4 items-center justify-center w-full'>
-                    <Button theme={theme} className='w-[50%]' variant='outline' onPress={() => { }}>
+                    <Button theme={theme} className='w-[50%]' variant='outline' onPress={() => { setIsSelected(''); onCategorySelect([]) }}>
                         <AppText theme={theme}>
                             limpar Filtro
                         </AppText>
                     </Button>
 
-                    <Button theme={theme} className='w-[50%]' onPress={() => { }}>
+                    <Button theme={theme} className='w-[50%]' onPress={() => { onClose(false) }}>
                         <AppText className='text-white' theme={theme}>
-                            Ver x resultados
+                            {loadingPlaces ? 'Carregando...' : `Ver ${total} resultados`}
                         </AppText>
                     </Button>
                 </View>

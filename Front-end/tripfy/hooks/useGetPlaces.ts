@@ -33,12 +33,13 @@ export interface useGetPlacesReturn {
     loading: boolean;
     error: string | null;
     getPlaces: (placesPayload: PlacesParams, page: number) => Promise<Atividade[]>;
+    total: number
 }
 
-export function useGetPlaces(limit: number = 10) {
+export function useGetPlaces(limit: number = 10): useGetPlacesReturn {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
+    const [total, setTotal] = useState<number>(0);
     const getPlaces = useCallback(async (placesPayload: PlacesParams, page: number): Promise<Atividade[]> => {
         try {
             const accessToken = await secureAuthStorage.getAccessToken();
@@ -49,12 +50,12 @@ export function useGetPlaces(limit: number = 10) {
 
             console.log("Fetching places with payload:", placesPayload, "Page:", page, "Limit:", limit);
             setLoading(true);
-            const response = await apiClient.get<PlaceApiResponse>("http://10.179.126.225:8080/v1/places", {
+            const response = await apiClient.get<PlaceApiResponse>("/v1/places", {
                 params: {
                     location: placesPayload.destino,
                     page: page,
                     limit: limit,
-                    tags: placesPayload.tags,
+                    types: placesPayload.tags,
                     priceLevels: Number(placesPayload.priceLevels),
                     minRating: Number(placesPayload.minRating)
                 },
@@ -63,6 +64,7 @@ export function useGetPlaces(limit: number = 10) {
                 },
             });
             console.log("Places API response:", response.data);
+            setTotal(response.data.places.length);
             const places: Atividade[] = response.data.places.map(place => ({
                 id: Math.floor(Math.random() * 1000000),
                 day: 0,
@@ -85,7 +87,7 @@ export function useGetPlaces(limit: number = 10) {
         }
     }, [])
 
-    return { loading, error, getPlaces };
+    return { loading, error, getPlaces, total };
 
 }
 

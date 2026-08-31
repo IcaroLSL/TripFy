@@ -42,7 +42,7 @@ const Step5 = ({ theme, roteiroData, setRoteiroData, currentStep, setCurrentStep
             privicyType: selectedPrivacy,
         })
 
-        router.push('/meus-roteiros/MeusRoteiros')
+        router.push({ pathname: '/meus-roteiros/[roteiroId]/Roteiro', params: { roteiroId: '123', roteiroName: data.nome } })
 
     }
 

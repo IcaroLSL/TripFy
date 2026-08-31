@@ -218,7 +218,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             )}
 
             {morningActivities[selectedDay]?.activities.map((activity, index) => (
-                <Card key={index} className={`flex flex-row justify-between items-center p-4 rounded-md`} theme={theme}>
+                <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
                     <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
@@ -236,7 +236,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             )}
 
             {afterNoonActivities[selectedDay]?.activities.map((activity, index) => (
-                <Button key={index} className='flex flex-row justify-between gap-2 items-center' onPress={() => { }} theme={theme} variant='outline'>
+                <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
                     <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
@@ -246,7 +246,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                     <Pressable onPress={() => handleManagerActivities(activity.day, 'afternoon', activity)}>
                         <MaterialIcons name='close' color='white' size={20} />
                     </Pressable>
-                </Button>
+                </Card>
             ))}
 
             {nightActivities[selectedDay] && nightActivities[selectedDay].activities.length > 0 && (
@@ -254,7 +254,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             )}
 
             {nightActivities[selectedDay]?.activities.map((activity, index) => (
-                <Button key={index} className='flex flex-row justify-between gap-2 items-center' onPress={() => { }} theme={theme} variant='outline'>
+                <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
                     <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
@@ -265,7 +265,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                     <Pressable onPress={() => handleManagerActivities(activity.day, 'night', activity)}>
                         <MaterialIcons name='close' color='white' size={20} />
                     </Pressable>
-                </Button>
+                </Card>
             ))}
 
             {earlyMorningActivities[selectedDay] && earlyMorningActivities[selectedDay].activities.length > 0 && (
@@ -273,7 +273,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             )}
 
             {earlyMorningActivities[selectedDay]?.activities.map((activity, index) => (
-                <Button key={index} className='flex flex-row justify-between gap-2 items-center' onPress={() => { }} theme={theme} variant='outline'>
+                <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
                     <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
@@ -284,7 +284,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                     <Pressable onPress={() => handleManagerActivities(activity.day, 'earlyMorning', activity)}>
                         <MaterialIcons name='close' color='white' size={20} />
                     </Pressable>
-                </Button>
+                </Card>
             ))}
 
 

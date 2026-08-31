@@ -89,14 +89,14 @@ export default function App() {
               <AppText className='text-center' theme={theme}>
                 Username:
               </AppText>
-              <TextField control={control} name='username' placeholder='Enter your username' theme={theme} />
+              <TextField control={control} name='username' placeholder='Enter your username' theme={theme} icon='person'/>
             </View>
 
             <View className='items-start gap-2'>
               <AppText className='text-center' theme={theme}>
                 Password:
               </AppText>
-              <PasswordField control={control} name='password' placeholder='Enter your password' theme={theme} />
+              <PasswordField control={control} name='password' placeholder='Enter your password' theme={theme} icon='lock'/>
             </View>
 
             <View className='flex flex-row justify-between items-center w-full'>
@@ -111,12 +111,6 @@ export default function App() {
             <Button disabled={loading} className='w-[40%]' onPress={handleSubmit(handleSignIn)} theme={theme}>
               <AppText className='text-white' theme={theme}>
                 {loading ? 'Signing in...' : 'Sign in'}
-              </AppText>
-            </Button>
-
-            <Button disabled={loading} className='w-[40%]' onPress={() => router.push('/home/home')} theme={theme}>
-              <AppText className='text-white' theme={theme}>
-                to home
               </AppText>
             </Button>
 

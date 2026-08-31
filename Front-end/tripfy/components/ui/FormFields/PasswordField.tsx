@@ -7,9 +7,10 @@ type PasswordFieldProps<T extends FieldValues> = {
     name: FieldPath<T>;
     placeholder: string;
     theme?: 'light' | 'dark';
+    icon?: keyof typeof MaterialIcons.glyphMap;
 };
 
-export function PasswordField<T extends FieldValues>({ control, name, placeholder, theme = 'light' }: PasswordFieldProps<T>) {
+export function PasswordField<T extends FieldValues>({ control, name, placeholder, theme = 'light', icon }: PasswordFieldProps<T>) {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     return (
 
@@ -20,15 +21,20 @@ export function PasswordField<T extends FieldValues>({ control, name, placeholde
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
 
                     <View className='gap-2  w-full' >
-                        <View className='items-center w-full'>
+                        <View className={`flex-row items-center justify-start border min-w-full gap-2 w-full max-w-full py-2 px-4 rounded-md ${theme === 'dark' ? ' border-blue-600 text-white placeholder:text-white' : 'bg-white border-gray-300 text-black'} ${error && 'border-red-500'}`}>
+
+                            {icon && (
+                                <MaterialIcons name={icon} size={20} color={theme === 'dark' ? 'white' : 'black'} />
+                            )}
+
                             <TextInput
-                                className={`border min-w-full max-w-full py-4 px-4 rounded-md ${theme === 'dark' ? ' border-blue-500 text-white placeholder:text-white' : 'bg-white border-gray-300 text-black'} ${error && 'border-red-500'}`}
+                                className={`w-full ${theme === 'dark' ? 'text-white placeholder:text-white' : 'text-black placeholder:text-gray-500'}`}
                                 placeholder={placeholder}
                                 secureTextEntry={!isPasswordVisible}
                                 onChangeText={onChange}
                                 value={value}
                             />
-                            <Pressable onPress={() => setIsPasswordVisible(!isPasswordVisible)} className="absolute right-4 top-1/2 -translate-y-1/2">
+                            <Pressable onPress={() => setIsPasswordVisible(!isPasswordVisible)} className="absolute right-4 top-8 -translate-y-1/2">
                                 <MaterialIcons name={isPasswordVisible ? "visibility" : "visibility-off"} size={24} color="gray" />
                             </Pressable>
                         </View>

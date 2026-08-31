@@ -52,7 +52,6 @@ const TimeField = <T extends FieldValues>({
                 />
               </Pressable>
 
-              {error && <Text className="font-bold text-red-500">{error.message}</Text>}
             </View>
           )}
         />
@@ -79,7 +78,6 @@ const TimeField = <T extends FieldValues>({
                 />
               </Pressable>
 
-              {error && <Text className="font-bold text-red-500">{error.message}</Text>}
             </View>
           )}
         />

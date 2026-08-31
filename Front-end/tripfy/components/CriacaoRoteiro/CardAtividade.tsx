@@ -21,7 +21,7 @@ const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividade
     const [addedActivity, setAddedActivity] = useState<boolean>(added)
     const [showTimePicker, setShowTimePicker] = useState<boolean>(false)
     const addedActivityRef = useRef<boolean>(false)
-    const { control, handleSubmit, reset } = useForm<FormData>({
+    const { control, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             startTime: '',
@@ -101,7 +101,7 @@ const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividade
                     </View>
                 </View>
             </Card>
-            {showTimePicker && <ModalAtividadeTime setAddedActivity={handleSetAddedActivity} activity={atividade} onConfirm={onAddActivity} reset={reset} onClose={handleCloseModal} handleSubmit={handleSubmit} startTime='startTime' endTime='endTime' theme={theme} control={control} />}
+            {showTimePicker && <ModalAtividadeTime errors={errors} setAddedActivity={handleSetAddedActivity} activity={atividade} onConfirm={onAddActivity} reset={reset} onClose={handleCloseModal} handleSubmit={handleSubmit} startTime='startTime' endTime='endTime' theme={theme} control={control} />}
         </>
 
     )

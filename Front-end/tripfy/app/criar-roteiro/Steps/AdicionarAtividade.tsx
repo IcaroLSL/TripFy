@@ -15,48 +15,94 @@ import { CategoriaAtividade, CATEGORIAS_ATIVIDADE } from '@/constants/Activities
 import { useRoteiroStore } from '@/store/roteiroStore'
 import ModalAtividadeTime from '../../../components/CriacaoRoteiro/ModalAtividadeTime'
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod.js'
-import z from 'zod'
+import z, { set } from 'zod'
 import { Atividade } from '@/interfaces/Atividade'
 import { useGetPlaces } from '../../../hooks/useGetPlaces'
+import Card from '../../../components/ui/Card'
 
-const formSchema = z.object({
+const formDateSchema = z.object({
     startTime: z.string().min(1, { message: "Horário de início é obrigatório" }),
     endTime: z.string().min(1, { message: "Horário de fim é obrigatório" }),
+}).refine((data) => {
+    const [startHour, startMinute] = data.startTime.split(':').map(Number);
+    const [endHour, endMinute] = data.endTime.split(':').map(Number);
+
+    const startTotalMinutes = startHour * 60 + startMinute;
+    const endTotalMinutes = endHour * 60 + endMinute;
+
+    return endTotalMinutes > startTotalMinutes;
+}, {
+    'path': ['endTime'],
+    'message': "Horário de fim deve ser maior que o horário de início",
+});
+
+type FormDateData = z.infer<typeof formDateSchema>;
+
+const formSearchSchema = z.object({
+    placeName: z.string().max(255, { message: "Nome do local deve ter no máximo 255 caracteres" }),
 })
 
-type FormData = z.infer<typeof formSchema>;
+type FormSearchData = z.infer<typeof formSearchSchema>;
+
+const getPriceLabel = (priceLevel: string): string => {
+    switch (priceLevel) {
+        case '0':
+            return 'Grátis';
+        case '1':
+            return '$';
+        case '2':
+            return '$$';
+        case '3':
+            return '$$$';
+        case '4':
+            return '$$$$';
+        default:
+            return '';
+    }
+};
+
+const formatPriceRange = (prices: string[]): string => {
+    if (prices.length === 0) return 'Sem filtro';
+    if (prices.length === 1) return getPriceLabel(prices[0]);
+    return `${getPriceLabel(prices[0])} - ${getPriceLabel(prices[prices.length - 1])}`;
+};
 
 const AdicionarAtividade = () => {
     const { roteiroData, setRoteiroData, theme } = useRoteiroStore()
     const { selectedDay } = useLocalSearchParams()
-    const { getPlaces, loading, error } = useGetPlaces()
+    const { getPlaces, loading, error, total } = useGetPlaces()
     const [places, setPlaces] = useState<Atividade[]>([]);
     const [showBottomCategoriesView, setShowBottomCategoriesView] = useState<boolean>(false)
     const [showBottomRatingPriceView, setShowBottomRatingPriceView] = useState<boolean>(false)
     const [showModalTime, setShowModalTime] = useState<boolean>(false)
     const [selectedActivity, setSelectedActivity] = useState<Atividade | null>(null)
+    const [activityList, setActivityList] = useState<Atividade[]>([])
     const [selectedCategories, setSelectedCategories] = React.useState<CategoriaAtividade[]>(roteiroData.tags ? CATEGORIAS_ATIVIDADE.filter((cat) => cat.tags.some((tag) => roteiroData.tags.includes(tag))) : [])
     const [selectedPrice, setSelectedPrice] = React.useState<string[]>(roteiroData.orcamento ? [roteiroData.orcamento] : [])
     const [selectedRatings, setSelectedRatings] = React.useState<string[]>(roteiroData.avaliacaoMinima ? [roteiroData.avaliacaoMinima] : ['Sem filtro'])
-    const { control, handleSubmit, reset } = useForm<FormData>({
-        resolver: zodResolver(formSchema),
+    const { control, handleSubmit, reset, formState: { errors } } = useForm<FormDateData>({
+        resolver: zodResolver(formDateSchema),
         defaultValues: {
             startTime: '',
             endTime: '',
         },
     });
 
+    const { control: searchControl, handleSubmit: searchhandleSubmit } = useForm<FormSearchData>({
+        resolver: zodResolver(formSearchSchema),
+        defaultValues: {
+            placeName: '',
+        },
+    });
+
     useEffect(() => {
         const fetchPlaces = async () => {
             try {
-                const convertedPriceLevels = selectedPrice.map(price => convertPriceRangeToNumber(price));
-                const convertedMinRatings = selectedRatings.map(rating => convertRatingToNumber(rating));
-                console.log('Converted Price Levels:', convertedPriceLevels);
-                console.log('Converted Min Ratings:', convertedMinRatings);
+                console.log('Fetching places with selectedCategories:', selectedCategories, 'selectedPrice:', selectedPrice, 'selectedRatings:', selectedRatings);
                 const fetchedPlaces = await getPlaces({
                     destino: roteiroData.destino,
                     tags: selectedCategories.flatMap((cat) => cat.tags),
-                    priceLevels: convertedPriceLevels,
+                    priceLevels: selectedPrice,
                     minRating: roteiroData.avaliacaoMinima || '0',
                 }, 1);
                 setPlaces(fetchedPlaces);
@@ -65,50 +111,8 @@ const AdicionarAtividade = () => {
             }
         };
         fetchPlaces()
-    }, [])
+    }, [selectedPrice, selectedRatings, selectedCategories, roteiroData.destino, roteiroData.avaliacaoMinima]);
 
-    useEffect(() => {
-        console.log('selectedCategories', selectedCategories)
-        console.log(selectedPrice.sort((a, b) => a.length - b.length))
-        console.log('selectedRatings', selectedRatings)
-    }, [selectedCategories, selectedPrice, selectedRatings])
-
-
-    const convertPriceRangeToNumber = (priceRange: string | null): string => {
-        switch (priceRange) {
-            case 'Grátis':
-                return '0';
-            case '$':
-                return '1';
-            case '$$':
-                return '2';
-            case '$$$':
-                return '3';
-            case '$$$$':
-                return '4';
-            default:
-                return '0';
-        }
-    };
-
-    const convertRatingToNumber = (rating: string | null): string => {
-        switch (rating) {
-            case 'Sem filtro':
-                return '0';
-            case '1★+':
-                return '1';
-            case '2★+':
-                return '2';
-            case '3★+':
-                return '3';
-            case '4★+':
-                return '4';
-            case '5★+':
-                return '5';
-            default:
-                return '0';
-        }
-    };
 
     const handleManagerActivities = (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => {
         let updatedActivities: Record<number, { activities: Atividade[] }> = {};
@@ -154,6 +158,38 @@ const AdicionarAtividade = () => {
                 setRoteiroData({ ...roteiroData, earlyMorningActivities: updatedActivities });
                 break;
         }
+
+        setActivityList((prevList) => [...prevList, {
+            id: 0,
+            name: activity.name,
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
+            day: Number(selectedDay),
+            startTime: '',
+            endTime: '',
+            priceLevel: activity.priceLevel !== null ? activity.priceLevel : 0,
+            stars: activity.stars !== null ? activity.stars : 0,
+            description: 'Complexo esportivo com quadras, campos e áreas de lazer para atividades físicas e recreação.',
+        }]);
+    }
+
+    const handleSelectActivity = (place: Atividade) => {
+        if (activityList.some((activity) => activity.name === place.name)) {
+            const updatedActivityList = activityList.filter((activity) => activity.name !== place.name);
+            setActivityList(updatedActivityList);
+            return;
+        }
+        setSelectedActivity({
+            id: 0,
+            name: place.name,
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
+            day: Number(selectedDay),
+            startTime: '',
+            endTime: '',
+            priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
+            stars: place.stars !== null ? place.stars : 0,
+            description: 'Complexo esportivo com quadras, campos e áreas de lazer para atividades físicas e recreação.',
+        });
+        setShowModalTime(true);
     }
 
     return (
@@ -174,7 +210,7 @@ const AdicionarAtividade = () => {
                     </AppDescription>
                 </View>
                 <View>
-                    {/* <TextField icon='search' theme={theme} control={control} name='atividade' placeholder='Buscar por nome (ex: Museu Nacional)' /> */}
+                    <TextField icon='search' theme={theme} control={searchControl} name='placeName' placeholder='Buscar por nome (ex: Museu Nacional)' />
                 </View>
 
                 <ScrollView
@@ -200,13 +236,7 @@ const AdicionarAtividade = () => {
 
                     <Button onPress={() => setShowBottomRatingPriceView(true)} theme={theme} className='flex-row justify-between items-center rounded-md'>
                         <AppText className='text-white' theme={theme}>
-                            Preço · {selectedPrice.length === 1 ? (
-                                selectedPrice[0]
-                            ) :
-                                (
-                                    `${selectedPrice.includes('Grátis') ? 'Grátis' : `${selectedPrice[0]}`} - ${selectedPrice[selectedPrice.length - 2]}`
-                                )
-                            }
+                            Preço · {formatPriceRange(selectedPrice)}
                         </AppText>
 
                         <MaterialIcons
@@ -218,7 +248,7 @@ const AdicionarAtividade = () => {
 
                     <Button onPress={() => setShowBottomRatingPriceView(true)} theme={theme} className='flex-row  justify-between items-center rounded-md'>
                         <AppText className='text-white' theme={theme}>
-                            Avaliação · 4★+
+                            Avaliação · 4<Text className='text-yellow-500'>★</Text>+
                         </AppText>
 
                         <MaterialIcons
@@ -231,7 +261,7 @@ const AdicionarAtividade = () => {
 
                 <View className='flex-row justify-between items-center mt-6'>
                     <AppText theme={theme}>
-                        Atividades encontradas
+                        {loading ? 'Atividades encontradas: carregando...' : `Atividades encontradas ${total}`}
                     </AppText>
 
                     <TouchableOpacity>
@@ -244,49 +274,83 @@ const AdicionarAtividade = () => {
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView>
-
-                    {places.map((place) => (
-                        <Button className='flex flex-row justify-between gap-2 items-center' onPress={() => { }} theme={theme} variant='outline'>
-                            <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10' }} style={{ width: 40, height: 40, borderRadius: 8 }} />
-
+                {
+                    loading ? (
+                        <Card theme={theme} className='flex flex-row justify-between gap-2 px-2 py-4 items-center'>
                             <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={2} ellipsizeMode='tail'>
-                                {place.name} — {place.priceLevel} · {place.stars}★ · 
+                                Carregando atividades...
                             </Text>
+                        </Card>
+                    ) : (
+                        <ScrollView>
 
-                            <Pressable onPress={() => {
-                                setSelectedActivity({
-                                    id: 0,
-                                    name: place.name,
-                                    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
-                                    day: Number(selectedDay),
-                                    startTime: '',
-                                    endTime: '',
-                                    priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
-                                    stars: place.stars !== null ? place.stars : 0,
-                                    description: 'Complexo esportivo com quadras, campos e áreas de lazer para atividades físicas e recreação.',
-                                });
-                                setShowModalTime(true);
-                            }} className='border border-blue-700 rounded-full p-0.5'>
-                                <MaterialIcons name='add' color={`${theme === 'light' ? 'black' : 'white'}`} size={20} />
-                            </Pressable>
-                        </Button>
-                    ))}
+                            <View className='gap-4'>
 
-                </ScrollView>
+                                {
+                                    places.length > 0 ? (
+
+                                        places.map((place, index) => (
+                                            <Card key={index} className='flex flex-row justify-between gap-2 px-2 py-4 items-center' theme={theme}>
+                                                <View className='flex flex-row gap-4'>
+
+                                                    <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10' }} style={{ width: 40, height: 40, borderRadius: 8 }} />
+
+                                                    <View>
+                                                        <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
+                                                            {place.name}
+                                                        </Text>
+
+                                                        <View className={`flex flex-row gap-2`} >
+                                                            <Text className='text-green-500'>
+                                                                {place.priceLevel === 0 ? 'Gratuito' : place.priceLevel === 1 ? '$' : place.priceLevel === 2 ? '$$' : place.priceLevel === 3 ? '$$$' : '$$$+'}
+                                                            </Text>
+                                                            <AppText theme={theme}>·</AppText>
+                                                            <View className='flex flex-row'>
+                                                                <AppText theme={theme}>
+                                                                    {place.stars}
+                                                                </AppText>
+                                                                <Text className='text-yellow-500'>★</Text>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                </View>
+
+                                                <Pressable onPress={() => handleSelectActivity(place)} className={`${activityList.some((activity) => activity.name === place.name) ? 'bg-red-500' : 'bg-blue-600'} rounded-full p-0.5`}>
+                                                    {
+                                                        activityList.some((activity) => activity.name === place.name) ? (
+                                                            <MaterialIcons name='close' color={`${theme === 'light' ? 'white' : 'white'}`} size={20} />
+                                                        ) : (
+                                                            <MaterialIcons name='add' color={`${theme === 'light' ? 'white' : 'white'}`} size={20} />
+                                                        )
+                                                    }
+                                                </Pressable>
+                                            </Card>
+                                        )
+                                        )) : (
+                                        <Card theme={theme} className='flex flex-row justify-between gap-2 px-2 py-4 items-center'>
+                                            <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={2} ellipsizeMode='tail'>
+                                                Nenhuma atividade encontrada.
+                                            </Text>
+                                        </Card>
+                                    )}
+                            </View>
+
+                        </ScrollView>
+                    )
+                }
 
             </ScreenContent>
 
             {showModalTime && selectedActivity && (
-                <ModalAtividadeTime control={control} startTime='startTime' endTime='endTime' handleSubmit={handleSubmit} reset={reset} onClose={() => setShowModalTime(false)} theme={theme} activity={selectedActivity} setAddedActivity={() => setShowModalTime(false)} onConfirm={handleManagerActivities} />
+                <ModalAtividadeTime errors={errors} control={control} startTime='startTime' endTime='endTime' handleSubmit={handleSubmit} reset={reset} onClose={() => { setShowModalTime(false); }} theme={theme} activity={selectedActivity} setAddedActivity={() => setShowModalTime(false)} onConfirm={handleManagerActivities} />
             )}
 
             {showBottomCategoriesView &&
-                <BottomCategoryView onCategorySelect={setSelectedCategories} selectedCategories={selectedCategories} theme={theme} onClose={setShowBottomCategoriesView} />
+                <BottomCategoryView loadingPlaces={loading} total={total} onCategorySelect={setSelectedCategories} selectedCategories={selectedCategories} theme={theme} onClose={setShowBottomCategoriesView} />
             }
 
             {showBottomRatingPriceView &&
-                <BottomRatingPriceView onPriceSelect={setSelectedPrice} onRatingSelect={setSelectedRatings} selectedPrice={selectedPrice} selectedRatings={selectedRatings} theme={theme} onClose={setShowBottomRatingPriceView} />
+                <BottomRatingPriceView loadingPlaces={loading} total={total} onPriceSelect={setSelectedPrice} onRatingSelect={setSelectedRatings} selectedPrice={selectedPrice} selectedRatings={selectedRatings} theme={theme} onClose={setShowBottomRatingPriceView} />
             }
 
         </>

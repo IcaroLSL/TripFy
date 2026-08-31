@@ -12,13 +12,15 @@ interface BottomRatingPriceViewProps extends DefaultProps {
     onRatingSelect: (ratings: string[]) => void
     selectedPrice: string[]
     selectedRatings: string[]
+    total: number
+    loadingPlaces: boolean
 }
 
 const listPrices: string[] = ['0', '1', '2', '3', '4']
 
 const listRatings: string[] = ['0', '1', '2', '3', '4', '5']
 
-const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, selectedPrice, selectedRatings }: BottomRatingPriceViewProps) => {
+const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, selectedPrice, selectedRatings, total, loadingPlaces }: BottomRatingPriceViewProps) => {
 
     const handleSelectPrice = (price: string) => {
         onPriceSelect(selectedPrice.includes(price) ? selectedPrice.filter(p => p !== price) : [...selectedPrice, price].sort((a, b) => a.length - b.length))
@@ -62,7 +64,7 @@ const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, 
                                     price === '1' ? '$' :
                                     price === '2' ? '$$' :
                                     price === '3' ? '$$$' :
-                                    price === '4' ? '$$$$' : ''}
+                                    price === '4' ? '$$$+' : ''}
                                 </AppText>
                             </View>
                         ))}
@@ -86,15 +88,15 @@ const BottomRatingPriceView = ({ theme, onClose, onPriceSelect, onRatingSelect, 
                 </View>
 
                 <View className='flex-1 flex-row gap-4 items-center justify-center w-full'>
-                    <Button theme={theme} className='w-[50%]' variant='outline' onPress={() => { }}>
+                    <Button theme={theme} className='w-[50%]' variant='outline' onPress={() => { selectedPrice.length > 0 && onPriceSelect([]); selectedRatings.length > 0 && onRatingSelect(['Sem filtro']) }}>
                         <AppText theme={theme}>
                             Limpar filtro
                         </AppText>
                     </Button>
 
-                    <Button disabled={selectedRatings.length === 0 || selectedPrice.length === 0} theme={theme} className='w-[50%]' onPress={() => { }}>
+                    <Button disabled={selectedRatings.length === 0 || selectedPrice.length === 0} theme={theme} className='w-[50%]' onPress={() => onClose(false)}>
                         <AppText className='text-white' theme={theme}>
-                            Ver x resultados
+                            { loadingPlaces ? 'Carregando...' : `Ver ${total} resultados` }
                         </AppText>
                     </Button>
                 </View>
