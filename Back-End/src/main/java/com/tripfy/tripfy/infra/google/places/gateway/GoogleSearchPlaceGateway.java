@@ -27,7 +27,7 @@ public class GoogleSearchPlaceGateway implements SearchPlaceGateway {
     private static final String FIELD_MASK =
         "id,displayName,priceLevel,priceRange,allowsDogs,formattedAddress," +
         "currentOpeningHours.weekdayDescriptions,internationalPhoneNumber," +
-        "rating,photos.authorAttributions.photoUri";
+        "rating,photos";
 
 
     @Override
@@ -45,19 +45,19 @@ public class GoogleSearchPlaceGateway implements SearchPlaceGateway {
         if (response == null) {
             return null;
         }
-
+        System.out.println("Response: " + response);
         LocalDetail place = response != null ? new LocalDetail(
                 response.id(),
-                response.displayName()         != null ? response.displayName().text()                                                                                                                                                                              : null,
-                response.formattedAddress(),                                                                                                                                                                                                                                                   
-                response.internationalPhoneNumber(),                                                                                                                                                                                                                                                   
-                response.rating(),                                                                                                                                                                                                                                                   
-                response.priceLevel()          != null ? response.priceLevel().value                                                                                                                                                                                : null,
-                response.currentOpeningHours() != null ? response.currentOpeningHours().weekdayDescriptions()                                                                                                                                                       : List.of(),
-                response.photos()              != null ? response.photos().stream().filter(photo -> photo.authorAttributions() != null).flatMap(photo -> photo.authorAttributions().stream()).map(GooglePlacesDetailResponse.AuthorAttributions::photoUri).toList() : List.of(),
-                response.allowsDogs()          != null ? response.allowsDogs()                                                                                                                                                                                      : false,
-                response.priceRange()          != null ? response.priceRange().startPrice().currencyCode() + " - " + response.priceRange().startPrice().units()                                                                                                     : null,
-                response.priceRange()          != null ? response.priceRange().endPrice().currencyCode()   + " - " + response.priceRange().endPrice().units()                                                                                                       : null
+                response.displayName()         != null ? response.displayName().text()                                                                          : null,
+                response.formattedAddress(),                                                                                                                                               
+                response.internationalPhoneNumber(),                                                                                                                                               
+                response.rating(),                                                                                                                                               
+                response.priceLevel()          != null ? response.priceLevel().value                                                                            : null,
+                response.currentOpeningHours() != null ? response.currentOpeningHours().weekdayDescriptions()                                                   : List.of(),
+                response.photos()              != null ? response.photos().stream().map(GooglePlacesDetailResponse.Photos::name).toList()                                               : List.of(),
+                response.allowsDogs()          != null ? response.allowsDogs()                                                                                  : false,
+                response.priceRange()          != null ? response.priceRange().startPrice().currencyCode() + " - " + response.priceRange().startPrice().units() : null,
+                response.priceRange()          != null ? response.priceRange().endPrice().currencyCode()   + " - " + response.priceRange().endPrice().units()   : null
         ) : null;
 
         return new PlaceDetailResponse(
@@ -68,7 +68,7 @@ public class GoogleSearchPlaceGateway implements SearchPlaceGateway {
                 place.rating(),
                 place.priceLevel(),
                 place.hours(),
-                place.imageUris(),
+                place.imageReferences(),
                 place.allowsDogs(),
                 place.priceRangeStart(),
                 place.priceRangeEnd()
