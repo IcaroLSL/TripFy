@@ -13,6 +13,8 @@ import com.tripfy.tripfy.places.dto.PositionResponse;
 import com.tripfy.tripfy.places.gateway.PositionGateway;
 import com.tripfy.tripfy.places.dto.PlaceImageResponse;
 import com.tripfy.tripfy.places.gateway.PlaceImageGateway;
+import com.tripfy.tripfy.places.gateway.SearchPlaceGateway;
+import com.tripfy.tripfy.places.dto.PlaceDetailResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -33,12 +37,14 @@ import java.util.List;
 public class PlacesController {
 
     private final SearchPlacesUseCase searchPlacesUseCase;
+    private final SearchPlaceGateway searchPlaceGateway;
     private final PlaceTypeCatalog placeTypeCatalog;
     private final PositionGateway positionGateway;
     private final PlaceImageGateway placeImageGateway;
 
-    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, PlaceTypeCatalog placeTypeCatalog, PositionGateway positionGateway, PlaceImageGateway placeImageGateway) {
+    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, SearchPlaceGateway searchPlaceGateway, PlaceTypeCatalog placeTypeCatalog, PositionGateway positionGateway, PlaceImageGateway placeImageGateway) {
         this.searchPlacesUseCase = searchPlacesUseCase;
+        this.searchPlaceGateway = searchPlaceGateway;
         this.placeTypeCatalog = placeTypeCatalog;
         this.positionGateway = positionGateway;
         this.placeImageGateway = placeImageGateway;
@@ -62,6 +68,13 @@ public class PlacesController {
         List<PlaceResponse> places = pageResult.places().stream().map(PlaceResponseMapper::toResponse).toList();
 
         return ResponseEntity.ok(new SearchPlacesResponse(places, page, limit, pageResult.hasMore()));
+    }
+
+    @GetMapping("/place/{publicId}")
+    public ResponseEntity<PlaceDetailResponse> searchById(@PathVariable String publicId) {
+        System.out.println("chamando endpoint de busca de lugar por id");
+        
+        return ResponseEntity.ok(searchPlaceGateway.getById(publicId));
     }
 
     @GetMapping("/places/types")
