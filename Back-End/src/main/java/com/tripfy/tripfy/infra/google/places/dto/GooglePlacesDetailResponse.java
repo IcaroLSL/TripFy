@@ -6,22 +6,17 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record GooglePlacesDetailResponse(
-    PlaceDTO place
+    String              id,
+    String              internationalPhoneNumber,
+    String              formattedAddress,
+    Double              rating,
+    PriceLevel          priceLevel,
+    DisplayName         displayName,
+    CurrentOpeningHours currentOpeningHours,           
+    List<Photos>        photos,
+    Boolean             allowsDogs ,
+    PriceRange          priceRange
 ) {
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record PlaceDTO(
-        String              id,
-        String              phoneNumber,
-        String              formattedAddress,
-        Double              rating,
-        PriceLevel          priceLevel,
-        DisplayName         displayName,
-        CurrentOpeningHours currentOpeningHours,           
-        List<Photos>        photos,
-        boolean             allowsDogs ,
-        PriceRange          priceRange
-    ) {}
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record DisplayName(String text) {}
 

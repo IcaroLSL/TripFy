@@ -42,23 +42,22 @@ public class GoogleSearchPlaceGateway implements SearchPlaceGateway {
             //      --header 'Content-Type: application/json' \
             //      --header 'X-Goog-Api-Key: AIzaSyBLkTY80yl7SK931yWMg48DIVvS1K8E5c0' \
             //      --header 'X-Goog-FieldMask: id,displayName,priceLevel,priceRange,allowsDogs,currentOpeningHours.weekdayDescriptions,formattedAddress,internationalPhoneNumber,rating,photos.authorAttributions.photoUri'
-       
-        if (response == null || response.place() == null) {
+        if (response == null) {
             return null;
         }
 
-        LocalDetail place = response.place() != null ? new LocalDetail(
-                response.place().id(),
-                response.place().displayName()         != null ? response.place().displayName().text()                                                                                                                                                                              : null,
-                response.place().formattedAddress(),                                                                                                                                                                                                                                                   
-                response.place().phoneNumber(),                                                                                                                                                                                                                                                   
-                response.place().rating(),                                                                                                                                                                                                                                                   
-                response.place().priceLevel()          != null ? response.place().priceLevel().value                                                                                                                                                                                : null,
-                response.place().currentOpeningHours() != null ? response.place().currentOpeningHours().weekdayDescriptions()                                                                                                                                                       : List.of(),
-                response.place().photos()              != null ? response.place().photos().stream().filter(photo -> photo.authorAttributions() != null).flatMap(photo -> photo.authorAttributions().stream()).map(GooglePlacesDetailResponse.AuthorAttributions::photoUri).toList() : List.of(),
-                response.place().allowsDogs(),                                                                                                                                                                                                                                                  
-                response.place().priceRange()          != null ? response.place().priceRange().startPrice().currencyCode() + " - " + response.place().priceRange().startPrice().units()                                                                                        : null,
-                response.place().priceRange()          != null ? response.place().priceRange().endPrice().currencyCode() + " - " + response.place().priceRange().endPrice().units()                                                                                        : null
+        LocalDetail place = response != null ? new LocalDetail(
+                response.id(),
+                response.displayName()         != null ? response.displayName().text()                                                                                                                                                                              : null,
+                response.formattedAddress(),                                                                                                                                                                                                                                                   
+                response.internationalPhoneNumber(),                                                                                                                                                                                                                                                   
+                response.rating(),                                                                                                                                                                                                                                                   
+                response.priceLevel()          != null ? response.priceLevel().value                                                                                                                                                                                : null,
+                response.currentOpeningHours() != null ? response.currentOpeningHours().weekdayDescriptions()                                                                                                                                                       : List.of(),
+                response.photos()              != null ? response.photos().stream().filter(photo -> photo.authorAttributions() != null).flatMap(photo -> photo.authorAttributions().stream()).map(GooglePlacesDetailResponse.AuthorAttributions::photoUri).toList() : List.of(),
+                response.allowsDogs()          != null ? response.allowsDogs()                                                                                                                                                                                      : false,
+                response.priceRange()          != null ? response.priceRange().startPrice().currencyCode() + " - " + response.priceRange().startPrice().units()                                                                                                     : null,
+                response.priceRange()          != null ? response.priceRange().endPrice().currencyCode()   + " - " + response.priceRange().endPrice().units()                                                                                                       : null
         ) : null;
 
         return new PlaceDetailResponse(

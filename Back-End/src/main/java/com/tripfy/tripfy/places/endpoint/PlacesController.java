@@ -70,8 +70,10 @@ public class PlacesController {
         return ResponseEntity.ok(new SearchPlacesResponse(places, page, limit, pageResult.hasMore()));
     }
 
-    @GetMapping("/{publicId}")
+    @GetMapping("/place/{publicId}")
     public ResponseEntity<PlaceDetailResponse> searchById(@PathVariable String publicId) {
+        System.out.println("chamando endpoint de busca de lugar por id");
+        
         return ResponseEntity.ok(searchPlaceGateway.getById(publicId));
     }
 
