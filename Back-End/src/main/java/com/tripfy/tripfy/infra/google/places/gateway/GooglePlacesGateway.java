@@ -59,18 +59,23 @@ public class GooglePlacesGateway implements PlacesGateway {
     }
 
     @Override
-    public PlacesResult searchByLocation(String location, List<String> types, Double minRating, List<Integer> priceLevels) {
+    public PlacesResult searchByLocation(String location, List<String> types, Double minRating, List<Integer> priceLevels, String name) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), null, minRating, priceLevels));
+        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), null, minRating, priceLevels, name));
     }
 
     @Override
-    public PlacesResult searchByLocationWithToken(String location, List<String> types, String pageToken, Double minRating, List<Integer> priceLevels) {
+    public PlacesResult searchByLocationWithToken(String location, List<String> types, String pageToken, Double minRating, List<Integer> priceLevels, String name) {
         GoogleGeocodeResponseDTO.Location coords = buscarCoordenadas(location);
-        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), pageToken, minRating, priceLevels));
+        return executeSearch(buildRequestBody(location, types, coords.lat(), coords.lng(), pageToken, minRating, priceLevels, name));
     }
 
-    private String buildTextQuery(List<String> types, String location) {
+    private String buildTextQuery(List<String> types, String location, String name) {
+        if (name != null && !name.isEmpty()) {
+            return name + " em " + location;
+
+        }
+
         List<String> effectiveTypes = (types == null || types.isEmpty()) ? DEFAULT_TYPES : types;
 
         String labels = effectiveTypes.stream()
@@ -82,13 +87,13 @@ public class GooglePlacesGateway implements PlacesGateway {
         return labels + " em " + location;
     }
 
-    private Map<String, Object> buildRequestBody(String location, List<String> types, Double lat, Double lng, String pageToken, Double minRating, List<Integer> priceLevels) {
+    private Map<String, Object> buildRequestBody(String location, List<String> types, Double lat, Double lng, String pageToken, Double minRating, List<Integer> priceLevels, String name) {
         var center       = Map.of("latitude", lat, "longitude", lng);
         var circle       = Map.of("center", center, "radius", SEARCH_RADIUS_METERS);
         var locationBias = Map.of("circle", circle);
 
         var body = new HashMap<String, Object>();
-        body.put("textQuery",      buildTextQuery(types, location));
+        body.put("textQuery",      buildTextQuery(types, location, name));
         body.put("locationBias",   locationBias);
         body.put("maxResultCount", 20);
         body.put("languageCode",   "pt-BR");
