@@ -101,10 +101,13 @@ public class PlacesController {
     @GetMapping("/places/image")
     public ResponseEntity<PlaceImageResponse> getImageByPlace(
             @RequestParam String photoReference,
+            @RequestParam(defaultValue = "false") boolean dummy,
             @AuthenticationPrincipal AuthenticatedUser user) {
         
         System.out.println("chamando endpoint de busca de imagem por lugar");
-
+        if (dummy) {
+            return ResponseEntity.ok(new PlaceImageResponse("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNFCv77ZV6d1Sj2cxI6iMxcqi-Mo11RaEB13vrNWUgeQ&s=10"));
+        }
         PlaceImageResponse placeImageResponse =
                 placeImageGateway.getImageByPlace(photoReference);
 
