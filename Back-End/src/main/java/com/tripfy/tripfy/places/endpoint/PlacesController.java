@@ -15,6 +15,8 @@ import com.tripfy.tripfy.places.dto.PlaceImageResponse;
 import com.tripfy.tripfy.places.gateway.PlaceImageGateway;
 import com.tripfy.tripfy.places.gateway.SearchPlaceGateway;
 import com.tripfy.tripfy.places.dto.PlaceDetailResponse;
+import com.tripfy.tripfy.places.dto.AutoCompleteResponse;
+import com.tripfy.tripfy.places.gateway.AutoCompleteGateway;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,13 +43,15 @@ public class PlacesController {
     private final PlaceTypeCatalog placeTypeCatalog;
     private final PositionGateway positionGateway;
     private final PlaceImageGateway placeImageGateway;
+    private final AutoCompleteGateway autoCompleteGateway;
 
-    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, SearchPlaceGateway searchPlaceGateway, PlaceTypeCatalog placeTypeCatalog, PositionGateway positionGateway, PlaceImageGateway placeImageGateway) {
+    public PlacesController(SearchPlacesUseCase searchPlacesUseCase, SearchPlaceGateway searchPlaceGateway, PlaceTypeCatalog placeTypeCatalog, PositionGateway positionGateway, PlaceImageGateway placeImageGateway, AutoCompleteGateway autoCompleteGateway) {
         this.searchPlacesUseCase = searchPlacesUseCase;
         this.searchPlaceGateway = searchPlaceGateway;
         this.placeTypeCatalog = placeTypeCatalog;
         this.positionGateway = positionGateway;
         this.placeImageGateway = placeImageGateway;
+        this.autoCompleteGateway = autoCompleteGateway;
     }
 
     @GetMapping("/places")
@@ -97,6 +101,19 @@ public class PlacesController {
                 positionGateway.getPosition(latitude, longitude);
 
         return ResponseEntity.ok(positionResponse);
+    }
+
+    @GetMapping("/places/autocomplete")
+    public ResponseEntity<AutoCompleteResponse> getAutoComplete(
+            @RequestParam String input,
+            @AuthenticationPrincipal AuthenticatedUser user) {
+
+        System.out.println("chamando endpoint de autocomplete");
+
+        AutoCompleteResponse autocompleteResponse =
+                autoCompleteGateway.getAutoComplete(input);
+
+        return ResponseEntity.ok(autocompleteResponse);
     }
 
     @GetMapping("/places/image")

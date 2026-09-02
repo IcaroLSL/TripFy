@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 @Component
 @Slf4j
 public class GooglePlaceImageGateway implements PlaceImageGateway {
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${google.places.api-key}")
