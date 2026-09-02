@@ -5,6 +5,7 @@ import { secureAuthStorage } from "@/services/secureAuthStorage";
 import { useCallback, useState } from "react";
 
 interface Place {
+    'publicId': string,
     "name": string,
     "address": string,
     "types": string[],
@@ -13,7 +14,8 @@ interface Place {
     "rating": number,
     "priceLevel": number | null,
     "latitude": number,
-    "longitude": number
+    "longitude": number,
+    'imageReferences': string[],
 }
 interface PlaceApiResponse {
     places: Place[];
@@ -63,18 +65,22 @@ export function useGetPlaces(limit: number = 10): useGetPlacesReturn {
                     Authorization: `Bearer ${accessToken}`,
                 },
             });
-            console.log("Places API response:", response.data);
             setTotal(response.data.places.length);
             const places: Atividade[] = response.data.places.map(place => ({
-                id: Math.floor(Math.random() * 1000000),
+                id: place.publicId,
                 day: 0,
-                image: '',
                 name: place.name,
+                address: place.address,
+                phoneNumber: place.phoneNumber,
+                rating: place.rating,
+                priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
+                hours: [],
+                imageUris: place.imageReferences,
+                priceRangeEnd:'',
+                priceRangeStart:'',
+                allowsDogs: false,
                 startTime: '',
                 endTime: '',
-                priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
-                stars: place.rating,
-                description: `${place.address}\nPhone: ${place.phoneNumber}\nWebsite: ${place.websiteUri}`,
             }));
 
             return places;

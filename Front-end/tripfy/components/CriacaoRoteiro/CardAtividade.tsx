@@ -17,7 +17,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividadeProps) => {
+const CardAtividade = ({ atividade, theme, onAddActivity, added, onViewDetails }: CardAtividadeProps) => {
     const [addedActivity, setAddedActivity] = useState<boolean>(added)
     const [showTimePicker, setShowTimePicker] = useState<boolean>(false)
     const addedActivityRef = useRef<boolean>(false)
@@ -50,9 +50,9 @@ const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividade
 
     return (
         <>
-            <Card theme={theme} className={`min-w-[180px] max-w-[180px] p-0 shadow-md rounded-md`}>
+            <Card theme={theme} className={`min-w-[180px] max-w-[180px] p-0 shadow-md rounded-md`} onPress={() => onViewDetails(atividade.id)} pressable={true}>
                 <View className='relative'>
-                    <Image source={atividade.image !== '' ? { uri: atividade.image } : require('../../assets/images/image-placeholder.jpeg')} style={{ width: '100%', height: 130, borderRadius: 8, borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }} />
+                    <Image source={atividade.imageUris.length > 0 ? { uri: atividade.imageUris[0] } : require('../../assets/images/image-placeholder.jpeg')} style={{ width: '100%', height: 130, borderRadius: 8, borderBottomRightRadius: 0, borderBottomLeftRadius: 0 }} />
                 </View>
 
                 <View className='p-4'>
@@ -80,7 +80,7 @@ const CardAtividade = ({ atividade, theme, onAddActivity, added }: CardAtividade
 
                             <View>
                                 <AppText theme={theme} className={theme === 'light' ? 'text-gray-600' : 'text-gray-400'}>
-                                    {atividade.stars} <MaterialIcons name="star" color={'#eab308'} className='text-yellow-500' />
+                                    {atividade.rating} <MaterialIcons name="star" color={'#eab308'} className='text-yellow-500' />
                                 </AppText>
                             </View>
                         </View>

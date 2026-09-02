@@ -60,7 +60,7 @@ function ModalAtividadeTime<T extends FieldValues>({ errors, control, startTime,
     })
 
     return (
-        <ModalComponent title='Selecione um horário' onClose={onClose} visible={true}>
+        <ModalComponent theme={theme} title='Selecione um horário' onClose={onClose} visible={true}>
             <View className='gap-4'>
                 <View className='flex flex-row w-full gap-4 flex-1'>
                     <View className='flex-1 gap-2'>

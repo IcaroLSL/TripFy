@@ -10,6 +10,7 @@ import { Atividade } from '@/interfaces/Atividade'
 import { useGetPlaces } from '../../../hooks/useGetPlaces'
 import { router, useLocalSearchParams } from 'expo-router'
 import Card from '../../../components/ui/Card'
+import ModalAtividade from '../../../components/CriacaoRoteiro/ModalAtividade'
 
 interface AtividadesRoteiro {
     activities: Atividade[];
@@ -24,6 +25,8 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
     const [afterNoonActivities, setAfterNoonActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.afternoonActivities ? roteiroData.afternoonActivities : {});
     const [nightActivities, setNightActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.nightActivities ? roteiroData.nightActivities : {});
     const [earlyMorningActivities, setEarlyMorningActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.earlyMorningActivities ? roteiroData.earlyMorningActivities : {});
+    const [placeId, setPlaceId] = useState<string>('')
+    const [showPlaceDetails, setShowPlaceDetails] = useState<boolean>(false)
 
     useEffect(() => {
         const fetchPlaces = async () => {
@@ -118,6 +121,11 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
         }
     }
 
+    const handleViewPlaceDetails = (placeId: string) => {
+        setPlaceId(placeId);
+        setShowPlaceDetails(true);
+    }
+
     return (
         <View className='gap-4'>
 
@@ -172,15 +180,21 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                                     atividade={{
                                         id: activity.id,
                                         day: selectedDay,
-                                        image: activity.image,
+                                        imageUris: activity.imageUris,
                                         name: activity.name,
                                         startTime: activity.startTime,
                                         endTime: activity.endTime,
                                         priceLevel: activity.priceLevel,
-                                        stars: activity.stars,
-                                        description: activity.description
+                                        rating: activity.rating,
+                                        address: activity.address,
+                                        hours: activity.hours,
+                                        phoneNumber: activity.phoneNumber,
+                                        priceRangeStart: activity.priceRangeStart,
+                                        priceRangeEnd: activity.priceRangeEnd,
+                                        allowsDogs: activity.allowsDogs
                                     }}
                                     theme={theme}
+                                    onViewDetails={handleViewPlaceDetails}
                                     onAddActivity={(day, timeOfDay, activity) => handleManagerActivities(day, timeOfDay, activity)}
                                     added={
                                         Boolean(morningActivities[selectedDay]?.activities.some(a => a.name === activity.name) ||
@@ -219,7 +233,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
 
             {morningActivities[selectedDay]?.activities.map((activity, index) => (
                 <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
-                    <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
+                    <Image source={activity.imageUris.length > 0 ? { uri: activity.imageUris[0] } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
                         {activity.name}: {activity.startTime} - {activity.endTime}
@@ -237,7 +251,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
 
             {afterNoonActivities[selectedDay]?.activities.map((activity, index) => (
                 <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
-                    <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
+                    <Image source={activity.imageUris.length > 0 ? { uri: activity.imageUris[0] } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
                         {activity.name}: {activity.startTime} - {activity.endTime}
@@ -255,7 +269,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
 
             {nightActivities[selectedDay]?.activities.map((activity, index) => (
                 <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
-                    <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
+                    <Image source={activity.imageUris.length > 0 ? { uri: activity.imageUris[0] } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
                         {activity.name}: {activity.startTime} - {activity.endTime}
@@ -274,7 +288,7 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
 
             {earlyMorningActivities[selectedDay]?.activities.map((activity, index) => (
                 <Card key={index} className={`flex flex-row justify-between items-center p-4 gap-2 rounded-md`} theme={theme}>
-                    <Image source={activity.image !== '' ? { uri: activity.image } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
+                    <Image source={activity.imageUris.length > 0 ? { uri: activity.imageUris[0] } : require('../../../assets/images/image-placeholder.jpeg')} style={{ width: 40, height: 40, borderRadius: 8 }} />
 
                     <Text className={`text-base flex-1 ${theme === 'light' ? 'text-black' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>
                         {activity.name}: {activity.startTime} - {activity.endTime}
@@ -287,6 +301,16 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 </Card>
             ))}
 
+            {
+                showPlaceDetails === true && (
+                    <ModalAtividade
+                        title='Detalhes da Atividade'
+                        theme={theme}
+                        placeId={placeId}
+                        onClose={() => setShowPlaceDetails(false)}
+                    />
+                )
+            }
 
             <Divider theme={theme} />
 

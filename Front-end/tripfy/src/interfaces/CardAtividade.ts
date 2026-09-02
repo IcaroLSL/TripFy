@@ -5,4 +5,5 @@ export interface CardAtividadeProps {
     theme: 'light' | 'dark';
     added: boolean;
     onAddActivity: (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => void;
+    onViewDetails: (placeId: string) => void;
 }
