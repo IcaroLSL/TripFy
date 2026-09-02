@@ -9,8 +9,6 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.tripfy.tripfy.infra.postgresSQL")
 @EnableRedisRepositories(basePackages = "com.tripfy.tripfy.infra.redis")
-// Se/quando você for criar repositórios para o MongoDB, crie a pasta infra/mongo 
-// e descomente a linha abaixo:
 // @EnableMongoRepositories(basePackages = "com.tripfy.tripfy.infra.mongo")
 public class TripfyApplication {
 
