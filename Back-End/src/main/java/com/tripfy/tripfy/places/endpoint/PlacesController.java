@@ -58,12 +58,13 @@ public class PlacesController {
             @RequestParam(required = false) List<String> types,
             @RequestParam(required = false) @DecimalMin(value = "0.0", message = "minRating deve ser maior ou igual a 0.0") @DecimalMax(value = "5.0", message = "minRating deve ser menor ou igual a 5.0") Double minRating,
             @RequestParam(required = false) List<@Min(value = 0, message = "priceLevel deve ser maior ou igual a 0") @Max(value = 4, message = "priceLevel deve ser menor ou igual a 4") Integer> priceLevels,
+            @RequestParam(required = false) String name,
             @AuthenticationPrincipal AuthenticatedUser user) {
         
         System.out.println("chamando endpoint de busca de lugares");
 
         List<String> validTypes = placeTypeCatalog.filterValid(types);
-        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, validTypes, minRating, priceLevels);
+        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, validTypes, minRating, priceLevels, name);
 
         List<PlaceResponse> places = pageResult.places().stream().map(PlaceResponseMapper::toResponse).toList();
 
@@ -101,10 +102,13 @@ public class PlacesController {
     @GetMapping("/places/image")
     public ResponseEntity<PlaceImageResponse> getImageByPlace(
             @RequestParam String photoReference,
+            @RequestParam(defaultValue = "false") boolean dummy,
             @AuthenticationPrincipal AuthenticatedUser user) {
         
         System.out.println("chamando endpoint de busca de imagem por lugar");
-
+        if (dummy) {
+            return ResponseEntity.ok(new PlaceImageResponse("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNFCv77ZV6d1Sj2cxI6iMxcqi-Mo11RaEB13vrNWUgeQ&s=10"));
+        }
         PlaceImageResponse placeImageResponse =
                 placeImageGateway.getImageByPlace(photoReference);
 

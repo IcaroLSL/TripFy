@@ -14,7 +14,7 @@ public record GooglePlacesDetailResponse(
     DisplayName         displayName,
     CurrentOpeningHours currentOpeningHours,           
     List<Photos>        photos,
-    Boolean             allowsDogs ,
+    Boolean             allowsDogs,
     PriceRange          priceRange
 ) {
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -24,10 +24,7 @@ public record GooglePlacesDetailResponse(
     public record CurrentOpeningHours(List<String> weekdayDescriptions) {}
     
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Photos(List<AuthorAttributions> authorAttributions) {}
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record AuthorAttributions(String photoUri) {}
+    public record Photos(String name) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record PriceRange(Price startPrice, Price endPrice) {}

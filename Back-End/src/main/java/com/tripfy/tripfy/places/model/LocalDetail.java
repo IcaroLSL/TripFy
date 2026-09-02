@@ -10,7 +10,7 @@ public record LocalDetail(
     Double       rating,
     Integer      priceLevel,
     List<String> hours,
-    List<String> imageUris,
+    List<String> imageReferences,
     Boolean      allowsDogs,
     String       priceRangeStart,
     String       priceRangeEnd
