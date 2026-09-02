@@ -88,7 +88,7 @@ const AdicionarAtividade = () => {
         },
     });
 
-    const { control: searchControl, handleSubmit: searchhandleSubmit } = useForm<FormSearchData>({
+    const { control: searchControl, watch } = useForm<FormSearchData>({
         resolver: zodResolver(formSearchSchema),
         defaultValues: {
             placeName: '',
@@ -98,12 +98,14 @@ const AdicionarAtividade = () => {
     useEffect(() => {
         const fetchPlaces = async () => {
             try {
+                const placeName = watch('placeName');
                 console.log('Fetching places with selectedCategories:', selectedCategories, 'selectedPrice:', selectedPrice, 'selectedRatings:', selectedRatings);
                 const fetchedPlaces = await getPlaces({
                     destino: roteiroData.destino,
                     tags: selectedCategories.flatMap((cat) => cat.tags),
                     priceLevels: selectedPrice,
                     minRating: roteiroData.avaliacaoMinima || '0',
+                    specificPlace: placeName || '',
                 }, 1);
                 setPlaces(fetchedPlaces);
             } catch (error) {
@@ -160,15 +162,20 @@ const AdicionarAtividade = () => {
         }
 
         setActivityList((prevList) => [...prevList, {
-            id: 0,
+            id: '',
             name: activity.name,
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
             day: Number(selectedDay),
             startTime: '',
             endTime: '',
             priceLevel: activity.priceLevel !== null ? activity.priceLevel : 0,
-            stars: activity.stars !== null ? activity.stars : 0,
-            description: 'Complexo esportivo com quadras, campos e áreas de lazer para atividades físicas e recreação.',
+            rating: activity.rating !== null ? activity.rating : 0,
+            imageUris: [],
+            allowsDogs: false,
+            phoneNumber: '',
+            'priceRangeEnd': '',
+            priceRangeStart: '',
+            address: '',
+            hours: []
         }]);
     }
 
@@ -179,15 +186,20 @@ const AdicionarAtividade = () => {
             return;
         }
         setSelectedActivity({
-            id: 0,
+            id: '',
             name: place.name,
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',
+            imageUris: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',],
             day: Number(selectedDay),
             startTime: '',
             endTime: '',
             priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
-            stars: place.stars !== null ? place.stars : 0,
-            description: 'Complexo esportivo com quadras, campos e áreas de lazer para atividades físicas e recreação.',
+            rating: place.rating !== null ? place.rating : 0,
+            allowsDogs: false,
+            phoneNumber: '',
+            'priceRangeEnd': '',
+            priceRangeStart: '',
+            address: '',
+            hours: []
         });
         setShowModalTime(true);
     }
@@ -307,7 +319,7 @@ const AdicionarAtividade = () => {
                                                             <AppText theme={theme}>·</AppText>
                                                             <View className='flex flex-row'>
                                                                 <AppText theme={theme}>
-                                                                    {place.stars}
+                                                                    {place.rating}
                                                                 </AppText>
                                                                 <Text className='text-yellow-500'>★</Text>
                                                             </View>

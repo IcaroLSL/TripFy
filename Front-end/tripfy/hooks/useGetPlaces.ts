@@ -29,7 +29,8 @@ interface PlacesParams {
     tags: string[];
     destino: string;
     priceLevels: string[];
-    minRating: string
+    minRating: string,
+    specificPlace?: string
 }
 export interface useGetPlacesReturn {
     loading: boolean;
@@ -59,7 +60,8 @@ export function useGetPlaces(limit: number = 10): useGetPlacesReturn {
                     limit: limit,
                     types: placesPayload.tags,
                     priceLevels: Number(placesPayload.priceLevels),
-                    minRating: Number(placesPayload.minRating)
+                    minRating: Number(placesPayload.minRating),
+                    name: placesPayload.specificPlace || '',
                 },
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
