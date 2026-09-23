@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-role-select
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createRole: "somenteLeitura",
+                privileges: [
+                  { resource: { db: "tripfy", collection: "" }, actions: ["find"] }
+                ],
+                roles: []
+              }
+
+  - changeSet:
+      id: 001-create-role-insert
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createRole: "somenteInsert",
+                privileges: [
+                  { resource: { db: "tripfy", collection: "" }, actions: ["insert"] }
+                ],
+                roles: []
+              }
+
+  - changeSet:
+      id: 001-create-role-update
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createRole: "somenteUpdate",
+                privileges: [
+                  { resource: { db: "tripfy", collection: "" }, actions: ["update"] }
+                ],
+                roles: []
+              }
+
+  - changeSet:
+      id: 001-create-role-delete
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createRole: "somenteDelete",
+                privileges: [
+                  { resource: { db: "tripfy", collection: "" }, actions: ["remove"] }
+                ],
+                roles: []
+              }

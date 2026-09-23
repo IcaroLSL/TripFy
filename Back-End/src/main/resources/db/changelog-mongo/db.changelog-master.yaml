@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog-mongo/changes/001-create-roles.yaml
+  - include:
+      file: db/changelog-mongo/changes/002-create-users.yaml

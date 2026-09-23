@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-user-select
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createUser: "${mongoSelectUser}",
+                pwd: "${mongoSelectPassword}",
+                roles: [{ role: "somenteLeitura", db: "tripfy" }]
+              }
+
+  - changeSet:
+      id: 002-create-user-insert
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createUser: "${mongoInsertUser}",
+                pwd: "${mongoInsertPassword}",
+                roles: [{ role: "somenteInsert", db: "tripfy" }]
+              }
+
+  - changeSet:
+      id: 002-create-user-update
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createUser: "${mongoUpdateUser}",
+                pwd: "${mongoUpdatePassword}",
+                roles: [{ role: "somenteUpdate", db: "tripfy" }]
+              }
+
+  - changeSet:
+      id: 002-create-user-delete
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                createUser: "${mongoDeleteUser}",
+                pwd: "${mongoDeletePassword}",
+                roles: [{ role: "somenteDelete", db: "tripfy" }]
+              }

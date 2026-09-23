@@ -3,7 +3,6 @@
         "dto": "interface",
         "endpoint": "controller",
         "gateway": "connection",
-        "datasource": "migrations",
         "argon2": "secure",
         "usecase": "command",
         "java": "java",
@@ -75,12 +74,28 @@
             "rootFolderNames": ["storage"]
         },
         {
+            "name": "mongodb",
+            "base": "database",
+            "color": "#4EC86F",
+            "lightColor": "#4EC86F",
+            "folderNames": ["mongodb"],
+            "rootFolderNames": ["mongodb"]
+        },
+        {
             "name": "mongo",
             "base": "firebase",
             "color": "#4EC86F",
             "lightColor": "#4EC86F",
             "folderNames": ["mongo"],
             "rootFolderNames": ["mongo"]
+        },
+        {
+            "name": "datasource",
+            "base": "migrations",
+            "color": "#6398EE",
+            "lightColor": "#6398EE",
+            "folderNames": ["datasource"],
+            "rootFolderNames": ["datasource"]
         }
     ],
     "java.configuration.updateBuildConfiguration": "interactive",

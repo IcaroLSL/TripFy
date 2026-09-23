@@ -10,10 +10,10 @@ services:
     image: 'mongo:7'
     environment:
       - 'MONGO_INITDB_DATABASE=tripfy'
-      - 'MONGO_INITDB_ROOT_PASSWORD=admin'
-      - 'MONGO_INITDB_ROOT_USERNAME=migration_tripfy'
+      - 'MONGO_INITDB_ROOT_PASSWORD={MONGO_MIGRATION_PASSWORD}'
+      - 'MONGO_INITDB_ROOT_USERNAME={MONGO_MIGRATION_USERNAME}'
     ports:
-      - '27017'
+      - '27017:27017'
     volumes:
       - ./storage/mongo:/data/db
   # postgres:
