@@ -9,11 +9,13 @@ services:
   mongodb:
     image: 'mongo:7'
     environment:
-      - 'MONGO_INITDB_DATABASE=app_db'
-      - 'MONGO_INITDB_ROOT_PASSWORD=9317'
-      - 'MONGO_INITDB_ROOT_USERNAME=tripfy'
+      - 'MONGO_INITDB_DATABASE=tripfy'
+      - 'MONGO_INITDB_ROOT_PASSWORD=admin'
+      - 'MONGO_INITDB_ROOT_USERNAME=migration_tripfy'
     ports:
       - '27017'
+    volumes:
+      - ./storage/mongo:/data/db
   # postgres:
   #   image: 'postgres:16'
   #   environment:
