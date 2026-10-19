@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Adicionar atividade — Wireframe baixa-fi</title>
+<style>
+  :root{
+    --ink: #26282C;
+    --ink-soft: #55585F;
+    --ink-faint: #9298A2;
+    --line: #26282C;
+    --line-soft: #C6CAD2;
+    --bg-page: #ECEDEF;
+    --bg-screen: #FFFFFF;
+    --fill-selected: #26282C;
+    --fill-selected-text: #FFFFFF;
+    --warn-border: #B23A2E;
+    --warn-bg: #FBEDEA;
+    --note-bg: #FFF7E0;
+    --note-border: #C9A227;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg-page);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--ink);
+    padding: 40px 16px 80px;
+  }
+  .page{ max-width: 1080px; margin: 0 auto; }
+
+  .page-header h1{ font-size: 19px; margin: 0 0 6px; }
+  .page-header p{ font-size: 13px; color: var(--ink-soft); line-height:1.5; margin:0 0 24px; max-width: 640px; }
+
+  .flags{
+    background: var(--note-bg);
+    border: 1.5px dashed var(--note-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 36px;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  .flags b{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; color:#8a6d0f;}
+  .flags ul{ margin:0; padding-left: 18px; }
+
+  .flow{ display:flex; flex-wrap:wrap; gap: 28px; justify-content:center; align-items:flex-start; }
+  .step-wrap{ display:flex; flex-direction:column; align-items:center; }
+  .step-tag{
+    font-size: 11px; font-weight:bold; text-transform:uppercase; letter-spacing:.04em;
+    color: var(--ink-faint); margin-bottom: 8px; text-align:center; max-width:340px;
+  }
+
+  /* ---- phone shell ---- */
+  .phone{
+    width: 340px; border: 2px solid var(--line); border-radius: 26px;
+    padding: 6px; background: var(--bg-page);
+  }
+  .screen{
+    background: var(--bg-screen); border-radius: 20px; overflow: hidden;
+    display:flex; flex-direction:column; min-height: 640px;
+  }
+  .status{ text-align:center; font-size:10px; color:var(--ink-faint); padding:8px 0 2px; letter-spacing:.05em;}
+
+  .content{ padding: 12px 20px 16px; flex:1; overflow-y:auto; }
+
+  .header-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
+  .close-x{ width:26px;height:26px; border:1.5px solid var(--line); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:bold; }
+  .header-spacer{ width:26px; }
+  .header-row h2{ font-size:14.5px; margin:0; }
+  .content .sub{ font-size:11px; color:var(--ink-soft); margin:2px 0 14px; text-align:center; }
+
+  .wf-input{
+    border: 1.5px solid var(--line); border-radius:8px;
+    padding: 10px 12px; font-size:12.5px; color: var(--ink-faint);
+    display:flex; align-items:center; gap:8px;
+  }
+
+  .filter-row{ display:flex; gap:8px; overflow-x:auto; margin: 12px 0 12px; padding-bottom:2px; }
+  .filter-pill{
+    flex:0 0 auto; border:1.5px solid var(--line); border-radius:999px;
+    padding:7px 11px; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; white-space:nowrap;
+  }
+  .filter-pill.active{ background:var(--fill-selected); color:#fff; border-color:var(--fill-selected); }
+  .filter-pill .chev{ font-size:9px; opacity:.7; }
+
+  .results-count{ font-size:10.5px; color:var(--ink-faint); margin-bottom:10px; }
+
+  .place-row{ border:1.5px solid var(--line); border-radius:10px; padding:10px; margin-bottom:8px; }
+  .place-row.sel{ border-width:2px; }
+  .place-top{ display:flex; gap:10px; align-items:center; }
+  .place-photo{ width:42px;height:42px; border:1.5px solid var(--line); border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .place-photo svg{ width:17px;height:17px; color:var(--ink-faint); }
+  .place-info{ flex:1; min-width:0; }
+  .place-name{ font-size:12px; font-weight:bold; margin-bottom:2px; }
+  .place-meta{ font-size:10.5px; color:var(--ink-soft); }
+  .place-add{ width:25px;height:25px; border:1.5px solid var(--line); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0; font-size:13px; }
+
+  .place-expand{ margin-top:10px; padding-top:10px; border-top:1.5px dashed var(--line-soft); }
+  .row-2{ display:flex; gap:8px; margin-bottom:10px; }
+  .row-2 .wf-input{ flex:1; }
+  .conflict{
+    border:1.5px solid var(--warn-border); background:var(--warn-bg); color:#7A2A20;
+    border-radius:8px; padding:9px 10px; font-size:10.5px; line-height:1.5; margin-bottom:10px;
+  }
+  .btn-primary-sm{ background:var(--ink); color:#fff; border-radius:8px; text-align:center; padding:10px; font-size:12px; font-weight:bold; }
+
+  .helper-bottom{ text-align:center; font-size:10.5px; color:var(--ink-faint); margin-top:6px; }
+
+  /* ---- sheet screens ---- */
+  .sheet-screen{ background: var(--bg-page); }
+  .sheet-dim{ flex:1; background: rgba(38,40,44,0.35); }
+  .sheet{
+    background: var(--bg-screen); border-radius: 20px 20px 0 0;
+    box-shadow: 0 -6px 16px rgba(0,0,0,0.1); max-height: 82%;
+    display:flex; flex-direction:column;
+  }
+  .sheet-handle{ width:36px; height:4px; background:var(--line-soft); border-radius:2px; margin:10px auto 4px; }
+  .sheet-header{ display:flex; justify-content:space-between; align-items:center; padding:6px 20px 10px; }
+  .sheet-header h2{ font-size:14.5px; margin:0; }
+  .link-mini{ font-size:11px; font-weight:bold; text-decoration:underline; background:none; border:0; }
+
+  .sheet-body{ padding:0 20px; overflow-y:auto; }
+
+  .cat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:4px; }
+  .cat-item{ border:1.5px solid var(--line); border-radius:10px; padding:9px 10px; font-size:11.5px; display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  .cat-item.sel{ border-width:2px; }
+  .cat-badge{ font-size:9px; background:var(--fill-selected); color:#fff; border-radius:999px; padding:2px 6px; font-weight:bold; flex-shrink:0; }
+
+  .subcat-panel{ margin:12px 0 4px; padding:12px; border:1.5px solid var(--line-soft); border-radius:10px; }
+  .subcat-title{ font-size:10.5px; font-weight:bold; margin-bottom:8px; display:flex; justify-content:space-between; color: var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; }
+  .subcat-grid{ display:flex; flex-wrap:wrap; gap:6px; }
+  .subcat-chip{ border:1.5px solid var(--line); border-radius:999px; padding:6px 10px; font-size:10px; }
+  .subcat-chip.sel{ background:var(--fill-selected); color:#fff; border-color:var(--fill-selected); font-weight:bold; }
+  .subcat-chip.more{ border-style:dashed; color:var(--ink-faint); }
+
+  .field-label{ font-size:11px; font-weight:bold; color: var(--ink-soft); margin: 16px 0 8px; text-transform:uppercase; letter-spacing:.03em;}
+  .field-label:first-child{ margin-top:4px; }
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ border: 1.5px solid var(--line); border-radius: 999px; padding: 8px 12px; font-size:11.5px; }
+  .chip.sel{ background: var(--fill-selected); color: var(--fill-selected-text); border-color: var(--fill-selected); font-weight:bold; }
+
+  .sheet-footer{ display:flex; gap:10px; padding:14px 20px 18px; border-top:1.5px solid var(--line-soft); }
+  .sheet-footer .wf-btn-outline{ flex:1; border:1.5px solid var(--line); border-radius:8px; text-align:center; padding:11px; font-size:12.5px; font-weight:bold; }
+  .sheet-footer .btn-primary{ flex:1; background:var(--ink); color:#fff; border-radius:8px; text-align:center; padding:11px; font-size:12.5px; font-weight:bold; }
+
+  .caption{ font-size:11px; color:var(--ink-faint); margin-top:10px; text-align:center; max-width:340px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <h1>Tripfy · Adicionar atividade — baixa fidelidade</h1>
+    <p>Tela acessada a partir do botão "+ Adicionar atividade" da Etapa 4. Apresentada como página cheia com transição modal (sobe de baixo), não como diálogo pequeno — dado o volume de filtros e resultados.</p>
+  </div>
+
+  <div class="flags">
+    <b>Pendências a confirmar com o time</b>
+    <ul>
+      <li><b>Taxonomia divergente:</b> essa tela usa as 9 categorias novas (com subcategorias via <code>tags</code>). A Etapa 2 do fluxo de criação ainda usa os 8 chips antigos do BR001. Recomendo unificar — se alguém marcar "Esportes" aqui mas a Etapa 2 nem tiver essa opção, a sugestão de preferência (BR001 cenário 5) fica incoerente com o filtro manual.</li>
+      <li><b>Rating 1–5:</b> assumi como "avaliação mínima" (1★+, 2★+...), não valor exato — poucos lugares têm nota exatamente "3.0". Confirmar se é isso mesmo.</li>
+      <li><b>Categoria principal seleciona todas as subcategorias por padrão</b> (atalho), usuário desmarca as que não quer. Comportamento alternativo seria começar vazio — validar qual faz mais sentido.</li>
+      <li><b>Preço virou multi-seleção</b> aqui (diferente do segmented único da Etapa 3), porque é filtro de busca — faz sentido buscar "$ ou $$" ao mesmo tempo, diferente de definir "meu orçamento é $$".</li>
+      <li><b>Horário da atividade</b> não estava no escopo da sua pergunta, mas incluí como expansão inline ao selecionar um resultado — sem isso, a tela não teria como alimentar a validação de conflito de horário (BR001) na volta pra Etapa 4.</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+
+    <!-- TELA 1 -->
+    <div class="step-wrap">
+      <div class="step-tag">Tela principal · Busca + resultados</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="header-row">
+            <div class="close-x">×</div>
+            <h2>Adicionar atividade</h2>
+            <div class="header-spacer"></div>
+          </div>
+          <p class="sub">Dia 1 · Tarde · 4/10 atividades</p>
+
+          <div class="wf-input">🔍 Buscar por nome (ex: Museu Nacional)</div>
+
+          <div class="filter-row">
+            <div class="filter-pill active">Categoria · 12 <span class="chev">⌄</span></div>
+            <div class="filter-pill active">Preço · $–$$$ <span class="chev">⌄</span></div>
+            <div class="filter-pill active">Avaliação · 4★+ <span class="chev">⌄</span></div>
+          </div>
+
+          <div class="results-count">24 lugares encontrados</div>
+
+          <div class="place-row">
+            <div class="place-top">
+              <div class="place-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="place-info">
+                <div class="place-name">Estádio Municipal Fonte Luminosa</div>
+                <div class="place-meta">Esportes · Estádio — $$ · 4.3★ · 2.1 km</div>
+              </div>
+              <div class="place-add">+</div>
+            </div>
+          </div>
+
+          <div class="place-row sel">
+            <div class="place-top">
+              <div class="place-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="place-info">
+                <div class="place-name">Complexo Esportivo Vila Nova</div>
+                <div class="place-meta">Esportes · Complexo esportivo — Grátis · 4.1★ · 3.4 km</div>
+              </div>
+              <div class="place-add">✓</div>
+            </div>
+            <div class="place-expand">
+              <div class="row-2">
+                <div class="wf-input">Início — 11:00</div>
+                <div class="wf-input">Fim — 12:30</div>
+              </div>
+              <div class="conflict">⚠ Conflito de horário: sobrepõe "Visita ao Museu" (10:00–12:00), já adicionada ao Dia 1.</div>
+              <div class="btn-primary-sm">Adicionar mesmo assim</div>
+            </div>
+          </div>
+
+          <div class="place-row">
+            <div class="place-top">
+              <div class="place-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="place-info">
+                <div class="place-name">Arena Multiuso Serra Azul</div>
+                <div class="place-meta">Esportes · Arena — $$$ · 4.5★ · 5.0 km</div>
+              </div>
+              <div class="place-add">+</div>
+            </div>
+          </div>
+
+          <div class="place-row">
+            <div class="place-top">
+              <div class="place-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="place-info">
+                <div class="place-name">Academia Boa Forma</div>
+                <div class="place-meta">Esportes · Academia — $$ · 4.6★ · 1.2 km</div>
+              </div>
+              <div class="place-add">+</div>
+            </div>
+          </div>
+
+          <p class="helper-bottom">Não achou o que procurava? Tente ajustar os filtros.</p>
+        </div>
+      </div></div>
+      <p class="caption">Selecionar um resultado expande inline o campo de horário — reaproveita o padrão de conflito já usado na Etapa 4.</p>
+    </div>
+
+    <!-- TELA 2 -->
+    <div class="step-wrap">
+      <div class="step-tag">Sheet · Categoria (2 níveis)</div>
+      <div class="phone"><div class="screen sheet-screen">
+        <div class="status">9:41</div>
+        <div class="sheet-dim"></div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <h2>Categoria</h2>
+            <button class="link-mini">Limpar</button>
+          </div>
+          <div class="sheet-body">
+            <div class="cat-grid">
+              <div class="cat-item">🍽 Comida e Bebida</div>
+              <div class="cat-item">🏨 Hospedagem</div>
+              <div class="cat-item">🎭 Entretenimento</div>
+              <div class="cat-item">🏛 Museus e Cultura</div>
+              <div class="cat-item">🥾 Ar Livre</div>
+              <div class="cat-item">⛪ Locais de Culto</div>
+              <div class="cat-item sel">🏟 Esportes <span class="cat-badge">15/15</span></div>
+              <div class="cat-item">🚉 Transporte</div>
+            </div>
+            <div class="cat-grid" style="grid-template-columns:1fr; margin-top:8px;">
+              <div class="cat-item sel">🛍 Compras <span class="cat-badge">4/12</span></div>
+            </div>
+
+            <div class="subcat-panel">
+              <div class="subcat-title">Esportes — subcategorias <span>15/15 <button class="link-mini">Desmarcar todas</button></span></div>
+              <div class="subcat-grid">
+                <div class="subcat-chip sel">Estádio</div>
+                <div class="subcat-chip sel">Arena</div>
+                <div class="subcat-chip sel">Academia</div>
+                <div class="subcat-chip sel">Centro de fitness</div>
+                <div class="subcat-chip sel">Campo de golfe</div>
+                <div class="subcat-chip sel">Piscina</div>
+                <div class="subcat-chip sel">Quadra de tênis</div>
+                <div class="subcat-chip sel">Complexo esportivo</div>
+                <div class="subcat-chip more">+ 7 mais</div>
+              </div>
+            </div>
+          </div>
+          <div class="sheet-footer">
+            <div class="wf-btn-outline">Limpar filtros</div>
+            <div class="btn-primary">Ver 24 resultados</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Marcar a categoria já seleciona todas as subcategorias (atalho) — usuário refina desmarcando.</p>
+    </div>
+
+    <!-- TELA 3 -->
+    <div class="step-wrap">
+      <div class="step-tag">Sheet · Preço e avaliação</div>
+      <div class="phone"><div class="screen sheet-screen">
+        <div class="status">9:41</div>
+        <div class="sheet-dim"></div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <h2>Preço e avaliação</h2>
+            <button class="link-mini">Limpar</button>
+          </div>
+          <div class="sheet-body">
+            <div class="field-label">Faixa de preço (múltipla escolha)</div>
+            <div class="chip-row">
+              <div class="chip">Grátis</div>
+              <div class="chip sel">$</div>
+              <div class="chip sel">$$</div>
+              <div class="chip sel">$$$</div>
+              <div class="chip">$$$$</div>
+            </div>
+
+            <div class="field-label">Avaliação mínima</div>
+            <div class="chip-row">
+              <div class="chip">Sem filtro</div>
+              <div class="chip">1★+</div>
+              <div class="chip">2★+</div>
+              <div class="chip">3★+</div>
+              <div class="chip sel">4★+</div>
+              <div class="chip">5★+</div>
+            </div>
+          </div>
+          <div class="sheet-footer">
+            <div class="wf-btn-outline">Limpar filtros</div>
+            <div class="btn-primary">Ver 24 resultados</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Preço aqui é multi-seleção (filtro de busca) — diferente do segmented único da Etapa 3 (definição de orçamento).</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

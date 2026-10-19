@@ -14,13 +14,15 @@ import ModalComponent from '../ui/Modal';
 import { useGetPlaceDetails } from '../../hooks/useGetPlace';
 import { AppText, AppTitle } from '../ui/TextApp';
 import { Button } from '../ui/Button';
+import { Atividade } from '@/interfaces/Atividade';
 
 interface ModalAtividadeProps {
     title?: string;
     onClose: () => void;
     placeId: string;
     theme: 'light' | 'dark';
-
+    onConfirm: (atividade: Atividade) => void
+    selectedDay?: number;
 }
 
 const WEEKDAY_LABELS: Record<string, string> = {
@@ -33,7 +35,7 @@ const WEEKDAY_LABELS: Record<string, string> = {
     Sunday: 'Domingo',
 };
 
-const ModalAtividade = ({ onClose, placeId, theme }: ModalAtividadeProps) => {
+const ModalAtividade = ({ onClose, placeId, theme, onConfirm, selectedDay }: ModalAtividadeProps) => {
     const { getPlace, loading, error, place } = useGetPlaceDetails();
     const [activeImage, setActiveImage] = useState(0);
     const [showAllHours, setShowAllHours] = useState(false);
@@ -158,11 +160,11 @@ const ModalAtividade = ({ onClose, placeId, theme }: ModalAtividadeProps) => {
                     )}
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1, marginBottom: 20 }}>
-                        <View className='gap-4 flex flex-row'>
+                        <View className='gap-2 flex flex-row'>
 
                             {place?.rating && (
                                 <View
-                                    className={`flex flex-row items-center gap-2 p-2 rounded-full ${isDark ? 'bg-[#2563eb26]' : 'bg-[#1E6B5E1A]'}`}>
+                                    className={`flex flex-row items-center gap-2 px-4 rounded-full ${isDark ? 'bg-[#2563eb26]' : 'bg-[#1E6B5E1A]'}`}>
                                     <MaterialIcons name="star" size={16} color="#F4A623" />
                                     <AppText
                                         theme={theme}
@@ -174,7 +176,7 @@ const ModalAtividade = ({ onClose, placeId, theme }: ModalAtividadeProps) => {
 
                             {place?.priceLevel && (
                                 <View
-                                    className='flex flex-row items-center bg-yellow-300/50 px-6  rounded-full'
+                                    className='flex flex-row items-center bg-yellow-300/50 px-4  rounded-full'
                                 >
                                     <AppText
                                         className='text-black'
@@ -200,14 +202,24 @@ const ModalAtividade = ({ onClose, placeId, theme }: ModalAtividadeProps) => {
                                 </View>
                             )}
 
-                            {place?.allowsDogs && (
+                            {place?.allowsDogs ? (
                                 <View
                                     className={`flex flex-row items-center gap-2 p-2 rounded-full ${isDark ? 'bg-[#2563eb26]' : 'bg-[#1E6B5E1A]'}`}>
                                     <MaterialIcons name="pets" size={18} color={c.accent} />
                                     <AppText
                                         theme={theme}
                                     >
-                                        Aceita cachorros
+                                        Aceita animais
+                                    </AppText>
+                                </View>
+                            ) : (
+                                <View
+                                    className={`flex flex-row items-center gap-2 p-2 rounded-full ${isDark ? 'bg-[#eb322526]' : 'bg-[#1E6B5E1A]'}`}>
+                                    <MaterialIcons name="pets" size={18} color={'#eb3225'} />
+                                    <AppText
+                                        theme={theme}
+                                    >
+                                        Não aceita animais
                                     </AppText>
                                 </View>
                             )}
@@ -312,7 +324,26 @@ const ModalAtividade = ({ onClose, placeId, theme }: ModalAtividadeProps) => {
                                 variant='custom'
                                 className='bg-blue-600 py-4 rounded-full flex flex-row items-center justify-center active:bg-blue-600/80'
                                 theme={theme}
-                                onPress={() => { }}
+                                onPress={() => {
+                                    onConfirm(
+                                        {
+                                            'address': place?.address || '',
+                                            'allowsDogs': place?.allowsDogs || false,
+                                            'day': selectedDay || 1,
+                                            'endTime': '',
+                                            'hours': place?.hours || [],
+                                            'id': place?.id || '',
+                                            'imageUris': place?.imageUris || [],
+                                            'name': place?.name || '',
+                                            'phoneNumber': place?.phoneNumber || '',
+                                            'priceLevel': place?.priceLevel || 0,
+                                            'priceRangeEnd': place?.priceRangeEnd || '',
+                                            'priceRangeStart': place?.priceRangeStart || '',
+                                            'rating': place?.rating || 0,
+                                            'startTime': ''
+                                        }
+                                    ); onClose();
+                                }}
                             >
                                 <MaterialIcons name="add" size={20} color="#FFFFFF" />
                                 <AppText theme={theme} className='text-white text-base font-semibold ml-2'>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Editar roteiro — Wireframe baixa-fi</title>
+<style>
+  :root{
+    --ink:#26282C; --ink-soft:#55585F; --ink-faint:#9298A2;
+    --line:#26282C; --line-soft:#C6CAD2;
+    --bg-page:#ECEDEF; --bg-screen:#FFFFFF;
+    --fill-selected:#26282C; --fill-selected-text:#FFFFFF;
+    --warn-border:#B23A2E; --warn-bg:#FBEDEA;
+    --note-bg:#FFF7E0; --note-border:#C9A227;
+    --presence:#2E7D32;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{background:var(--bg-page); font-family:Arial,Helvetica,sans-serif; color:var(--ink); padding:40px 16px 80px;}
+  .page{max-width:1080px;margin:0 auto;}
+  .page-header h1{font-size:19px;margin:0 0 6px;}
+  .page-header p{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 24px;max-width:640px;}
+  .flags{background:var(--note-bg);border:1.5px dashed var(--note-border);border-radius:8px;padding:14px 16px;margin-bottom:36px;font-size:12.5px;line-height:1.6;}
+  .flags b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;color:#8a6d0f;}
+  .flags ul{margin:0;padding-left:18px;}
+  .flow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;}
+  .step-wrap{display:flex;flex-direction:column;align-items:center;}
+  .step-tag{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);margin-bottom:8px;text-align:center;max-width:340px;}
+  .phone{width:340px;border:2px solid var(--line);border-radius:26px;padding:6px;background:var(--bg-page);}
+  .screen{background:var(--bg-screen);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:660px;}
+  .status{text-align:center;font-size:10px;color:var(--ink-faint);padding:8px 0 2px;letter-spacing:.05em;}
+  .content{padding:12px 20px 16px;flex:1;overflow-y:auto;}
+  .caption{font-size:11px;color:var(--ink-faint);margin-top:10px;text-align:center;max-width:340px;}
+
+  .edit-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .round-btn{width:26px;height:26px;border:1.5px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;flex-shrink:0;}
+  .edit-title{text-align:center;flex:1;}
+  .edit-title .name{font-size:13.5px;font-weight:bold;}
+  .edit-title .saved{font-size:9.5px;color:var(--ink-faint);}
+
+  .avatar-stack{display:flex;margin:10px 0 4px;}
+  .avatar{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--bg-screen);background:var(--line-soft);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin-left:-8px;}
+  .avatar:first-child{margin-left:0;}
+  .presence-note{font-size:10.5px;color:var(--ink-soft);margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+  .presence-dot{width:6px;height:6px;border-radius:50%;background:var(--presence);flex-shrink:0;}
+
+  .tabs{display:flex;gap:6px;margin-bottom:6px;}
+  .tab{border:1.5px solid var(--line);border-radius:8px 8px 0 0;padding:7px 14px;font-size:12px;font-weight:bold;}
+  .tab.act{background:var(--ink);color:#fff;}
+  .counter{font-size:10.5px;color:var(--ink-faint);text-align:right;margin-bottom:12px;}
+
+  .time-block{margin-bottom:14px;}
+  .time-block .tlabel{font-size:11px;font-weight:bold;color:var(--ink-soft);margin-bottom:6px;}
+  .activity-row{border:1.5px solid var(--line);border-radius:8px;padding:9px 10px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;margin-bottom:6px;}
+  .activity-row.locked{opacity:.55;}
+  .activity-row .x{color:var(--ink-faint);font-weight:bold;}
+  .lock-note{font-size:9.5px;color:var(--ink-faint);margin:-3px 0 6px 2px;}
+  .add-activity{border:1.5px dashed var(--line);border-radius:8px;padding:9px 10px;text-align:center;font-size:11.5px;color:var(--ink-soft);}
+
+  .sheet-screen{background:var(--bg-page);}
+  .sheet-dim{flex:1;background:rgba(38,40,44,0.35);}
+  .sheet{background:var(--bg-screen);border-radius:20px 20px 0 0;box-shadow:0 -6px 16px rgba(0,0,0,0.1);display:flex;flex-direction:column;}
+  .sheet-handle{width:36px;height:4px;background:var(--line-soft);border-radius:2px;margin:10px auto 4px;}
+  .sheet-header{display:flex;justify-content:space-between;align-items:center;padding:6px 20px 10px;}
+  .sheet-header h2{font-size:14.5px;margin:0;}
+  .sheet-body{padding:0 20px 16px;}
+
+  .version-compare{display:flex;gap:8px;margin-bottom:12px;}
+  .version-card{flex:1;border:1.5px solid var(--line);border-radius:8px;padding:9px;font-size:10.5px;line-height:1.5;}
+  .version-card .who{font-weight:bold;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+  .conflict-btn{border:1.5px solid var(--line);border-radius:8px;padding:11px;text-align:center;font-size:12px;font-weight:bold;margin-bottom:8px;}
+  .conflict-btn.primary{background:var(--ink);color:#fff;border:0;}
+  .merge-link{text-align:center;font-size:11.5px;font-weight:bold;text-decoration:underline;}
+
+  .field-label{font-size:11px;font-weight:bold;color:var(--ink-soft);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.03em;}
+  .field-label:first-child{margin-top:4px;}
+  .wf-input{border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .row-2{display:flex;gap:8px;}
+  .row-2 .wf-input{flex:1;}
+  .priv-card{border:1.5px solid var(--line);border-radius:8px;padding:10px 11px;margin-bottom:8px;}
+  .priv-card.sel{border-width:2px;}
+  .priv-card .ptitle{font-size:12px;font-weight:bold;display:flex;align-items:center;gap:7px;margin-bottom:2px;}
+  .radio{width:12px;height:12px;border:1.5px solid var(--line);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;}
+  .radio.sel:after{content:"";width:5px;height:5px;background:var(--ink);border-radius:50%;}
+  .priv-card .pdesc{font-size:10px;color:var(--ink-soft);line-height:1.4;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <h1>Tripfy · Editar roteiro — baixa fidelidade</h1>
+    <p>Acessada a partir de "Meus roteiros" ou do botão de ação no roteiro compartilhado. Reaproveita o layout da Etapa 4 da criação (dias/horários/atividades).</p>
+  </div>
+  <div class="flags">
+    <b>Pendências a confirmar com o time</b>
+    <ul>
+      <li><b>Auto-save</b> em vez de botão "Salvar" explícito — confirmar se é isso mesmo ou se vocês preferem salvar manual com estado "não salvo".</li>
+      <li><b>Item bloqueado por permissão (BR004):</b> modelei como card acinzentado com cadeado. O `PermissaoValidator` do backend precisa recusar a escrita mesmo que o app trave visualmente — nunca confiar só no front.</li>
+      <li><b>Histórico de alterações</b> (retenção de 90 dias, BR004) não tem tela própria ainda — só mencionado, não desenhado.</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+
+    <div class="step-wrap">
+      <div class="step-tag">Editar roteiro individual</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header">
+            <div class="round-btn">‹</div>
+            <div class="edit-title"><div class="name">3 dias em Monte Verde</div><div class="saved">Salvo agora</div></div>
+            <div class="round-btn">⋯</div>
+          </div>
+
+          <div class="tabs" style="margin-top:14px;">
+            <div class="tab act">Dia 1</div><div class="tab">Dia 2</div><div class="tab">Dia 3</div>
+          </div>
+          <div class="counter">4/10 atividades hoje</div>
+
+          <div class="time-block">
+            <div class="tlabel">MANHÃ · 06:00–12:00</div>
+            <div class="activity-row"><span>Visita ao Museu · 10:00–12:00 · $$</span><span class="x">×</span></div>
+            <div class="add-activity">+ Adicionar atividade</div>
+          </div>
+          <div class="time-block">
+            <div class="tlabel">TARDE · 12:00–18:00</div>
+            <div class="add-activity">+ Adicionar atividade</div>
+          </div>
+          <div class="time-block">
+            <div class="tlabel">NOITE · 18:00–00:00</div>
+            <div class="add-activity">+ Adicionar atividade</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">"⋯" abre o painel de Detalhes (nome/destino/privacidade), mostrado à direita.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Editar roteiro em grupo · presença + permissão</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header">
+            <div class="round-btn">‹</div>
+            <div class="edit-title"><div class="name">Viagem Nordeste 2026</div><div class="saved">Salvo agora</div></div>
+            <div class="round-btn">⋯</div>
+          </div>
+
+          <div class="avatar-stack">
+            <div class="avatar">VC</div><div class="avatar">M</div><div class="avatar">J</div>
+          </div>
+          <div class="presence-note"><span class="presence-dot"></span> Maria está editando o Dia 2 agora</div>
+
+          <div class="tabs">
+            <div class="tab act">Dia 1</div><div class="tab">Dia 2</div>
+          </div>
+          <div class="counter">6/10 atividades hoje</div>
+
+          <div class="time-block">
+            <div class="tlabel">MANHÃ · 06:00–12:00</div>
+            <div class="activity-row locked"><span>🔒 Café da manhã na pousada · 08:00–09:00</span><span class="x">×</span></div>
+            <div class="lock-note">Adicionado por João — só ele ou o administrador podem editar</div>
+            <div class="activity-row"><span>Praia do Meio · 09:30–12:00 · $</span><span class="x">×</span></div>
+          </div>
+          <div class="time-block">
+            <div class="tlabel">TARDE · 12:00–18:00</div>
+            <div class="add-activity">+ Adicionar atividade</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Atividade de outro membro fica visível mas travada — reflete a matriz de permissão do BR004.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Sheet · Conflito de edição (BR004 cenário 7)</div>
+      <div class="phone"><div class="screen sheet-screen">
+        <div class="status">9:41</div>
+        <div class="sheet-dim"></div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header"><h2>Conflito de edição</h2></div>
+          <div class="sheet-body">
+            <p style="font-size:11px;color:var(--ink-soft);margin:0 0 12px;">Você e Maria editaram a mesma atividade ao mesmo tempo. Escolha o que fazer:</p>
+            <div class="version-compare">
+              <div class="version-card"><div class="who">Sua versão</div>Almoço no Restaurante X<br>11:30–13:00 · $$</div>
+              <div class="version-card"><div class="who">Versão de Maria</div>Almoço na Barraca da Praia<br>12:00–13:30 · $</div>
+            </div>
+            <div class="conflict-btn primary">Manter a minha versão</div>
+            <div class="conflict-btn">Manter a versão de Maria</div>
+            <div class="merge-link">Mesclar manualmente</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Aparece assim que o segundo usuário tenta salvar — exatamente como o cenário descreve.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Sheet · Detalhes do roteiro</div>
+      <div class="phone"><div class="screen sheet-screen">
+        <div class="status">9:41</div>
+        <div class="sheet-dim"></div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header"><h2>Detalhes do roteiro</h2></div>
+          <div class="sheet-body">
+            <div class="field-label">Nome</div>
+            <div class="wf-input">3 dias em Monte Verde</div>
+            <div class="field-label">Período</div>
+            <div class="row-2">
+              <div class="wf-input">Início — 12/09</div>
+              <div class="wf-input">Fim — 14/09</div>
+            </div>
+            <div class="field-label">Quem pode ver este roteiro?</div>
+            <div class="priv-card sel"><div class="ptitle"><span class="radio sel"></span> Privado</div><div class="pdesc">Só você vê.</div></div>
+            <div class="priv-card"><div class="ptitle"><span class="radio"></span> Público</div><div class="pdesc">Qualquer pessoa pode ver e clonar (BR002).</div></div>
+            <div class="priv-card"><div class="ptitle"><span class="radio"></span> Colaborativo</div><div class="pdesc">Convidados podem ver e editar (BR004).</div></div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Reaproveita os componentes das Etapas 1 e 5 do wizard de criação.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

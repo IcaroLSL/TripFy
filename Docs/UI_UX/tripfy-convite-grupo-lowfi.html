@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Convite e cargos do grupo — Wireframe baixa-fi</title>
+<style>
+  :root{
+    --ink:#26282C; --ink-soft:#55585F; --ink-faint:#9298A2;
+    --line:#26282C; --line-soft:#C6CAD2;
+    --bg-page:#ECEDEF; --bg-screen:#FFFFFF;
+    --fill-selected:#26282C; --fill-selected-text:#FFFFFF;
+    --note-bg:#FFF7E0; --note-border:#C9A227;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{background:var(--bg-page); font-family:Arial,Helvetica,sans-serif; color:var(--ink); padding:40px 16px 80px;}
+  .page{max-width:1080px;margin:0 auto;}
+  .page-header h1{font-size:19px;margin:0 0 6px;}
+  .page-header p{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 24px;max-width:640px;}
+  .flags{background:var(--note-bg);border:1.5px dashed var(--note-border);border-radius:8px;padding:14px 16px;margin-bottom:36px;font-size:12.5px;line-height:1.6;}
+  .flags b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;color:#8a6d0f;}
+  .flags ul{margin:0;padding-left:18px;}
+  .flow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;}
+  .step-wrap{display:flex;flex-direction:column;align-items:center;}
+  .step-tag{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);margin-bottom:8px;text-align:center;max-width:340px;}
+  .phone{width:340px;border:2px solid var(--line);border-radius:26px;padding:6px;background:var(--bg-page);}
+  .screen{background:var(--bg-screen);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:660px;}
+  .status{text-align:center;font-size:10px;color:var(--ink-faint);padding:8px 0 2px;letter-spacing:.05em;}
+  .content{padding:12px 20px 16px;flex:1;overflow-y:auto;}
+  .caption{font-size:11px;color:var(--ink-faint);margin-top:10px;text-align:center;max-width:340px;}
+
+  .edit-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .round-btn{width:26px;height:26px;border:1.5px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;flex-shrink:0;}
+  .edit-title{text-align:center;flex:1;font-size:14px;font-weight:bold;}
+
+  .tabs{display:flex;gap:6px;margin-bottom:16px;}
+  .tab{border:1.5px solid var(--line);border-radius:999px;padding:7px 13px;font-size:11.5px;font-weight:bold;}
+  .tab.act{background:var(--ink);color:#fff;}
+
+  .code-box{border:2px solid var(--line);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px;}
+  .code-box .code{font-size:26px;font-weight:bold;letter-spacing:.12em;margin-bottom:6px;}
+  .code-box .valid{font-size:10.5px;color:var(--ink-faint);}
+  .btn-outline-full{border:1.5px solid var(--line);border-radius:8px;padding:11px;text-align:center;font-size:12.5px;font-weight:bold;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .link-mini{text-align:center;font-size:11.5px;font-weight:bold;text-decoration:underline;margin-top:4px;}
+
+  .wf-input{border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--ink-faint);display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+
+  .user-row{border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--line-soft);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;}
+  .user-info{flex:1;min-width:0;}
+  .user-name{font-size:12.5px;font-weight:bold;}
+  .user-meta{font-size:10px;color:var(--ink-soft);}
+  .btn-mini{border:1.5px solid var(--line);border-radius:999px;padding:6px 11px;font-size:10.5px;font-weight:bold;white-space:nowrap;}
+  .role-badge{border:1.5px solid var(--line);border-radius:999px;padding:5px 10px;font-size:10px;font-weight:bold;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+
+  .invite-row{border:1.5px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;}
+  .invite-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .invite-name{font-size:12px;font-weight:bold;}
+  .badge-pending{border:1.5px solid var(--note-border);background:var(--note-bg);color:#8a6d0f;border-radius:999px;padding:3px 8px;font-size:9.5px;font-weight:bold;}
+  .invite-meta{font-size:10px;color:var(--ink-soft);margin-bottom:8px;}
+  .invite-actions{display:flex;gap:8px;}
+  .invite-actions div{flex:1;text-align:center;border:1.5px solid var(--line);border-radius:8px;padding:7px;font-size:10.5px;font-weight:bold;}
+
+  .sheet-screen{background:var(--bg-page);}
+  .sheet-dim{flex:1;background:rgba(38,40,44,0.35);}
+  .sheet{background:var(--bg-screen);border-radius:20px 20px 0 0;box-shadow:0 -6px 16px rgba(0,0,0,0.1);display:flex;flex-direction:column;}
+  .sheet-handle{width:36px;height:4px;background:var(--line-soft);border-radius:2px;margin:10px auto 4px;}
+  .sheet-header{display:flex;justify-content:space-between;align-items:center;padding:6px 20px 10px;}
+  .sheet-header h2{font-size:14.5px;margin:0;}
+  .sheet-body{padding:0 20px 16px;}
+  .role-card{border:1.5px solid var(--line);border-radius:8px;padding:10px 11px;margin-bottom:8px;}
+  .role-card.sel{border-width:2px;}
+  .role-card .rtitle{font-size:12.5px;font-weight:bold;display:flex;align-items:center;gap:7px;margin-bottom:2px;}
+  .radio{width:12px;height:12px;border:1.5px solid var(--line);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;}
+  .radio.sel:after{content:"";width:5px;height:5px;background:var(--ink);border-radius:50%;}
+  .role-card .rdesc{font-size:10px;color:var(--ink-soft);line-height:1.4;}
+  .sheet-footer{padding:14px 20px 18px;border-top:1.5px solid var(--line-soft);}
+  .btn-primary-full{background:var(--ink);color:#fff;border-radius:8px;padding:12px;text-align:center;font-size:12.5px;font-weight:bold;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <h1>Tripfy · Convite e cargos do grupo — baixa fidelidade</h1>
+    <p>Cobre os dois canais de convite do BR005 (código e busca por username) e o gerenciamento de papéis do BR004.</p>
+  </div>
+  <div class="flags">
+    <b>Pendências a confirmar com o time</b>
+    <ul>
+      <li>BR005 tem duas validades de código conflitantes no documento: "7 dias (configurável)" no cenário 1, mas "validade padrão: 1 ano" na seção de regras. Usei <b>7 dias</b> no wireframe — confirmar qual vale.</li>
+      <li>A visão de "Gerenciar membros" que desenhei é a do <b>ADMINISTRADOR</b> (com dropdown de papel e botão remover). MEMBRO/CONVIDADO deveriam ver a mesma lista sem essas ações — não desenhei essa variante read-only separadamente.</li>
+      <li>Convite por username usa notificação push/in-app (BR005); não desenhei a tela de notificação com "Aceitar/Recusar" — fica pro próximo lote.</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+
+    <div class="step-wrap">
+      <div class="step-tag">Convidar · Código Base62</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Convidar pessoas</div><div class="round-btn" style="visibility:hidden;">‹</div></div>
+          <div class="tabs"><div class="tab act">Código</div><div class="tab">Buscar pessoa</div></div>
+
+          <div class="code-box">
+            <div class="code">Ab3Cd7X</div>
+            <div class="valid">Válido por 7 dias</div>
+          </div>
+          <div class="btn-outline-full">💬 Compartilhar via WhatsApp</div>
+          <div class="btn-outline-full">📋 Copiar link do convite</div>
+          <div class="link-mini">🔄 Gerar novo código</div>
+        </div>
+      </div></div>
+      <p class="caption">Mensagem do WhatsApp segue o template exato do BR005 (nome do grupo + link + descrição do Tripfy).</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Convidar · Buscar pessoa</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Convidar pessoas</div><div class="round-btn" style="visibility:hidden;">‹</div></div>
+          <div class="tabs"><div class="tab">Código</div><div class="tab act">Buscar pessoa</div></div>
+
+          <div class="wf-input">🔍 Buscar por username</div>
+
+          <div class="user-row">
+            <div class="avatar">MS</div>
+            <div class="user-info"><div class="user-name">@mariasilva</div><div class="user-meta">Cadastrada no Tripfy</div></div>
+            <div class="btn-mini">Convidar</div>
+          </div>
+          <div class="user-row">
+            <div class="avatar">JP</div>
+            <div class="user-info"><div class="user-name">joao@email.com</div><div class="user-meta">Não cadastrado — convite por e-mail</div></div>
+            <div class="btn-mini">Convidar</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Username cadastrado → notificação push. Não cadastrado → e-mail com link de cadastro (BR005 cenário 7/11).</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Convites pendentes</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Convites pendentes</div><div class="round-btn" style="visibility:hidden;">‹</div></div>
+
+          <div class="invite-row">
+            <div class="invite-top"><span class="invite-name">maria@email.com</span><span class="badge-pending">PENDENTE</span></div>
+            <div class="invite-meta">Enviado há 5 dias · 1/3 reenvios usados</div>
+            <div class="invite-actions"><div>Reenviar</div><div>Cancelar</div></div>
+          </div>
+          <div class="invite-row">
+            <div class="invite-top"><span class="invite-name">joao@email.com</span><span class="badge-pending">PENDENTE</span></div>
+            <div class="invite-meta">Enviado hoje · 0/3 reenvios usados</div>
+            <div class="invite-actions"><div>Reenviar</div><div>Cancelar</div></div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Limite de 20 convites pendentes por grupo (BR005) — vale um contador aqui também.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Gerenciar membros e cargos (visão ADMIN)</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Membros do grupo</div><div class="round-btn" style="visibility:hidden;">‹</div></div>
+
+          <div class="user-row">
+            <div class="avatar">VC</div>
+            <div class="user-info"><div class="user-name">Você</div><div class="user-meta">Entrou em 18/02</div></div>
+            <div class="role-badge">Administrador</div>
+          </div>
+          <div class="user-row">
+            <div class="avatar">M</div>
+            <div class="user-info"><div class="user-name">Maria Silva</div><div class="user-meta">Entrou em 19/02</div></div>
+            <div class="role-badge">Editor ⌄</div>
+          </div>
+          <div class="user-row">
+            <div class="avatar">J</div>
+            <div class="user-info"><div class="user-name">João Pedro</div><div class="user-meta">Entrou em 20/02</div></div>
+            <div class="role-badge">Membro ⌄</div>
+          </div>
+          <div class="user-row">
+            <div class="avatar">A</div>
+            <div class="user-info"><div class="user-name">Ana Costa</div><div class="user-meta">Entrou em 22/02</div></div>
+            <div class="role-badge">Convidado ⌄</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Tocar num badge de papel (⌄) abre o sheet ao lado. "Você" não tem dropdown — não dá pra rebaixar a si mesmo sem transferir antes (BR004).</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Sheet · Alterar papel</div>
+      <div class="phone"><div class="screen sheet-screen">
+        <div class="status">9:41</div>
+        <div class="sheet-dim"></div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header"><h2>Alterar papel de Maria</h2></div>
+          <div class="sheet-body">
+            <div class="role-card"><div class="rtitle"><span class="radio"></span> Administrador</div><div class="rdesc">Controle total do grupo.</div></div>
+            <div class="role-card sel"><div class="rtitle"><span class="radio sel"></span> Editor</div><div class="rdesc">Cria e edita roteiros, não gerencia membros.</div></div>
+            <div class="role-card"><div class="rtitle"><span class="radio"></span> Membro</div><div class="rdesc">Cria roteiro próprio, não edita de outros.</div></div>
+            <div class="role-card"><div class="rtitle"><span class="radio"></span> Convidado</div><div class="rdesc">Somente leitura.</div></div>
+          </div>
+          <div class="sheet-footer"><div class="btn-primary-full">Confirmar</div></div>
+        </div>
+      </div></div>
+      <p class="caption">Reaproveita o mesmo componente de cards usado na Etapa 5 do wizard de criação.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

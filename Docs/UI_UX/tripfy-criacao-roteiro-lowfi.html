@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Criação de roteiro — Wireframe baixa-fi</title>
+<style>
+  :root{
+    --ink: #26282C;
+    --ink-soft: #55585F;
+    --ink-faint: #9298A2;
+    --line: #26282C;
+    --line-soft: #C6CAD2;
+    --bg-page: #ECEDEF;
+    --bg-screen: #FFFFFF;
+    --fill-selected: #26282C;
+    --fill-selected-text: #FFFFFF;
+    --warn-border: #B23A2E;
+    --warn-bg: #FBEDEA;
+    --note-bg: #FFF7E0;
+    --note-border: #C9A227;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg-page);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--ink);
+    padding: 40px 16px 80px;
+  }
+  .page{ max-width: 760px; margin: 0 auto; }
+
+  .page-header h1{ font-size: 19px; margin: 0 0 6px; }
+  .page-header p{ font-size: 13px; color: var(--ink-soft); line-height:1.5; margin:0 0 24px; max-width: 560px; }
+
+  .flags{
+    background: var(--note-bg);
+    border: 1.5px dashed var(--note-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 36px;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  .flags b{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; color:#8a6d0f;}
+  .flags ul{ margin:0; padding-left: 18px; }
+
+  .flow{ display:flex; flex-direction:column; align-items:center; }
+  .step-wrap{ width:100%; display:flex; flex-direction:column; align-items:center; }
+  .step-tag{
+    font-size: 11px;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  .arrow{
+    font-size: 20px;
+    color: var(--ink-faint);
+    margin: 10px 0 18px;
+  }
+
+  /* ---- phone lo-fi shell ---- */
+  .phone{
+    width: 340px;
+    border: 2px solid var(--line);
+    border-radius: 26px;
+    padding: 6px;
+    background: var(--bg-page);
+    margin-bottom: 8px;
+  }
+  .screen{
+    background: var(--bg-screen);
+    border-radius: 20px;
+    overflow: hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .status{ text-align:center; font-size:10px; color:var(--ink-faint); padding:8px 0 2px; letter-spacing:.05em;}
+
+  .progress{ display:flex; gap:4px; padding: 8px 20px 0; }
+  .progress-seg{ height:4px; flex:1; background: var(--line-soft); border-radius:2px; }
+  .progress-seg.filled{ background: var(--ink); }
+
+  .content{ padding: 14px 20px 16px; max-height: 500px; overflow-y:auto; }
+  .content h2{ font-size:16px; margin: 4px 0 3px; }
+  .content .sub{ font-size:11.5px; color:var(--ink-soft); margin:0 0 16px; }
+
+  .field-label{ font-size:11.5px; font-weight:bold; color: var(--ink-soft); margin: 14px 0 6px; text-transform:uppercase; letter-spacing:.03em;}
+  .field-label:first-child{ margin-top:0; }
+
+  .wf-input{
+    border: 1.5px solid var(--line); border-radius:8px;
+    padding: 10px 12px; font-size:13px; color: var(--ink-faint);
+    display:flex; align-items:center; gap:8px;
+  }
+  .wf-input.filled{ color: var(--ink); }
+  .row-2{ display:flex; gap:10px; }
+  .row-2 .wf-input{ flex:1; }
+
+  .wf-btn-outline{
+    border:1.5px solid var(--line); border-radius:8px; text-align:center;
+    padding:11px; font-size:13px; font-weight:bold; background:none;
+  }
+  .divider{ display:flex; align-items:center; gap:10px; font-size:11px; color:var(--ink-faint); margin: 14px 0; }
+  .divider:before, .divider:after{ content:""; flex:1; height:1px; background:var(--line-soft); }
+
+  .chip-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+  .chip{
+    border: 1.5px solid var(--line); border-radius: 999px;
+    padding: 9px 10px; font-size:12px; text-align:center;
+  }
+  .chip.sel{ background: var(--fill-selected); color: var(--fill-selected-text); border-color: var(--fill-selected); font-weight:bold; }
+
+  .segmented{ display:flex; border:1.5px solid var(--line); border-radius:8px; overflow:hidden; }
+  .segmented div{ flex:1; text-align:center; padding:10px 4px; font-size:12px; border-right:1.5px solid var(--line); }
+  .segmented div:last-child{ border-right:none; }
+  .segmented div.act{ background:var(--fill-selected); color:#fff; font-weight:bold; }
+
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip-row .chip{ flex:0 0 auto; padding:8px 12px; }
+
+  .note{
+    border:1.5px dashed var(--note-border); background:var(--note-bg);
+    border-radius:8px; padding:9px 11px; font-size:11px; line-height:1.5; margin-top:14px;
+  }
+
+  .tabs{ display:flex; gap:6px; margin-bottom:6px; }
+  .tab{ border:1.5px solid var(--line); border-radius:8px 8px 0 0; padding:7px 14px; font-size:12px; font-weight:bold; }
+  .tab.act{ background:var(--ink); color:#fff; }
+  .counter{ font-size:10.5px; color:var(--ink-faint); text-align:right; margin-bottom:14px; }
+
+  .suggest-label{ font-size:11.5px; font-weight:bold; margin: 4px 0 8px; }
+  .suggest-row{ display:flex; gap:8px; overflow-x:auto; margin-bottom:16px; padding-bottom:2px; }
+  .suggest-card{ flex:0 0 108px; border:1.5px solid var(--line); border-radius:8px; overflow:hidden; }
+  .ph-photo{
+    width:100%; aspect-ratio:4/3; border-bottom:1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ph-photo svg{ width:22px; height:22px; color:var(--ink-faint); }
+  .suggest-body{ padding:6px 7px; }
+  .suggest-body .name{ font-size:10.5px; font-weight:bold; line-height:1.3; margin-bottom:3px; }
+  .suggest-body .meta{ font-size:9.5px; color:var(--ink-soft); display:flex; justify-content:space-between; align-items:center; }
+  .add-mini{ width:16px; height:16px; border:1.5px solid var(--line); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:bold; }
+
+  .time-block{ margin-bottom:16px; }
+  .time-block .tlabel{ font-size:11px; font-weight:bold; color:var(--ink-soft); margin-bottom:6px; }
+  .activity-row{
+    border:1.5px solid var(--line); border-radius:8px; padding:9px 10px;
+    display:flex; justify-content:space-between; align-items:center; font-size:11.5px; margin-bottom:6px;
+  }
+  .activity-row .x{ color: var(--ink-faint); font-weight:bold; }
+  .add-activity{
+    border:1.5px dashed var(--line); border-radius:8px; padding:9px 10px;
+    text-align:center; font-size:11.5px; color: var(--ink-soft);
+  }
+  .conflict{
+    border:1.5px solid var(--warn-border); background:var(--warn-bg); color:#7A2A20;
+    border-radius:8px; padding:9px 10px; font-size:11px; line-height:1.5; margin-top:2px;
+  }
+
+  .priv-card{ border:1.5px solid var(--line); border-radius:8px; padding:11px 12px; margin-bottom:10px; }
+  .priv-card.sel{ border-width:2px; }
+  .priv-card .ptitle{ font-size:12.5px; font-weight:bold; display:flex; align-items:center; gap:7px; margin-bottom:3px; }
+  .radio{ width:13px; height:13px; border:1.5px solid var(--line); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+  .radio.sel:after{ content:""; width:6px; height:6px; background:var(--ink); border-radius:50%; }
+  .priv-card .pdesc{ font-size:11px; color:var(--ink-soft); line-height:1.4; }
+
+  .summary-box{ border:1.5px solid var(--line-soft); border-radius:8px; padding:10px 12px; font-size:11.5px; line-height:1.7; color:var(--ink-soft); }
+  .summary-box b{ color:var(--ink); }
+
+  .footer{
+    display:flex; gap:10px; padding: 12px 20px 18px; border-top:1.5px solid var(--line-soft);
+  }
+  .footer .wf-btn-outline{ flex:1; }
+  .btn-primary{ flex:1; background:var(--ink); color:#fff; border-radius:8px; text-align:center; padding:11px; font-size:13px; font-weight:bold; }
+  .btn-ghost{ visibility:hidden; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <h1>Tripfy · Criação de roteiro — baixa fidelidade</h1>
+    <p>Wireframe estrutural do fluxo de 5 etapas, ancorado na BR001 (montagem/busca) e, na etapa final, na BR003 (privacidade). Sem cor de marca, sem foto real — só estrutura.</p>
+  </div>
+
+  <div class="flags">
+    <b>Pendências a confirmar com o time antes de avançar pra hi-fi</b>
+    <ul>
+      <li><b>exemplo.md vs BR001.md:</b> ambos usam <code>id: BR001</code> com conteúdos diferentes (duração mínima por destino vs. montagem/busca). Tratei o primeiro como template ilustrativo — se for regra real, precisa de ID próprio antes de virar validação bloqueante na Etapa 1.</li>
+      <li><b>Etapa 5 (privacidade):</b> BR003 documenta regras de <i>visualização</i>, não de <i>criação</i>. Assumi que a escolha PÚBLICO/PRIVADO/COLABORATIVO acontece no fim da criação — confirmar se isso não deveria ser uma etapa separada de compartilhamento.</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+
+    <!-- ETAPA 1 -->
+    <div class="step-wrap">
+      <div class="step-tag">Etapa 1 de 5 · Destino e período · BR001</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="progress">
+          <div class="progress-seg filled"></div><div class="progress-seg"></div><div class="progress-seg"></div><div class="progress-seg"></div><div class="progress-seg"></div>
+        </div>
+        <div class="content">
+          <h2>Para onde vamos?</h2>
+          <p class="sub">Vamos usar isso pra sugerir atividades no raio certo</p>
+
+          <div class="wf-btn-outline">📍 Usar minha localização atual</div>
+          <div class="divider">ou</div>
+          <div class="field-label">Destino</div>
+          <div class="wf-input">🔍 Buscar cidade, região ou país</div>
+
+          <div class="field-label">Quando?</div>
+          <div class="row-2">
+            <div class="wf-input">Início — dd/mm/aaaa</div>
+            <div class="wf-input">Fim — dd/mm/aaaa</div>
+          </div>
+
+          <div class="note">Raio padrão de busca: 50km a partir do ponto escolhido (ajustável depois na montagem). <b>Nota:</b> se houver permanência mínima recomendada por tipo de destino, exibir aqui só após confirmação da regra (ver aviso no topo).</div>
+        </div>
+        <div class="footer">
+          <div class="wf-btn-outline btn-ghost">Voltar</div>
+          <div class="btn-primary">Continuar</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- ETAPA 2 -->
+    <div class="step-wrap">
+      <div class="step-tag">Etapa 2 de 5 · Categorias · BR001</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="progress">
+          <div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg"></div><div class="progress-seg"></div><div class="progress-seg"></div>
+        </div>
+        <div class="content">
+          <h2>O que você curte?</h2>
+          <p class="sub">Selecione uma ou mais — isso prioriza as sugestões da Etapa 4</p>
+
+          <div class="chip-grid">
+            <div class="chip">🍽 Restaurante</div>
+            <div class="chip">🏛 Museu</div>
+            <div class="chip">🥾 Ar livre</div>
+            <div class="chip sel">🏖 Praia</div>
+            <div class="chip">🌳 Parque</div>
+            <div class="chip">🌃 Vida noturna</div>
+            <div class="chip">🛍 Compras</div>
+            <div class="chip sel">🏺 Histórico</div>
+          </div>
+        </div>
+        <div class="footer">
+          <div class="wf-btn-outline">Voltar</div>
+          <div class="btn-primary">Continuar</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- ETAPA 3 -->
+    <div class="step-wrap">
+      <div class="step-tag">Etapa 3 de 5 · Preço e avaliação · BR001</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="progress">
+          <div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg"></div><div class="progress-seg"></div>
+        </div>
+        <div class="content">
+          <h2>Qual seu orçamento?</h2>
+          <p class="sub">Por atividade — dá pra ajustar depois</p>
+
+          <div class="field-label">Faixa de preço</div>
+          <div class="segmented">
+            <div>Grátis</div><div>$</div><div class="act">$$</div><div>$$$</div><div>$$$$</div>
+          </div>
+
+          <div class="field-label">Avaliação mínima</div>
+          <div class="chip-row">
+            <div class="chip">Qualquer</div>
+            <div class="chip">3.0+</div>
+            <div class="chip sel">4.0+ ⭐</div>
+            <div class="chip">4.5+</div>
+          </div>
+
+          <div class="note">Atividades com menos de 10 avaliações não entram no ranking de destaque (regra interna do domínio).</div>
+        </div>
+        <div class="footer">
+          <div class="wf-btn-outline">Voltar</div>
+          <div class="btn-primary">Continuar</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- ETAPA 4 -->
+    <div class="step-wrap">
+      <div class="step-tag">Etapa 4 de 5 · Dias e atividades · BR001</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="progress">
+          <div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg"></div>
+        </div>
+        <div class="content">
+          <h2>Monte seu roteiro</h2>
+          <p class="sub">Adicione atividades por dia e horário</p>
+
+          <div class="tabs">
+            <div class="tab act">Dia 1</div>
+            <div class="tab">Dia 2</div>
+            <div class="tab">Dia 3</div>
+          </div>
+          <div class="counter">4/10 atividades hoje</div>
+
+          <div class="suggest-label">Sugerido pra você</div>
+          <div class="suggest-row">
+            <div class="suggest-card">
+              <div class="ph-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="suggest-body">
+                <div class="name">Praia do Meio</div>
+                <div class="meta"><span>$ · 4.6★</span><div class="add-mini">+</div></div>
+              </div>
+            </div>
+            <div class="suggest-card">
+              <div class="ph-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="suggest-body">
+                <div class="name">Forte Histórico</div>
+                <div class="meta"><span>$$ · 4.4★</span><div class="add-mini">+</div></div>
+              </div>
+            </div>
+            <div class="suggest-card">
+              <div class="ph-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="suggest-body">
+                <div class="name">Mirante do Sol</div>
+                <div class="meta"><span>Grátis · 4.8★</span><div class="add-mini">+</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="time-block">
+            <div class="tlabel">MANHÃ · 06:00–12:00</div>
+            <div class="activity-row"><span>Visita ao Museu · 10:00–12:00 · $$</span><span class="x">×</span></div>
+            <div class="add-activity">+ Adicionar atividade</div>
+          </div>
+
+          <div class="time-block">
+            <div class="tlabel">TARDE · 12:00–18:00</div>
+            <div class="activity-row"><span>Almoço Restaurante X · 11:30–13:00 · $$</span><span class="x">×</span></div>
+            <div class="conflict">⚠ Conflito de horário: esta atividade sobrepõe "Visita ao Museu" (10:00–12:00)</div>
+          </div>
+
+          <div class="time-block">
+            <div class="tlabel">NOITE · 18:00–00:00</div>
+            <div class="add-activity">+ Adicionar atividade</div>
+          </div>
+        </div>
+        <div class="footer">
+          <div class="wf-btn-outline">Voltar</div>
+          <div class="btn-primary">Continuar</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- ETAPA 5 -->
+    <div class="step-wrap">
+      <div class="step-tag">Etapa 5 de 5 · Finalizar · BR003 (inferido)</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="progress">
+          <div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg filled"></div><div class="progress-seg filled"></div>
+        </div>
+        <div class="content">
+          <h2>Revise e salve</h2>
+          <p class="sub">Confira antes de publicar seu roteiro</p>
+
+          <div class="field-label">Nome do roteiro</div>
+          <div class="wf-input filled">3 dias em Monte Verde</div>
+
+          <div class="field-label">Resumo</div>
+          <div class="summary-box">
+            <b>Destino:</b> Monte Verde, MG<br>
+            <b>Período:</b> 3 dias (12–14/09)<br>
+            <b>Categorias:</b> Praia, Histórico<br>
+            <b>Atividades adicionadas:</b> 4
+          </div>
+
+          <div class="field-label">Quem pode ver este roteiro?</div>
+          <div class="priv-card sel">
+            <div class="ptitle"><span class="radio sel"></span> Privado</div>
+            <div class="pdesc">Só você vê. Pode compartilhar depois com pessoas específicas ou por link.</div>
+          </div>
+          <div class="priv-card">
+            <div class="ptitle"><span class="radio"></span> Público</div>
+            <div class="pdesc">Qualquer pessoa pode ver e clonar este roteiro (BR002).</div>
+          </div>
+          <div class="priv-card">
+            <div class="ptitle"><span class="radio"></span> Colaborativo</div>
+            <div class="pdesc">Pessoas convidadas podem ver e editar junto (grupos · BR004).</div>
+          </div>
+
+          <div class="note">⚠ Confirmar com o time: essa escolha deve acontecer aqui na criação, ou como etapa separada de compartilhamento depois de salvar?</div>
+        </div>
+        <div class="footer">
+          <div class="wf-btn-outline">Voltar</div>
+          <div class="btn-primary">Salvar roteiro</div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -13,6 +13,8 @@ import { set, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Location from 'expo-location';
 import { useConvertLocation } from '../../../hooks/useConvertLocation';
+import { useAutocompleteLocation } from '../../../hooks/useAutocompleteLocation';
+import Card from '../../../components/ui/Card';
 
 
 const formSchema = z.object({
@@ -29,7 +31,8 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
-    const { convertLocation, error, loading } = useConvertLocation()
+    const { convertLocation, error, loading, location } = useConvertLocation()
+    const { getLocationSuggestions, error: autocompleteError, loading: autocompleteLoading, locationSuggestions } = useAutocompleteLocation()
     const [errorLocation, setErrorLocation] = useState<string | null>(null);
     const [loadingLocation, setLoadingLocation] = useState<boolean>(false);
     const { control, handleSubmit, setValue, watch, setError } = useForm<FormData>({
@@ -43,6 +46,28 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
         },
         mode: 'onBlur',
     });
+    const watchDestino = watch('destino');
+
+    useEffect(() => {
+
+        const fetchLocationSuggestions = setTimeout(async () => {
+            try {
+
+                if (watchDestino && watchDestino.length > 0) {
+                    const suggestions = await getLocationSuggestions(watchDestino);
+                    if (suggestions) {
+                        console.log('Location suggestions:', suggestions);
+                    } else {
+                        console.log('No location suggestions found');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching location suggestions:', error);
+            }
+        }, 1000)
+
+        return () => clearTimeout(fetchLocationSuggestions);
+    }, [watchDestino])
 
     const handleGetLocation = async () => {
         try {
@@ -99,6 +124,18 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 <AppText theme={theme}>Destino</AppText>
                 <TextField theme={theme} control={control} name="destino" placeholder="Digite o endereço do destino" />
             </View>
+
+            {locationSuggestions && locationSuggestions.length > 0 && (
+                <Card theme={theme} className='absolute top-[30vh] left-0 right-0 p-4 items-center gap-2'>
+                    <AppText theme={theme}>Sugestões de Localização:</AppText>
+                    {locationSuggestions.map((suggestion, index) => (
+                        <Text key={index} className={`text-base text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                            {suggestion}
+                        </Text>
+                    ))}
+                </Card>
+            )}
+
             <View className="gap-2">
                 <AppText theme={theme}>Quando?</AppText>
                 <DateField mode='range' theme={theme} control={control} name="data" placeholder="Selecione a data de início e fim" />

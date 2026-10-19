@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Meus roteiros — Wireframe baixa-fi</title>
+<style>
+  :root{
+    --ink: #26282C;
+    --ink-soft: #55585F;
+    --ink-faint: #9298A2;
+    --line: #26282C;
+    --line-soft: #C6CAD2;
+    --bg-page: #ECEDEF;
+    --bg-screen: #FFFFFF;
+    --fill-selected: #26282C;
+    --fill-selected-text: #FFFFFF;
+    --note-bg: #FFF7E0;
+    --note-border: #C9A227;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg-page);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--ink);
+    padding: 40px 16px 80px;
+  }
+  .page{ max-width: 1080px; margin: 0 auto; }
+
+  .page-header h1{ font-size: 19px; margin: 0 0 6px; }
+  .page-header p{ font-size: 13px; color: var(--ink-soft); line-height:1.5; margin:0 0 24px; max-width: 640px; }
+
+  .flags{
+    background: var(--note-bg); border: 1.5px dashed var(--note-border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 36px; font-size: 12.5px; line-height: 1.6;
+  }
+  .flags b{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; color:#8a6d0f;}
+  .flags ul{ margin:0; padding-left: 18px; }
+
+  .flow{ display:flex; flex-wrap:wrap; gap: 28px; justify-content:center; align-items:flex-start; }
+  .step-wrap{ display:flex; flex-direction:column; align-items:center; }
+  .step-tag{
+    font-size: 11px; font-weight:bold; text-transform:uppercase; letter-spacing:.04em;
+    color: var(--ink-faint); margin-bottom: 8px; text-align:center; max-width:340px;
+  }
+
+  .phone{ width: 340px; border: 2px solid var(--line); border-radius: 26px; padding: 6px; background: var(--bg-page); }
+  .screen{ background: var(--bg-screen); border-radius: 20px; overflow: hidden; display:flex; flex-direction:column; min-height: 680px; }
+  .status{ text-align:center; font-size:10px; color:var(--ink-faint); padding:8px 0 2px; letter-spacing:.05em;}
+
+  .content{ padding: 12px 20px 8px; flex:1; overflow-y:auto; }
+
+  .list-header{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2px; }
+  .list-header h2{ font-size:18px; margin:0 0 3px; }
+  .list-header .count{ font-size:11px; color:var(--ink-faint); }
+  .btn-new{ border:1.5px solid var(--line); border-radius:999px; padding:7px 12px; font-size:11px; font-weight:bold; white-space:nowrap; }
+
+  .wf-input{
+    border: 1.5px solid var(--line); border-radius:8px; padding: 10px 12px; font-size:12.5px;
+    color: var(--ink-faint); display:flex; align-items:center; gap:8px; margin: 14px 0 12px;
+  }
+
+  .tabs{ display:flex; gap:6px; margin-bottom:14px; }
+  .tab{ border:1.5px solid var(--line); border-radius:999px; padding:7px 13px; font-size:11.5px; font-weight:bold; }
+  .tab.act{ background:var(--ink); color:#fff; }
+
+  .roteiro-card{ border:1.5px solid var(--line); border-radius:12px; padding:11px; margin-bottom:12px; position:relative; }
+  .roteiro-top{ display:flex; gap:10px; }
+  .roteiro-photo{ width:56px;height:56px; border:1.5px solid var(--line); border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .roteiro-photo svg{ width:22px;height:22px; color:var(--ink-faint); }
+  .roteiro-info{ flex:1; min-width:0; }
+  .roteiro-name{ font-size:13.5px; font-weight:bold; margin-bottom:2px; }
+  .roteiro-meta{ font-size:11px; color:var(--ink-soft); margin-bottom:7px; }
+
+  .badge-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .badge{ border:1.5px solid var(--line); border-radius:999px; padding:3px 8px; font-size:9.5px; font-weight:bold; display:inline-flex; align-items:center; gap:4px; }
+  .badge.draft{ border-color:var(--note-border); background:var(--note-bg); color:#8a6d0f; }
+  .badge.group{ border-style:dashed; }
+
+  .roteiro-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:11px; padding-top:10px; border-top:1.5px dashed var(--line-soft); }
+  .timestamp{ font-size:10px; color:var(--ink-faint); }
+  .card-actions{ display:flex; gap:8px; align-items:center; }
+  .btn-edit{ border:1.5px solid var(--line); border-radius:8px; padding:6px 11px; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; }
+  .btn-more{ width:26px;height:26px; border:1.5px solid var(--line); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:bold; }
+
+  /* menu popover state */
+  .menu-anchor{ position:relative; }
+  .popover{
+    position:absolute; top:38px; right:0; z-index:5;
+    background:var(--bg-screen); border:1.5px solid var(--line); border-radius:10px;
+    width:170px; box-shadow: 0 6px 16px rgba(0,0,0,0.12); overflow:hidden;
+  }
+  .popover-item{ padding:11px 13px; font-size:12px; font-weight:bold; border-bottom:1px solid var(--line-soft); }
+  .popover-item:last-child{ border-bottom:none; color:#B23A2E; }
+
+  .bottom-nav{
+    display:flex; justify-content:space-around; align-items:center;
+    padding: 10px 18px 16px; border-top:1.5px solid var(--line-soft); background:var(--bg-screen);
+  }
+  .nav-icon{ width:22px; height:22px; color: var(--ink-faint); }
+  .nav-icon.act{ color: var(--ink); }
+  .nav-fab{ width:44px; height:44px; border-radius:50%; background:var(--ink); display:flex; align-items:center; justify-content:center; margin-top:-22px; }
+  .nav-fab svg{ width:18px;height:18px; color:#fff; }
+
+  .empty-state{ text-align:center; padding: 60px 20px; }
+  .empty-icon{ width:64px; height:64px; border:1.5px dashed var(--line-soft); border-radius:16px; margin:0 auto 18px; display:flex; align-items:center; justify-content:center; }
+  .empty-icon svg{ width:26px;height:26px; color:var(--ink-faint); }
+  .empty-state h3{ font-size:14px; margin:0 0 6px; }
+  .empty-state p{ font-size:12px; color:var(--ink-soft); line-height:1.5; margin:0 0 20px; }
+  .btn-primary-full{ background:var(--ink); color:#fff; border-radius:8px; padding:12px; font-size:12.5px; font-weight:bold; display:inline-block; }
+
+  .caption{ font-size:11px; color:var(--ink-faint); margin-top:10px; text-align:center; max-width:340px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <h1>Tripfy · Meus roteiros — baixa fidelidade</h1>
+    <p>Listagem dos roteiros criados pelo usuário, com seleção para edição. Nenhuma BR001–BR008 cobre listagem/edição de roteiro próprio hoje — desenhado com base na estrutura de dados do BR001 e nas badges de privacidade (BR003) e grupo (BR004).</p>
+  </div>
+
+  <div class="flags">
+    <b>Pendências a confirmar com o time</b>
+    <ul>
+      <li><b>Aba "Rascunhos"</b> pressupõe persistência de progresso parcial do wizard de criação — nunca foi formalizado como regra, só sugerido como recomendação técnica anteriormente.</li>
+      <li><b>Botão "Editar" em roteiro de grupo (BR004)</b> precisa respeitar o papel atual do usuário (ADMINISTRADOR/EDITOR editam; MEMBRO só edita o que criou; CONVIDADO nunca edita) — não modelei os estados desabilitados aqui, mas o componente precisa prever isso.</li>
+      <li><b>Falta uma BR</b> que formalize "listar/editar roteiro próprio" — hoje BR003 só cobre visualização de roteiros de terceiros.</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+
+    <!-- TELA 1: LISTA -->
+    <div class="step-wrap">
+      <div class="step-tag">Tela principal · Meus roteiros</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="list-header">
+            <div>
+              <h2>Meus roteiros</h2>
+              <div class="count">4 roteiros</div>
+            </div>
+            <div class="btn-new">+ Novo</div>
+          </div>
+
+          <div class="wf-input">🔍 Buscar roteiro</div>
+
+          <div class="tabs">
+            <div class="tab act">Todos</div>
+            <div class="tab">Em grupo</div>
+            <div class="tab">Rascunhos</div>
+          </div>
+
+          <div class="roteiro-card">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">3 dias em Monte Verde</div>
+                <div class="roteiro-meta">Monte Verde, MG · 3 dias</div>
+                <div class="badge-row">
+                  <div class="badge">🔒 Privado</div>
+                  <div class="badge">✓ Completo</div>
+                </div>
+              </div>
+            </div>
+            <div class="roteiro-footer">
+              <span class="timestamp">Editado há 2 dias</span>
+              <div class="card-actions">
+                <div class="btn-edit">✎ Editar</div>
+                <div class="btn-more">⋯</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="roteiro-card">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">Viagem Nordeste 2026</div>
+                <div class="roteiro-meta">Salvador, BA · 7 dias</div>
+                <div class="badge-row">
+                  <div class="badge">🤝 Colaborativo</div>
+                  <div class="badge group">👥 Grupo</div>
+                  <div class="badge">✓ Completo</div>
+                </div>
+              </div>
+            </div>
+            <div class="roteiro-footer">
+              <span class="timestamp">Editado ontem</span>
+              <div class="card-actions">
+                <div class="btn-edit">✎ Editar</div>
+                <div class="btn-more">⋯</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="roteiro-card">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">Fim de semana em Paraty</div>
+                <div class="roteiro-meta">Paraty, RJ · 2 dias</div>
+                <div class="badge-row">
+                  <div class="badge">🌐 Público</div>
+                  <div class="badge draft">✎ Rascunho</div>
+                </div>
+              </div>
+            </div>
+            <div class="roteiro-footer">
+              <span class="timestamp">Editado há 30 min</span>
+              <div class="card-actions">
+                <div class="btn-edit">✎ Continuar</div>
+                <div class="btn-more">⋯</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="roteiro-card">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">Bonito completo</div>
+                <div class="roteiro-meta">Bonito, MS · 5 dias</div>
+                <div class="badge-row">
+                  <div class="badge">🔒 Privado</div>
+                  <div class="badge">✓ Completo</div>
+                </div>
+              </div>
+            </div>
+            <div class="roteiro-footer">
+              <span class="timestamp">Editado há 1 semana</span>
+              <div class="card-actions">
+                <div class="btn-edit">✎ Editar</div>
+                <div class="btn-more">⋯</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="bottom-nav">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <div class="nav-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></div>
+          <svg class="nav-icon act" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M9 3h6v4H9z"/></svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 21c1.5-4 5-6 7-6s5.5 2 7 6"/></svg>
+        </div>
+      </div></div>
+      <p class="caption">Cada card já expõe "Editar" direto — sem precisar entrar no detalhe do roteiro primeiro.</p>
+    </div>
+
+    <!-- TELA 2: MENU DE OPÇÕES -->
+    <div class="step-wrap">
+      <div class="step-tag">Estado · Menu "⋯" aberto</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="list-header">
+            <div>
+              <h2>Meus roteiros</h2>
+              <div class="count">4 roteiros</div>
+            </div>
+            <div class="btn-new">+ Novo</div>
+          </div>
+          <div class="wf-input">🔍 Buscar roteiro</div>
+          <div class="tabs">
+            <div class="tab act">Todos</div>
+            <div class="tab">Em grupo</div>
+            <div class="tab">Rascunhos</div>
+          </div>
+
+          <div class="roteiro-card menu-anchor">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">3 dias em Monte Verde</div>
+                <div class="roteiro-meta">Monte Verde, MG · 3 dias</div>
+                <div class="badge-row">
+                  <div class="badge">🔒 Privado</div>
+                  <div class="badge">✓ Completo</div>
+                </div>
+              </div>
+            </div>
+            <div class="roteiro-footer">
+              <span class="timestamp">Editado há 2 dias</span>
+              <div class="card-actions">
+                <div class="btn-edit">✎ Editar</div>
+                <div class="btn-more">⋯</div>
+              </div>
+            </div>
+            <div class="popover">
+              <div class="popover-item">✎ Editar</div>
+              <div class="popover-item">⧉ Duplicar</div>
+              <div class="popover-item">🔗 Compartilhar</div>
+              <div class="popover-item">🗑 Excluir</div>
+            </div>
+          </div>
+
+          <div class="roteiro-card" style="opacity:.45">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">Viagem Nordeste 2026</div>
+                <div class="roteiro-meta">Salvador, BA · 7 dias</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">"⋯" cobre ações secundárias (duplicar, compartilhar, excluir) sem competir com o "Editar" principal.</p>
+    </div>
+
+    <!-- TELA 3: ESTADO VAZIO -->
+    <div class="step-wrap">
+      <div class="step-tag">Estado vazio · Sem roteiros ainda</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="list-header">
+            <div>
+              <h2>Meus roteiros</h2>
+              <div class="count">0 roteiros</div>
+            </div>
+          </div>
+          <div class="empty-state">
+            <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18l6-6-6-6"/></svg></div>
+            <h3>Você ainda não criou nenhum roteiro</h3>
+            <p>Monte seu primeiro roteiro em poucos passos — a gente te ajuda com sugestões pelo caminho.</p>
+            <div class="btn-primary-full">Criar meu primeiro roteiro</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Estado inicial, antes de qualquer roteiro ser criado.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

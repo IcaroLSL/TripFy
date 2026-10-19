@@ -18,20 +18,20 @@ const FooterBar = ({ tabIndex }: { tabIndex?: number }) => {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity className={`p-4 ${tabIndex === 1 && 'bg-blue-900' } ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { }}>
+                <TouchableOpacity className={`p-4 ${tabIndex === 1 && 'bg-blue-900/40' } ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { router.push('/roteiros-salvos/RoteirosSalvos') }} >
                     <View>
                         <MateriaIcon name="favorite" size={24} color={theme === 'light' ? '#1A1A2E' : '#FFFFFF'} />
                     </View>
                 </TouchableOpacity>
 
 
-                <TouchableOpacity className={`p-4 ${tabIndex === 2 ? 'bg-blue-900' : ''} ${theme === 'light' ? 'bg-blue-600' : 'bg-blue-600'} rounded-full bottom-4`} onPress={() => { router.push('/criar-roteiro/CriarRoteiro') }}>
+                <TouchableOpacity className={`p-4 ${tabIndex === 2 ? 'bg-blue-900/40' : ''} ${theme === 'light' ? 'bg-blue-600' : 'bg-blue-600'} rounded-full bottom-4`} onPress={() => { router.push('/criar-roteiro/CriarRoteiro') }}>
                     <View>
                         <MateriaIcon name="add" size={24} color="#FFFFFF" />
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity className={`p-4 ${tabIndex === 3 && `${theme === 'light' ? 'bg-blue-600' : 'bg-blue-900/40'}`} ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { router.push('/meus-roteiros/MeusRoteiros') }}>
+                <TouchableOpacity className={`p-4 ${tabIndex === 3 && `${theme === 'light' ? 'bg-blue-900/40' : 'bg-blue-900/40'}`} ${theme === 'light' ? 'active:bg-gray-100' : 'active:bg-gray-100/10'} rounded-full`} onPress={() => { router.push('/meus-roteiros/MeusRoteiros') }}>
                     <View>
                         <MateriaIcon name="flight" size={24} color={theme === 'light' ? `${tabIndex === 3 ? '#FFFFFF' : '#1A1A2E'}` : '#FFFFFF'} />
                     </View>

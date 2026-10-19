@@ -19,6 +19,7 @@ import z, { set } from 'zod'
 import { Atividade } from '@/interfaces/Atividade'
 import { useGetPlaces } from '../../../hooks/useGetPlaces'
 import Card from '../../../components/ui/Card'
+import ModalAtividade from '../../../components/CriacaoRoteiro/ModalAtividade'
 
 const formDateSchema = z.object({
     startTime: z.string().min(1, { message: "Horário de início é obrigatório" }),
@@ -72,6 +73,8 @@ const AdicionarAtividade = () => {
     const { selectedDay } = useLocalSearchParams()
     const { getPlaces, loading, error, total } = useGetPlaces()
     const [places, setPlaces] = useState<Atividade[]>([]);
+    const [showPlaceDetails, setShowPlaceDetails] = useState<boolean>(false)
+    const [placeId, setPlaceId] = useState<string>('')
     const [showBottomCategoriesView, setShowBottomCategoriesView] = useState<boolean>(false)
     const [showBottomRatingPriceView, setShowBottomRatingPriceView] = useState<boolean>(false)
     const [showModalTime, setShowModalTime] = useState<boolean>(false)
@@ -95,11 +98,11 @@ const AdicionarAtividade = () => {
         },
     });
 
+    const placeName = watch('placeName');
+
     useEffect(() => {
-        const fetchPlaces = async () => {
+        const debounceTimer = setTimeout(async () => {
             try {
-                const placeName = watch('placeName');
-                console.log('Fetching places with selectedCategories:', selectedCategories, 'selectedPrice:', selectedPrice, 'selectedRatings:', selectedRatings);
                 const fetchedPlaces = await getPlaces({
                     destino: roteiroData.destino,
                     tags: selectedCategories.flatMap((cat) => cat.tags),
@@ -111,9 +114,10 @@ const AdicionarAtividade = () => {
             } catch (error) {
                 console.error("Error fetching places:", error);
             }
-        };
-        fetchPlaces()
-    }, [selectedPrice, selectedRatings, selectedCategories, roteiroData.destino, roteiroData.avaliacaoMinima]);
+        }, 1000);
+
+        return () => clearTimeout(debounceTimer);
+    }, [selectedPrice, selectedRatings, selectedCategories, roteiroData.destino, roteiroData.avaliacaoMinima, placeName, getPlaces]);
 
 
     const handleManagerActivities = (day: number, timeOfDay: 'morning' | 'afternoon' | 'night' | 'earlyMorning', activity: Atividade) => {
@@ -186,7 +190,7 @@ const AdicionarAtividade = () => {
             return;
         }
         setSelectedActivity({
-            id: '',
+            id: place.id,
             name: place.name,
             imageUris: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10',],
             day: Number(selectedDay),
@@ -195,11 +199,11 @@ const AdicionarAtividade = () => {
             priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
             rating: place.rating !== null ? place.rating : 0,
             allowsDogs: false,
-            phoneNumber: '',
-            'priceRangeEnd': '',
-            priceRangeStart: '',
-            address: '',
-            hours: []
+            phoneNumber: place.phoneNumber || '',
+            'priceRangeEnd': place.priceRangeEnd || '',
+            priceRangeStart: place.priceRangeStart || '',
+            address: place.address,
+            hours: place.hours || []
         });
         setShowModalTime(true);
     }
@@ -302,7 +306,7 @@ const AdicionarAtividade = () => {
                                     places.length > 0 ? (
 
                                         places.map((place, index) => (
-                                            <Card key={index} className='flex flex-row justify-between gap-2 px-2 py-4 items-center' theme={theme}>
+                                            <Card key={index} className='flex flex-row justify-between gap-2 px-2 py-4 items-center' theme={theme} pressable={true} onPress={() => { setPlaceId(place.id); setShowPlaceDetails(true) }}>
                                                 <View className='flex flex-row gap-4'>
 
                                                     <Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO_1CBjai2QFMFUqtsB9nsVZwVlG7J0aFcPYfRS0ibqgF3I8ypKNAAgyI&s=10' }} style={{ width: 40, height: 40, borderRadius: 8 }} />
@@ -365,6 +369,18 @@ const AdicionarAtividade = () => {
                 <BottomRatingPriceView loadingPlaces={loading} total={total} onPriceSelect={setSelectedPrice} onRatingSelect={setSelectedRatings} selectedPrice={selectedPrice} selectedRatings={selectedRatings} theme={theme} onClose={setShowBottomRatingPriceView} />
             }
 
+            {
+                showPlaceDetails === true && (
+                    <ModalAtividade
+                        title='Detalhes da Atividade'
+                        theme={theme}
+                        placeId={placeId}
+                        onClose={() => setShowPlaceDetails(false)}
+                        onConfirm={handleSelectActivity}
+                        selectedDay={Number(selectedDay)}
+                    />
+                )
+            }
         </>
     )
 }

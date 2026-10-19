@@ -1,19 +1,21 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Pressable } from 'react-native'
 import React, { Children } from 'react'
 
 interface CardProps {
-    className?: string;
-    children?: React.ReactNode;
-    theme: 'light' | 'dark';
-    pressable?: boolean;
-    onPress?: () => void;
+  className?: string;
+  children?: React.ReactNode;
+  theme: 'light' | 'dark';
+  pressable?: boolean;
+  onPress?: () => void;
 }
 
-const Card = ({ className, children, theme, pressable, onPress }: CardProps) => {
+const Card = ({ className, children, theme, pressable = false, onPress }: CardProps) => {
   return (
-    <TouchableOpacity onPress={onPress} className={`shadow-md rounded-md ${className || ''} ${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'} ${pressable ? 'active:bg-gray-200/50 dark:active:bg-[#1A1A2E]/50' : ''}`}>
+    <Pressable onPress={onPress} disabled={!pressable}>
+      <View pointerEvents={pressable ? 'none' : 'auto'} className={`shadow-md rounded-md ${className || ''} ${theme === 'light' ? 'bg-white' : 'bg-[#1A1A2E]'} ${pressable && 'active:bg-[#1A1A2E]/60'}`}>
         {children}
-    </TouchableOpacity>
+      </View>
+    </Pressable>
   )
 }
 

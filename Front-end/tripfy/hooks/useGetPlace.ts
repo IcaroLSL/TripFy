@@ -1,76 +1,112 @@
 import { apiClient } from "@/instances/apiClient";
 import { Atividade } from "@/interfaces/Atividade";
 import { secureAuthStorage } from "@/services/secureAuthStorage";
-import { useAuthStore } from "@/store/authStore";
-import axios from "axios";
 import { useCallback, useState } from "react";
+import { getPlaceImage } from "./useGetPlaceImage";
 
 interface useGetPlaceReturn {
     loading: boolean;
     error: string | null;
     place: Atividade | null;
-    getPlace: (placeId: string) => Promise<ApiReturn | null>;
+    getPlace: (placeId: string) => Promise<Atividade | null>;
 }
 
 interface ApiReturn {
-    'publicId': string,
-    "name": string,
-    "address": string,
-    "phoneNumber": string,
-    "rating": number,
-    "priceLevel": number | null,
-    "hours": string[],
-    "imageUris": string[],
-    "allowsDogs": boolean,
-    "priceRangeStart": string,
-    "priceRangeEnd": string,
+    publicId: string;
+    name: string;
+    address: string;
+    phoneNumber: string;
+    rating: number;
+    priceLevel: number | null;
+    hours: string[];
+    imageReferences: string[];
+    allowsDogs: boolean;
+    priceRangeStart: string;
+    priceRangeEnd: string;
 }
 
-
 export const useGetPlaceDetails = (): useGetPlaceReturn => {
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [place, setPlace] = useState<Atividade | null>(null);
 
-    const getPlace = useCallback(async (placeId: string): Promise<ApiReturn | null> => {
-        try {
-            setLoading(true);
-            setError(null);
-            const token = await secureAuthStorage.getAccessToken()
+    const getPlace = useCallback(
+        async (placeId: string): Promise<Atividade | null> => {
+            try {
+                setLoading(true);
+                setError(null);
 
-            const response = await apiClient.get<ApiReturn>(`/v1/place/${placeId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (response.status !== 200) {
-                throw new Error(`Error fetching place: ${response.statusText}`);
+                const token = await secureAuthStorage.getAccessToken();
+
+                const response = await apiClient.get<ApiReturn>(
+                    `/v1/place/${placeId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (response.status !== 200) {
+                    throw new Error(
+                        `Error fetching place: ${response.statusText}`
+                    );
+                }
+
+                const data = response.data;
+
+                // Carrega TODAS as imagens em paralelo
+                const imageUris = await Promise.all(
+                    data.imageReferences
+                        .filter((imageReference) => imageReference?.length > 0)
+                        .map((imageReference) =>
+                            getPlaceImage(imageReference, true)
+                        )
+                );
+
+                const validImageUris = imageUris.filter(
+                    (imageUri): imageUri is string =>
+                        Boolean(imageUri && imageUri.length > 0)
+                );
+
+                const placeData: Atividade = {
+                    id: data.publicId,
+                    name: data.name,
+                    address: data.address,
+                    phoneNumber: data.phoneNumber,
+                    rating: data.rating,
+                    priceLevel: data.priceLevel ?? 0,
+                    hours: data.hours,
+
+                    // Todas as fotos carregadas
+                    imageUris: validImageUris,
+
+                    allowsDogs: data.allowsDogs,
+                    priceRangeStart: data.priceRangeStart,
+                    priceRangeEnd: data.priceRangeEnd,
+
+                    day: 1,
+                    startTime: "",
+                    endTime: "",
+                };
+
+                console.log("Fetched place details:", placeData);
+
+                setPlace(placeData);
+
+                return placeData;
+            } catch (err: any) {
+                setError(
+                    err?.message || "An unknown error occurred"
+                );
+
+                return null;
+            } finally {
+                setLoading(false);
             }
-
-            setPlace({
-                id: response.data.publicId,
-                name: response.data.name,
-                address: response.data.address,
-                phoneNumber: response.data.phoneNumber,
-                rating: response.data.rating,
-                priceLevel: response.data.priceLevel || 0,
-                hours: response.data.hours,
-                imageUris: response.data.imageUris,
-                allowsDogs: response.data.allowsDogs,
-                priceRangeStart: response.data.priceRangeStart,
-                priceRangeEnd: response.data.priceRangeEnd,
-                day: 1,
-                startTime: "",
-                endTime: "",
-            });
-            return response.data;
-        } catch (err: any) {
-            setError(err.message || "An unknown error occurred");
-            return null;
-        } finally {
-            setLoading(false);
-        }
-    }, [])
+        },
+        []
+    );
 
     return { loading, error, place, getPlace };
-}
+};

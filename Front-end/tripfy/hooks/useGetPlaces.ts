@@ -3,6 +3,7 @@ import { Atividade } from "@/interfaces/Atividade";
 import { Roteiro } from "@/interfaces/Roteiro";
 import { secureAuthStorage } from "@/services/secureAuthStorage";
 import { useCallback, useState } from "react";
+import { getPlaceImage } from "./useGetPlaceImage";
 
 interface Place {
     'publicId': string,
@@ -51,7 +52,6 @@ export function useGetPlaces(limit: number = 10): useGetPlacesReturn {
                 return [];
             }
 
-            console.log("Fetching places with payload:", placesPayload, "Page:", page, "Limit:", limit);
             setLoading(true);
             const response = await apiClient.get<PlaceApiResponse>("/v1/places", {
                 params: {
@@ -68,7 +68,8 @@ export function useGetPlaces(limit: number = 10): useGetPlacesReturn {
                 },
             });
             setTotal(response.data.places.length);
-            const places: Atividade[] = response.data.places.map(place => ({
+
+            let places: Atividade[] = response.data.places.map(place => ({
                 id: place.publicId,
                 day: 0,
                 name: place.name,
@@ -78,14 +79,24 @@ export function useGetPlaces(limit: number = 10): useGetPlacesReturn {
                 priceLevel: place.priceLevel !== null ? place.priceLevel : 0,
                 hours: [],
                 imageUris: place.imageReferences,
-                priceRangeEnd:'',
-                priceRangeStart:'',
+                priceRangeEnd: '',
+                priceRangeStart: '',
                 allowsDogs: false,
                 startTime: '',
                 endTime: '',
             }));
 
-            return places;
+            const placesWithImages: Atividade[] = await Promise.all(places.map(async (place) => {
+                if (place.imageUris && place.imageUris.length > 0) {
+                    const images = await getPlaceImage(place.imageUris[0], true);
+                    if (images && images.length > 0) {
+                        place.imageUris = [images];
+                    }
+                }
+                return place;
+            }));
+
+            return placesWithImages;
 
         } catch (error) {
             setError("Error fetching places");

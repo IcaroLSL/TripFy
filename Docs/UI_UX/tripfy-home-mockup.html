@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Home — RoteiroCard (protótipo estrutural)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-page: #EDEEF1;
+    --bg-app: #F7F7F8;
+    --surface: #FFFFFF;
+    --border: #E6E7EB;
+    --border-strong: #D7D9DE;
+    --text-primary: #16181D;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9AA0AC;
+    --placeholder: #DCDEE3;
+    --placeholder-icon: #B7BAC3;
+    --accent-favorite: #E23744;
+    --accent-favorite-bg: rgba(255,255,255,0.85);
+    --accent-rating-bg: rgba(22,24,29,0.72);
+    --accent-rating-star: #FFC94D;
+    --radius-card: 16px;
+    --radius-pill: 999px;
+    --shadow-card: 0 1px 2px rgba(16,17,20,0.04), 0 6px 16px rgba(16,17,20,0.06);
+    --shadow-fab: 0 6px 16px rgba(16,17,20,0.28);
+    --font-display: 'Sora', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg-page);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    padding: 40px 16px 64px;
+  }
+
+  .page{
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .page-header{ margin-bottom: 28px; }
+  .page-header h1{
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .page-header p{
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 560px;
+    line-height: 1.5;
+  }
+
+  /* ---------- Comparativo Antes / Depois ---------- */
+  .compare{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 36px;
+  }
+  .compare-title{
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-tertiary);
+    margin: 0 0 16px;
+  }
+  .compare-grid{
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .compare-col{ width: 152px; }
+  .compare-label{
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 10px;
+  }
+  .compare-label--old{ background: #F1F1F3; color: var(--text-secondary); }
+  .compare-label--new{ background: #16181D; color: #fff; }
+  .compare-notes{
+    flex: 1;
+    min-width: 220px;
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+  .compare-notes li b{ color: var(--text-primary); }
+
+  /* ---------- Old card (baixa-fi original) ---------- */
+  .old-card{
+    background: var(--surface);
+  }
+  .old-card__img{
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: var(--placeholder);
+    border-radius: 6px;
+    position: relative;
+  }
+  .old-card__heart{
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    color: var(--accent-favorite);
+  }
+  .old-card__label{
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-top: 8px;
+  }
+
+  /* ---------- Phone frame ---------- */
+  .phone-shell{
+    width: min(390px, 100%);
+    margin: 0 auto;
+    background: #0B0C0E;
+    border-radius: 46px;
+    padding: 12px;
+    box-shadow: 0 20px 50px rgba(16,17,20,0.25);
+  }
+  .phone-screen{
+    background: var(--bg-app);
+    border-radius: 36px;
+    overflow: hidden;
+    position: relative;
+  }
+  .status-bar{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .status-icons{ display:flex; gap:6px; align-items:center; }
+
+  .app-content{
+    padding: 8px 20px 100px;
+    max-height: 780px;
+    overflow-y: auto;
+  }
+
+  /* ---------- Header / busca ---------- */
+  .home-header{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin: 8px 0 18px;
+  }
+  .search-pill{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  .icon-btn{
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--text-primary);
+  }
+
+  /* ---------- Carrossel destaque ---------- */
+  .hero-carousel{
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: linear-gradient(135deg, #E3E4E8, #CFD1D7);
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap: 6px;
+    margin-bottom: 26px;
+  }
+  .dot{ width:6px; height:6px; border-radius:50%; background: var(--border-strong); }
+  .dot.active{ background: var(--text-primary); width:16px; border-radius: var(--radius-pill); }
+
+  /* ---------- Seções ---------- */
+  .section{ margin-bottom: 28px; }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .section-head h2{
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .section-head span.sub{
+    display:block;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    margin-top: 2px;
+    font-family: var(--font-body);
+  }
+  .ver-mais{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+
+  .card-row{
+    display:flex;
+    gap: 12px;
+    overflow-x: auto;
+    margin: 0 -20px;
+    padding: 0 20px 6px;
+    scroll-snap-type: x proximity;
+  }
+  .card-row::-webkit-scrollbar{ display:none; }
+
+  /* ---------- RoteiroCard (proposta) ---------- */
+  .roteiro-card{
+    width: 158px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    background: var(--surface);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .roteiro-card__img{
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--placeholder);
+    position: relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .roteiro-card__img svg{ width: 34px; height: 34px; color: var(--placeholder-icon); }
+
+  .badge-rating{
+    position:absolute;
+    top: 8px;
+    left: 8px;
+    display:flex;
+    align-items:center;
+    gap: 3px;
+    background: var(--accent-rating-bg);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 7px 3px 6px;
+    border-radius: var(--radius-pill);
+  }
+  .badge-rating svg{ width: 10px; height: 10px; color: var(--accent-rating-star); }
+
+  .btn-favorite{
+    position:absolute;
+    top: 6px;
+    right: 6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent-favorite-bg);
+    backdrop-filter: blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .btn-favorite svg{ width: 16px; height: 16px; color: var(--accent-favorite); }
+  .btn-favorite.is-active svg{ fill: var(--accent-favorite); }
+
+  .roteiro-card__body{ padding: 10px 10px 12px; }
+  .roteiro-card__title{
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 4px;
+    color: var(--text-primary);
+  }
+  .roteiro-card__meta{
+    display:flex;
+    align-items:center;
+    gap: 3px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .roteiro-card__meta svg{ width: 11px; height: 11px; flex-shrink:0; color: var(--text-tertiary); }
+
+  .roteiro-card__footer{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+  .price{
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .price small{ font-weight: 500; color: var(--text-tertiary); font-size: 10px; display:block; margin-bottom: -1px;}
+  .duration-chip{
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-app);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+  }
+
+  /* ---------- Bottom nav ---------- */
+  .bottom-nav{
+    position: absolute;
+    left:0; right:0; bottom:0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 12px 22px 22px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+  }
+  .nav-item{ color: var(--text-tertiary); width:24px; height:24px; }
+  .nav-item.active{ color: var(--text-primary); }
+  .nav-fab{
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: var(--shadow-fab);
+    margin-top: -30px;
+    flex-shrink: 0;
+  }
+  .nav-fab svg{ width:22px; height:22px; color: #fff; }
+
+  .legend{
+    max-width: 620px;
+    margin: 28px auto 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <h1>Tripfy · Home — RoteiroCard redesenhado</h1>
+    <p>Protótipo estrutural em neutro (sem paleta de cor definida). Vermelho do favorito e dourado da avaliação são cores <em>semânticas</em> de referência de mercado — não a paleta final da marca.</p>
+  </div>
+
+  <div class="compare">
+    <p class="compare-title">Antes vs. Depois — só o card</p>
+    <div class="compare-grid">
+      <div class="compare-col">
+        <span class="compare-label compare-label--old">Atual</span>
+        <div class="old-card">
+          <div class="old-card__img">
+            <svg class="old-card__heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg>
+          </div>
+          <div class="old-card__label">Monte Verde</div>
+        </div>
+      </div>
+      <div class="compare-col">
+        <span class="compare-label compare-label--new">Proposta</span>
+        <div class="roteiro-card" style="box-shadow:none;border:1px solid var(--border)">
+          <div class="roteiro-card__img">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+            <div class="badge-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.9 1.4 7-6.2-3.6-6.2 3.6 1.4-7L1.9 9.3l7-.8z"/></svg>4.8</div>
+            <div class="btn-favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg></div>
+          </div>
+          <div class="roteiro-card__body">
+            <p class="roteiro-card__title">3 dias em Monte Verde</p>
+            <div class="roteiro-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+              Monte Verde, MG
+            </div>
+            <div class="roteiro-card__footer">
+              <span class="price"><small>a partir de</small>R$ 320</span>
+              <span class="duration-chip">3 dias</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="compare-notes">
+        <li><b>Preço, nota e duração</b> visíveis sem abrir o roteiro</li>
+        <li><b>Hierarquia tipográfica</b> real: título em Sora, metadado em Inter menor</li>
+        <li><b>Favorito</b> com área de toque maior e fundo próprio (contraste sobre qualquer foto)</li>
+        <li><b>Localização</b> explícita com ícone — reduz ambiguidade do nome do roteiro</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===================== TELA ===================== -->
+  <div class="phone-shell">
+    <div class="phone-screen">
+
+      <div class="status-bar">
+        <span>9:41</span>
+        <span class="status-icons">
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="0.5"/><rect x="4.5" y="4" width="3" height="7" rx="0.5"/><rect x="9" y="1.5" width="3" height="9.5" rx="0.5"/></svg>
+          <svg width="20" height="11" viewBox="0 0 20 11" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="1" width="16" height="9" rx="2"/><rect x="17.5" y="3.5" width="2" height="4" rx="1" fill="currentColor" stroke="none"/><rect x="2" y="2.5" width="12" height="6" rx="1" fill="currentColor" stroke="none"/></svg>
+        </span>
+      </div>
+
+      <div class="app-content">
+
+        <div class="home-header">
+          <div class="search-pill">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            Para onde você vai?
+          </div>
+          <div class="icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          </div>
+        </div>
+
+        <div class="hero-carousel">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--placeholder-icon)" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+        </div>
+        <div class="dots">
+          <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h2>Perto de você<span class="sub">Raio de 50km da sua localização</span></h2>
+            <span class="ver-mais">ver mais</span>
+          </div>
+          <div class="card-row">
+
+            <div class="roteiro-card">
+              <div class="roteiro-card__img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+                <div class="badge-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.9 1.4 7-6.2-3.6-6.2 3.6 1.4-7L1.9 9.3l7-.8z"/></svg>4.8</div>
+                <div class="btn-favorite is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg></div>
+              </div>
+              <div class="roteiro-card__body">
+                <p class="roteiro-card__title">3 dias em Monte Verde</p>
+                <div class="roteiro-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                  Monte Verde, MG
+                </div>
+                <div class="roteiro-card__footer">
+                  <span class="price"><small>a partir de</small>R$ 320</span>
+                  <span class="duration-chip">3 dias</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="roteiro-card">
+              <div class="roteiro-card__img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+                <div class="badge-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.9 1.4 7-6.2-3.6-6.2 3.6 1.4-7L1.9 9.3l7-.8z"/></svg>4.6</div>
+                <div class="btn-favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg></div>
+              </div>
+              <div class="roteiro-card__body">
+                <p class="roteiro-card__title">Fim de semana em Campos do Jordão</p>
+                <div class="roteiro-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                  Campos do Jordão, SP
+                </div>
+                <div class="roteiro-card__footer">
+                  <span class="price"><small>a partir de</small>R$ 480</span>
+                  <span class="duration-chip">2 dias</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="roteiro-card">
+              <div class="roteiro-card__img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+                <div class="badge-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.9 1.4 7-6.2-3.6-6.2 3.6 1.4-7L1.9 9.3l7-.8z"/></svg>4.9</div>
+                <div class="btn-favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg></div>
+              </div>
+              <div class="roteiro-card__body">
+                <p class="roteiro-card__title">Praias de Ilha Grande</p>
+                <div class="roteiro-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                  Angra dos Reis, RJ
+                </div>
+                <div class="roteiro-card__footer">
+                  <span class="price"><small>a partir de</small>R$ 550</span>
+                  <span class="duration-chip">4 dias</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h2>Mais bem avaliados<span class="sub">Nota média acima de 4.5</span></h2>
+            <span class="ver-mais">ver mais</span>
+          </div>
+          <div class="card-row">
+
+            <div class="roteiro-card">
+              <div class="roteiro-card__img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+                <div class="badge-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.9 1.4 7-6.2-3.6-6.2 3.6 1.4-7L1.9 9.3l7-.8z"/></svg>4.9</div>
+                <div class="btn-favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg></div>
+              </div>
+              <div class="roteiro-card__body">
+                <p class="roteiro-card__title">Bonito completo: 5 dias</p>
+                <div class="roteiro-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                  Bonito, MS
+                </div>
+                <div class="roteiro-card__footer">
+                  <span class="price"><small>a partir de</small>R$ 1.240</span>
+                  <span class="duration-chip">5 dias</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="roteiro-card">
+              <div class="roteiro-card__img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+                <div class="badge-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.9 1.4 7-6.2-3.6-6.2 3.6 1.4-7L1.9 9.3l7-.8z"/></svg>4.7</div>
+                <div class="btn-favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg></div>
+              </div>
+              <div class="roteiro-card__body">
+                <p class="roteiro-card__title">Serra Gaúcha: rota do vinho</p>
+                <div class="roteiro-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                  Gramado, RS
+                </div>
+                <div class="roteiro-card__footer">
+                  <span class="price"><small>a partir de</small>R$ 690</span>
+                  <span class="duration-chip">4 dias</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="roteiro-card">
+              <div class="roteiro-card__img">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5.5-5.5-4 4L9 12l-6 6"/></svg>
+                <div class="badge-rating"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .8-5.2 4.9 1.4 7-6.2-3.6-6.2 3.6 1.4-7L1.9 9.3l7-.8z"/></svg>4.8</div>
+                <div class="btn-favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg></div>
+              </div>
+              <div class="roteiro-card__body">
+                <p class="roteiro-card__title">Trilhas na Chapada Diamantina</p>
+                <div class="roteiro-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                  Palmeiras, BA
+                </div>
+                <div class="roteiro-card__footer">
+                  <span class="price"><small>a partir de</small>R$ 980</span>
+                  <span class="duration-chip">6 dias</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="bottom-nav">
+        <svg class="nav-item active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        <svg class="nav-item" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <div class="nav-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></div>
+        <svg class="nav-item" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M9 3h6v4H9z"/></svg>
+        <svg class="nav-item" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 21c1.5-4 5-6 7-6s5.5 2 7 6"/></svg>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="legend">Protótipo estrutural (HTML/CSS estático). Cinzas neutros representam áreas de foto/skeleton. Confirmar com o time se a listagem de "Perto de você" e "Mais bem avaliados" cobre roteiros PÚBLICOS apenas (BR003) antes de tratar estado vazio/erro.</p>
+
+</div>
+</body>
+</html>

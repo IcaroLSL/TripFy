@@ -76,11 +76,11 @@ export default function App() {
         source={theme === 'light' ? require('../assets/images/fundo_light_login.png') : require('../assets/images/fundo_dark_login.jpg')}
         className='flex-1'
       >
-        <SafeAreaView className={`h-screen w-screen flex flex-col justify-end p-4`}>
+        <SafeAreaView className={`h-screen w-screen flex flex-col justify-end bottom-[5%] p-4`}>
 
           <Image source={theme === 'light' ? require('../assets/images/logo_light_2.png') : require('../assets/images/logo_dark_2.png')} className='w-[50%] h-[30%] self-center' />
 
-          <Card theme={theme} className='flex p-4 items-center h-[70%] gap-4'>
+          <Card theme={theme} className='flex px-4 py-6 items-center gap-4' pressable={false}>
 
             <AppDescription theme={theme}>
               Don't have an account? <Text className='text-blue-500' onPress={() => console.log('Sign up')}>Sign up</Text>

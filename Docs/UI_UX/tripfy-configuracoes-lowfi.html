@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Configurações — Wireframe baixa-fi</title>
+<style>
+  :root{
+    --ink:#26282C; --ink-soft:#55585F; --ink-faint:#9298A2;
+    --line:#26282C; --line-soft:#C6CAD2;
+    --bg-page:#ECEDEF; --bg-screen:#FFFFFF;
+    --fill-selected:#26282C; --fill-selected-text:#FFFFFF;
+    --note-bg:#FFF7E0; --note-border:#C9A227;
+    --danger:#B23A2E;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{background:var(--bg-page); font-family:Arial,Helvetica,sans-serif; color:var(--ink); padding:40px 16px 80px;}
+  .page{max-width:1080px;margin:0 auto;}
+  .page-header h1{font-size:19px;margin:0 0 6px;}
+  .page-header p{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 24px;max-width:640px;}
+  .flags{background:var(--note-bg);border:1.5px dashed var(--note-border);border-radius:8px;padding:14px 16px;margin-bottom:36px;font-size:12.5px;line-height:1.6;}
+  .flags b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;color:#8a6d0f;}
+  .flags ul{margin:0;padding-left:18px;}
+  .flow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;}
+  .step-wrap{display:flex;flex-direction:column;align-items:center;}
+  .step-tag{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);margin-bottom:8px;text-align:center;max-width:340px;}
+  .phone{width:340px;border:2px solid var(--line);border-radius:26px;padding:6px;background:var(--bg-page);}
+  .screen{background:var(--bg-screen);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:660px;}
+  .status{text-align:center;font-size:10px;color:var(--ink-faint);padding:8px 0 2px;letter-spacing:.05em;}
+  .content{padding:12px 20px 16px;flex:1;overflow-y:auto;}
+  .caption{font-size:11px;color:var(--ink-faint);margin-top:10px;text-align:center;max-width:340px;}
+
+  .edit-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .round-btn{width:26px;height:26px;border:1.5px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;flex-shrink:0;}
+  .edit-title{text-align:center;flex:1;font-size:14px;font-weight:bold;}
+
+  .profile-row{display:flex;align-items:center;gap:12px;padding:6px 0 18px;}
+  .avatar-lg{width:48px;height:48px;border-radius:50%;background:var(--line-soft);flex-shrink:0;}
+  .profile-name{font-size:14px;font-weight:bold;}
+  .profile-email{font-size:11px;color:var(--ink-soft);}
+
+  .group-label{font-size:10.5px;font-weight:bold;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 6px;}
+  .settings-list{border:1.5px solid var(--line);border-radius:10px;overflow:hidden;}
+  .settings-row{display:flex;justify-content:space-between;align-items:center;padding:12px 13px;font-size:12.5px;border-bottom:1px solid var(--line-soft);}
+  .settings-row:last-child{border-bottom:none;}
+  .settings-row .val{color:var(--ink-faint);font-size:11px;}
+  .toggle{width:34px;height:18px;border:1.5px solid var(--line);border-radius:999px;position:relative;flex-shrink:0;}
+  .toggle.on{background:var(--ink);}
+  .toggle-dot{width:12px;height:12px;background:#fff;border-radius:50%;position:absolute;top:1px;left:1px;}
+  .toggle.on .toggle-dot{left:auto;right:1px;background:#fff;}
+  .toggle:not(.on) .toggle-dot{background:var(--ink);}
+
+  .signout{margin-top:20px;text-align:center;font-size:12.5px;font-weight:bold;color:var(--danger);padding:12px;}
+
+  .sheet-screen{background:var(--bg-page);}
+  .sheet-dim{flex:1;background:rgba(38,40,44,0.35);}
+  .sheet{background:var(--bg-screen);border-radius:20px 20px 0 0;box-shadow:0 -6px 16px rgba(0,0,0,0.1);display:flex;flex-direction:column;}
+  .sheet-handle{width:36px;height:4px;background:var(--line-soft);border-radius:2px;margin:10px auto 4px;}
+  .sheet-header{display:flex;justify-content:space-between;align-items:center;padding:6px 20px 10px;}
+  .sheet-header h2{font-size:14.5px;margin:0;}
+  .sheet-body{padding:0 20px 18px;}
+  .theme-card{border:1.5px solid var(--line);border-radius:8px;padding:11px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+  .theme-card.sel{border-width:2px;}
+  .radio{width:12px;height:12px;border:1.5px solid var(--line);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-left:auto;}
+  .radio.sel:after{content:"";width:5px;height:5px;background:var(--ink);border-radius:50%;}
+
+  .blocked-row{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;margin-bottom:8px;}
+  .blocked-row .avatar{width:32px;height:32px;border-radius:50%;background:var(--line-soft);flex-shrink:0;}
+  .blocked-row .info{flex:1;font-size:12px;font-weight:bold;}
+  .btn-mini{border:1.5px solid var(--line);border-radius:999px;padding:6px 11px;font-size:10.5px;font-weight:bold;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <h1>Tripfy · Configurações — baixa fidelidade</h1>
+    <p>Tema, conta, privacidade padrão de novos roteiros e usuários bloqueados (ligado à exceção de domínio já existente no BR005).</p>
+  </div>
+  <div class="flags">
+    <b>Pendências a confirmar com o time</b>
+    <ul>
+      <li><b>"Usuários bloqueados"</b> nasce direto da exceção <code>UsuarioBloqueadoException</code> do BR005 — mas nenhuma BR documenta a ação de <i>bloquear</i> alguém (só o efeito de já estar bloqueado). Falta essa regra de origem.</li>
+      <li><b>"Privacidade padrão de novos roteiros"</b> é uma extensão minha do BR003 — hoje BR001 não define um default. Sem isso, a Etapa 5 do wizard sempre nasceria sem pré-seleção.</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+
+    <div class="step-wrap">
+      <div class="step-tag">Configurações — principal</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Configurações</div><div class="round-btn" style="visibility:hidden;">‹</div></div>
+
+          <div class="profile-row">
+            <div class="avatar-lg"></div>
+            <div><div class="profile-name">Você</div><div class="profile-email">voce@email.com</div></div>
+          </div>
+
+          <div class="group-label">Conta</div>
+          <div class="settings-list">
+            <div class="settings-row"><span>Editar perfil</span><span class="val">›</span></div>
+            <div class="settings-row"><span>Alterar senha</span><span class="val">›</span></div>
+          </div>
+
+          <div class="group-label">Aparência</div>
+          <div class="settings-list">
+            <div class="settings-row"><span>Tema</span><span class="val">Sistema ›</span></div>
+          </div>
+
+          <div class="group-label">Privacidade e acesso</div>
+          <div class="settings-list">
+            <div class="settings-row"><span>Privacidade padrão de roteiros</span><span class="val">Privado ›</span></div>
+            <div class="settings-row"><span>Usuários bloqueados</span><span class="val">2 ›</span></div>
+          </div>
+
+          <div class="group-label">Notificações</div>
+          <div class="settings-list">
+            <div class="settings-row"><span>Notificações push</span><div class="toggle on"><div class="toggle-dot"></div></div></div>
+            <div class="settings-row"><span>E-mail</span><div class="toggle"><div class="toggle-dot"></div></div></div>
+            <div class="settings-row"><span>Convites de grupo</span><div class="toggle on"><div class="toggle-dot"></div></div></div>
+          </div>
+
+          <div class="group-label">Sobre</div>
+          <div class="settings-list">
+            <div class="settings-row"><span>Termos de uso</span><span class="val">›</span></div>
+            <div class="settings-row"><span>Versão</span><span class="val">1.0.0</span></div>
+          </div>
+
+          <div class="signout">Sair da conta</div>
+        </div>
+      </div></div>
+      <p class="caption">Grupos claros de configuração — evita uma lista única infinita.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Sheet · Tema</div>
+      <div class="phone"><div class="screen sheet-screen">
+        <div class="status">9:41</div>
+        <div class="sheet-dim"></div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header"><h2>Tema</h2></div>
+          <div class="sheet-body">
+            <div class="theme-card">☀️ Claro<span class="radio"></span></div>
+            <div class="theme-card">🌙 Escuro<span class="radio"></span></div>
+            <div class="theme-card sel">⚙️ Sistema<span class="radio sel"></span></div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">"Sistema" acompanha o modo claro/escuro do aparelho automaticamente.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Usuários bloqueados</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Usuários bloqueados</div><div class="round-btn" style="visibility:hidden;">‹</div></div>
+
+          <div class="blocked-row"><div class="avatar"></div><div class="info">@usuario_x</div><div class="btn-mini">Desbloquear</div></div>
+          <div class="blocked-row"><div class="avatar"></div><div class="info">@usuario_y</div><div class="btn-mini">Desbloquear</div></div>
+        </div>
+      </div></div>
+      <p class="caption">Efeito direto do bloqueio: a pessoa não consegue entrar nos seus grupos via código (BR005).</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

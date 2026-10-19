@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useState, useRef, useCallback, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useEffect, use } from 'react'
 import { CardAtividadeProps } from '@/interfaces/CardAtividade'
 import { AppDescription, AppText, AppTitle } from '../ui/TextApp'
 import { MaterialIcons } from '@expo/vector-icons'

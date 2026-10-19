@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tripfy · Roteiros salvos — Wireframe baixa-fi</title>
+<style>
+  :root{
+    --ink:#26282C; --ink-soft:#55585F; --ink-faint:#9298A2;
+    --line:#26282C; --line-soft:#C6CAD2;
+    --bg-page:#ECEDEF; --bg-screen:#FFFFFF;
+    --fill-selected:#26282C; --fill-selected-text:#FFFFFF;
+    --note-bg:#FFF7E0; --note-border:#C9A227;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{background:var(--bg-page); font-family:Arial,Helvetica,sans-serif; color:var(--ink); padding:40px 16px 80px;}
+  .page{max-width:1080px;margin:0 auto;}
+  .page-header h1{font-size:19px;margin:0 0 6px;}
+  .page-header p{font-size:13px;color:var(--ink-soft);line-height:1.5;margin:0 0 24px;max-width:640px;}
+  .flags{background:var(--note-bg);border:1.5px dashed var(--note-border);border-radius:8px;padding:14px 16px;margin-bottom:36px;font-size:12.5px;line-height:1.6;}
+  .flags b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;color:#8a6d0f;}
+  .flags ul{margin:0;padding-left:18px;}
+  .flow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;}
+  .step-wrap{display:flex;flex-direction:column;align-items:center;}
+  .step-tag{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);margin-bottom:8px;text-align:center;max-width:340px;}
+  .phone{width:340px;border:2px solid var(--line);border-radius:26px;padding:6px;background:var(--bg-page);}
+  .screen{background:var(--bg-screen);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-height:660px;}
+  .status{text-align:center;font-size:10px;color:var(--ink-faint);padding:8px 0 2px;letter-spacing:.05em;}
+  .content{padding:12px 20px 16px;flex:1;overflow-y:auto;}
+  .caption{font-size:11px;color:var(--ink-faint);margin-top:10px;text-align:center;max-width:340px;}
+
+  .edit-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .round-btn{width:26px;height:26px;border:1.5px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;flex-shrink:0;}
+  .edit-title{text-align:center;flex:1;font-size:14px;font-weight:bold;}
+  .count{font-size:11px;color:var(--ink-faint);text-align:center;margin-bottom:14px;}
+
+  .roteiro-card{border:1.5px solid var(--line);border-radius:12px;padding:11px;margin-bottom:12px;}
+  .roteiro-card.unavailable{opacity:.55;}
+  .roteiro-top{display:flex;gap:10px;}
+  .roteiro-photo{width:56px;height:56px;border:1.5px solid var(--line);border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .roteiro-photo svg{width:22px;height:22px;color:var(--ink-faint);}
+  .roteiro-info{flex:1;min-width:0;}
+  .roteiro-name{font-size:13px;font-weight:bold;margin-bottom:2px;}
+  .roteiro-author{font-size:10.5px;color:var(--ink-soft);margin-bottom:2px;}
+  .roteiro-meta{font-size:10.5px;color:var(--ink-soft);}
+  .heart{width:22px;height:22px;flex-shrink:0;}
+  .roteiro-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:9px;border-top:1.5px dashed var(--line-soft);font-size:10.5px;}
+  .unavail-note{background:var(--note-bg);border:1.5px solid var(--note-border);border-radius:8px;padding:8px 9px;font-size:10px;color:#8a6d0f;margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .unavail-note div:last-child{font-weight:bold;text-decoration:underline;white-space:nowrap;}
+
+  .detail-hero{width:100%;aspect-ratio:16/9;border:1.5px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+  .detail-title{font-size:16px;font-weight:bold;margin:0 0 4px;}
+  .detail-meta{font-size:11.5px;color:var(--ink-soft);margin-bottom:10px;}
+  .badge-row{display:flex;gap:6px;margin-bottom:14px;}
+  .badge{border:1.5px solid var(--line);border-radius:999px;padding:3px 8px;font-size:9.5px;font-weight:bold;}
+  .day-summary{border:1.5px solid var(--line-soft);border-radius:8px;padding:9px 10px;font-size:11px;margin-bottom:8px;color:var(--ink-soft);}
+  .day-summary b{color:var(--ink);}
+  .action-compare{display:flex;gap:10px;margin-top:16px;}
+  .action-box{flex:1;border:1.5px dashed var(--line-soft);border-radius:8px;padding:10px;font-size:10px;color:var(--ink-soft);text-align:center;}
+  .action-box .btn{background:var(--ink);color:#fff;border-radius:8px;padding:9px;font-size:11.5px;font-weight:bold;margin-bottom:6px;}
+  .action-box .btn.outline{background:none;color:var(--ink);border:1.5px solid var(--ink);}
+
+  .sheet-screen{background:var(--bg-page);}
+  .sheet-dim{flex:1;background:rgba(38,40,44,0.35);}
+  .sheet{background:var(--bg-screen);border-radius:20px 20px 0 0;box-shadow:0 -6px 16px rgba(0,0,0,0.1);display:flex;flex-direction:column;}
+  .sheet-handle{width:36px;height:4px;background:var(--line-soft);border-radius:2px;margin:10px auto 4px;}
+  .sheet-body{padding:0 20px 16px;text-align:center;}
+  .sheet-body h2{font-size:15px;margin:14px 0 8px;}
+  .sheet-body p{font-size:12px;color:var(--ink-soft);line-height:1.5;margin:0 0 18px;}
+  .btn-primary-full{background:var(--ink);color:#fff;border-radius:8px;padding:12px;text-align:center;font-size:12.5px;font-weight:bold;margin-bottom:8px;}
+  .btn-outline-full{border:1.5px solid var(--line);border-radius:8px;padding:12px;text-align:center;font-size:12.5px;font-weight:bold;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <h1>Tripfy · Roteiros salvos — baixa fidelidade</h1>
+    <p>Lista de roteiros favoritados de outros usuários (BR006), com acesso ao detalhe e ação contextual de edição — que na prática é clonagem (BR002), exceto quando o roteiro é colaborativo e você tem permissão.</p>
+  </div>
+  <div class="flags">
+    <b>Pendências a confirmar com o time</b>
+    <ul>
+      <li>Roteiro que virou privado depois de favoritado deve, pela BR006, ser <b>removido</b> da lista de favoritos — modelei um estado intermediário "indisponível" com botão de remover manual em vez de sumir sozinho, pra dar visibilidade ao usuário do que aconteceu. Confirmar se o comportamento correto é remoção silenciosa ou esse aviso.</li>
+      <li>Não existe uma "Tela de detalhe do roteiro" própria no projeto ainda — a que fiz aqui é um stub mínimo só pra viabilizar a decisão de Editar vs. Clonar. Merece virar tela completa depois (com atividades dia a dia, avaliações, etc.).</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+
+    <div class="step-wrap">
+      <div class="step-tag">Lista de roteiros salvos</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Roteiros salvos</div><div class="round-btn" style="visibility:hidden;">‹</div></div>
+          <div class="count">3 roteiros</div>
+
+          <div class="roteiro-card">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">Trilhas na Chapada Diamantina</div>
+                <div class="roteiro-author">por @pedroaventura</div>
+                <div class="roteiro-meta">Palmeiras, BA · 6 dias · R$ 980 · 4.8★</div>
+              </div>
+              <svg class="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg>
+            </div>
+            <div class="roteiro-footer"><span>Público</span><span>Salvo há 3 dias</span></div>
+          </div>
+
+          <div class="roteiro-card">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">Serra Gaúcha: rota do vinho</div>
+                <div class="roteiro-author">por @carlaenoturismo</div>
+                <div class="roteiro-meta">Gramado, RS · 4 dias · R$ 690 · 4.7★</div>
+              </div>
+              <svg class="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg>
+            </div>
+            <div class="roteiro-footer"><span>Público</span><span>Salvo há 1 semana</span></div>
+          </div>
+
+          <div class="roteiro-card unavailable">
+            <div class="roteiro-top">
+              <div class="roteiro-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+              <div class="roteiro-info">
+                <div class="roteiro-name">Fim de semana em Ilhabela</div>
+                <div class="roteiro-author">por @julianaviaja</div>
+                <div class="roteiro-meta">Ilhabela, SP · 2 dias</div>
+              </div>
+              <svg class="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.2 5 5.6 5c1.9 0 3.4 1 4.4 2.4C11 6 12.5 5 14.4 5c3.4 0 5.1 3.4 3.6 6.7C19.5 16.4 12 21 12 21z"/></svg>
+            </div>
+            <div class="unavail-note"><span>🔒 O criador tornou este roteiro privado.</span><div>Remover</div></div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Estado "indisponível" reflete a BR006 cenário 3 — roteiro tornado privado após favoritado.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Detalhe do roteiro (de terceiro)</div>
+      <div class="phone"><div class="screen">
+        <div class="status">9:41</div>
+        <div class="content">
+          <div class="edit-header"><div class="round-btn">‹</div><div class="edit-title">Detalhe</div><div class="round-btn">♡</div></div>
+          <div class="detail-hero"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" color="#9298A2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 18l6-6 4 4 8-8"/></svg></div>
+          <div class="detail-title">Trilhas na Chapada Diamantina</div>
+          <div class="detail-meta">por @pedroaventura · Palmeiras, BA · 6 dias</div>
+          <div class="badge-row"><div class="badge">🌐 Público</div><div class="badge">R$ 980 · 4.8★</div></div>
+
+          <div class="day-summary"><b>Dia 1</b> — Cachoeira da Fumaça, Vale do Pati (3 atividades)</div>
+          <div class="day-summary"><b>Dia 2</b> — Poço Encantado, Poço Azul (2 atividades)</div>
+          <div class="day-summary"><b>Dia 3</b> — Morro do Pai Inácio (1 atividade)</div>
+
+          <div class="action-compare">
+            <div class="action-box">
+              <div class="btn">⧉ Clonar para editar</div>
+              Roteiro Público/Privado — você não pode editar o original
+            </div>
+            <div class="action-box">
+              <div class="btn outline">✎ Editar</div>
+              Só aparece se for Colaborativo e você tiver permissão (BR004)
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">O botão de ação muda de comportamento conforme o tipo de privacidade — nunca edita o original de outra pessoa sem ser colaborativo.</p>
+    </div>
+
+    <div class="step-wrap">
+      <div class="step-tag">Sheet · Confirmar clonagem (BR002)</div>
+      <div class="phone"><div class="screen sheet-screen">
+        <div class="status">9:41</div>
+        <div class="sheet-dim"></div>
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-body">
+            <h2>Clonar este roteiro?</h2>
+            <p>Uma cópia será criada na sua conta com os mesmos destinos e atividades. Você poderá editá-la livremente — o roteiro original de @pedroaventura não será alterado.</p>
+            <div class="btn-primary-full">Clonar roteiro</div>
+            <div class="btn-outline-full">Cancelar</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption">Ao confirmar, a cópia abre direto na tela de Editar roteiro (individual).</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -11,10 +11,32 @@ import { useGetPlaces } from '../../../hooks/useGetPlaces'
 import { router, useLocalSearchParams } from 'expo-router'
 import Card from '../../../components/ui/Card'
 import ModalAtividade from '../../../components/CriacaoRoteiro/ModalAtividade'
+import z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import ModalAtividadeTime from '../../../components/CriacaoRoteiro/ModalAtividadeTime'
 
 interface AtividadesRoteiro {
     activities: Atividade[];
 }
+
+const formDateSchema = z.object({
+    startTime: z.string().min(1, { message: "Horário de início é obrigatório" }),
+    endTime: z.string().min(1, { message: "Horário de fim é obrigatório" }),
+}).refine((data) => {
+    const [startHour, startMinute] = data.startTime.split(':').map(Number);
+    const [endHour, endMinute] = data.endTime.split(':').map(Number);
+
+    const startTotalMinutes = startHour * 60 + startMinute;
+    const endTotalMinutes = endHour * 60 + endMinute;
+
+    return endTotalMinutes > startTotalMinutes;
+}, {
+    'path': ['endTime'],
+    'message': "Horário de fim deve ser maior que o horário de início",
+});
+
+type FormDateData = z.infer<typeof formDateSchema>;
 
 const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
     const { getPlaces, loading, error } = useGetPlaces()
@@ -26,7 +48,16 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
     const [nightActivities, setNightActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.nightActivities ? roteiroData.nightActivities : {});
     const [earlyMorningActivities, setEarlyMorningActivities] = useState<Record<number, AtividadesRoteiro>>(roteiroData.earlyMorningActivities ? roteiroData.earlyMorningActivities : {});
     const [placeId, setPlaceId] = useState<string>('')
+    const [selectedActivity, setSelectedActivity] = useState<Atividade | null>(null)
+    const [showModalTime, setShowModalTime] = useState<boolean>(false)
     const [showPlaceDetails, setShowPlaceDetails] = useState<boolean>(false)
+    const { control, handleSubmit, reset, formState: { errors } } = useForm<FormDateData>({
+        resolver: zodResolver(formDateSchema),
+        defaultValues: {
+            startTime: '',
+            endTime: '',
+        },
+    });
 
     useEffect(() => {
         const fetchPlaces = async () => {
@@ -47,6 +78,8 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
 
     useEffect(() => {
         if (roteiroData.startDate && roteiroData.endDate) {
+            console.log('roteiroData.startDate:', roteiroData.startDate);
+            console.log('roteiroData.endDate:', roteiroData.endDate);
             const start = roteiroData.startDate.getDate()
             const end = roteiroData.endDate.getDate()
             const daysArray = Array.from({ length: end - start + 1 }, (_, i) => start + i);
@@ -308,9 +341,15 @@ const Step4 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                         theme={theme}
                         placeId={placeId}
                         onClose={() => setShowPlaceDetails(false)}
+                        onConfirm={(activity: Atividade) => { setShowPlaceDetails(false); setShowModalTime(true); setSelectedActivity(activity); }}
+                        selectedDay={selectedDay}
                     />
                 )
             }
+
+            {showModalTime && selectedActivity && (
+                <ModalAtividadeTime errors={errors} control={control} startTime='startTime' endTime='endTime' handleSubmit={handleSubmit} reset={reset} onClose={() => { setShowModalTime(false); }} theme={theme} activity={selectedActivity} setAddedActivity={() => setShowModalTime(false)} onConfirm={handleManagerActivities} />
+            )}
 
             <Divider theme={theme} />
 
