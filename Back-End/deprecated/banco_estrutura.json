@@ -1,0 +1,37 @@
+// travelRoute
+// {
+//   "_id": {
+//     "$oid": "6a2428692e86e35d5ac80a01"
+//   },
+//   "name": "Viagem de fim de ano",
+//   "ownersId": ["1787064828566688", "1787064041682630"],
+//   "places": [{"morning": ["123231", "1343423424321"], "afternoon": ["213124414", "4759483556"], "night": ["123123543123", "123123123"]}, {"morning": [], "afternoon": [], "night": []}, {"morning": ["123231", "1343423424321"], "afternoon": ["213124414", "4759483556"], "night": ["123123543123", "123123123"]}, {"morning": ["123231", "1343423424321"], "afternoon": ["213124414", "4759483556"], "night": ["123123543123", "123123123"]}],
+//   "coverImage": "https://thumbs.dreamstime.com/b/chuva-da-night-do-t%C3%B3quio-100784259.jpg",
+//   "location": "Toquio, Japão",
+//   "category": ["restaurant", "bar", "hotel", "japanese_restaurant"],
+//   "likes": ["1787064828566688"],
+//   "priceLevel": 2,
+//   "date_created": {
+//     "$date": "2026-06-06T14:02:17.023Z"
+//   },
+//   "date_updated": {
+//     "$date": "2026-06-06T14:02:17.023Z"
+//   }
+// }
+
+// itinerary
+// {
+//   "_id": {
+//     "$oid": "6a2598692e86e35d5ac80a01"
+//   },
+//   "travelRouteId": "6a2428692e86e35d5ac80a01",
+//   "userId": "1787064828566688",
+//   "beginningDate": "2026-09-28T03:00:00.000Z",
+//   "endingDate": "2026-10-01T02:59:59.999Z",
+//   "date_created": {
+//     "$date": "2026-06-06T14:02:17.023Z"
+//   },
+//   "date_updated": {
+//     "$date": "2026-06-06T14:02:17.023Z"
+//   }
+// }
