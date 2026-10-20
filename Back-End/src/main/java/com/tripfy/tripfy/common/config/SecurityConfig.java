@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/v*/auth/oauth/**").permitAll()
                         .requestMatchers("/v*/health").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/v*/travel-routes/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

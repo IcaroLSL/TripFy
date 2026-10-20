@@ -1,0 +1,173 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 003-create-collection-travel-route
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                create: "travelRoute",
+                validator: {
+                  $jsonSchema: {
+                    bsonType: "object",
+                    required: [
+                      "name",
+                      "ownersId",
+                      "places",
+                      "coverImage",
+                      "location",
+                      "category",
+                      "likes",
+                      "priceLevel",
+                      "date_created",
+                      "date_updated"
+                    ],
+                    properties: {
+
+                      _id: {
+                        bsonType: "objectId"
+                      },
+
+                      name: {
+                        bsonType: "string",
+                        minLength: 1
+                      },
+
+                      ownersId: {
+                        bsonType: "array",
+                        items: {
+                          bsonType: "string"
+                        }
+                      },
+
+                      places: {
+                        bsonType: "array",
+                        items: {
+                          bsonType: "object",
+                          required: [
+                            "morning",
+                            "afternoon",
+                            "night"
+                          ],
+                          properties: {
+
+                            morning: {
+                              bsonType: "array",
+                              items: {
+                                bsonType: "string"
+                              }
+                            },
+
+                            afternoon: {
+                              bsonType: "array",
+                              items: {
+                                bsonType: "string"
+                              }
+                            },
+
+                            night: {
+                              bsonType: "array",
+                              items: {
+                                bsonType: "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+
+                      coverImage: {
+                        bsonType: "string",
+                        minLength: 1
+                      },
+
+                      location: {
+                        bsonType: "string",
+                        minLength: 1
+                      },
+
+                      category: {
+                        bsonType: "array",
+                        items: {
+                          bsonType: "string"
+                        }
+                      },
+
+                      likes: {
+                        bsonType: "array",
+                        items: {
+                          bsonType: "string"
+                        }
+                      },
+
+                      priceLevel: {
+                        bsonType: "int",
+                        minimum: 0
+                      },
+
+                      date_created: {
+                        bsonType: "date"
+                      },
+
+                      date_updated: {
+                        bsonType: "date"
+                      }
+                    }
+                  }
+                }
+              }
+
+  - changeSet:
+      id: 004-create-collection-itinerary
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                create: "itinerary",
+                validator: {
+                  $jsonSchema: {
+                    bsonType: "object",
+                    required: [
+                      "travelRouteId",
+                      "userId",
+                      "beginningDate",
+                      "endingDate",
+                      "date_created",
+                      "date_updated"
+                    ],
+                    properties: {
+
+                      _id: {
+                        bsonType: "objectId"
+                      },
+
+                      travelRouteId: {
+                        bsonType: "string",
+                        minLength: 1
+                      },
+
+                      userId: {
+                        bsonType: "string",
+                        minLength: 1
+                      },
+
+                      beginningDate: {
+                        bsonType: "date"
+                      },
+
+                      endingDate: {
+                        bsonType: "date"
+                      },
+
+                      date_created: {
+                        bsonType: "date"
+                      },
+
+                      date_updated: {
+                        bsonType: "date"
+                      }
+                    }
+                  }
+                }
+              }

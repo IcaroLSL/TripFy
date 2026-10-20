@@ -3,3 +3,7 @@ databaseChangeLog:
       file: db/changelog-mongo/changes/001-create-roles.yaml
   - include:
       file: db/changelog-mongo/changes/002-create-users.yaml
+  - include:
+      file: db/changelog-mongo/changes/003-create-collection-travel-itinerary.yaml
+  - include:
+      file: db/changelog-mongo/changes/004-update-travel-itinerary-schema-and-indexes.yaml
