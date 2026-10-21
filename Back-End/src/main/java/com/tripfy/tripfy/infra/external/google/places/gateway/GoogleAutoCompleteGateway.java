@@ -1,8 +1,8 @@
-package com.tripfy.tripfy.infra.google.places.gateway;
+package com.tripfy.tripfy.infra.external.google.places.gateway;
 
 import com.tripfy.tripfy.places.gateway.AutoCompleteGateway;
 import com.tripfy.tripfy.places.dto.AutoCompleteResponse;
-import com.tripfy.tripfy.infra.google.places.dto.GoogleAutoCompleteResponse;
+import com.tripfy.tripfy.infra.external.google.places.dto.GoogleAutoCompleteResponse;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;

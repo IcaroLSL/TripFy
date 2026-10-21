@@ -1,8 +1,8 @@
-package com.tripfy.tripfy.infra.google.places.gateway;
+package com.tripfy.tripfy.infra.external.google.places.gateway;
 
 import com.tripfy.tripfy.places.gateway.SearchPlaceGateway;
 import com.tripfy.tripfy.places.dto.PlaceDetailResponse;
-import com.tripfy.tripfy.infra.google.places.dto.GooglePlacesDetailResponse;
+import com.tripfy.tripfy.infra.external.google.places.dto.GooglePlacesDetailResponse;
 import com.tripfy.tripfy.places.model.LocalDetail;
 
 import lombok.extern.slf4j.Slf4j;

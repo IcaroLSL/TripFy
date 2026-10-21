@@ -1,8 +1,8 @@
-package com.tripfy.tripfy.infra.google.places.gateway;
+package com.tripfy.tripfy.infra.external.google.places.gateway;
 
-import com.tripfy.tripfy.infra.google.places.dto.GoogleGeocodeResponseDTO;
-import com.tripfy.tripfy.infra.google.places.dto.GooglePlacesResponseDTO;
-import com.tripfy.tripfy.infra.google.places.dto.PriceLevel;
+import com.tripfy.tripfy.infra.external.google.places.dto.GoogleGeocodeResponseDTO;
+import com.tripfy.tripfy.infra.external.google.places.dto.GooglePlacesResponseDTO;
+import com.tripfy.tripfy.infra.external.google.places.dto.PriceLevel;
 import com.tripfy.tripfy.places.gateway.PlaceTypeCatalog;
 import com.tripfy.tripfy.places.gateway.PlacesGateway;
 import com.tripfy.tripfy.places.model.Local;

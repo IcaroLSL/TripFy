@@ -1,12 +1,14 @@
-package com.tripfy.tripfy.infra.oauth.google;
+package com.tripfy.tripfy.infra.external.oauth.google;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
+
 import com.tripfy.tripfy.auth.gateway.OAuthTokenValidator;
 import com.tripfy.tripfy.auth.model.AuthProvider;
 import com.tripfy.tripfy.auth.model.OAuthUserInfo;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

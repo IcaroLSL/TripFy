@@ -1,8 +1,9 @@
-package com.tripfy.tripfy.infra.oauth.facebook;
+package com.tripfy.tripfy.infra.external.oauth.facebook;
 
 import com.tripfy.tripfy.auth.gateway.OAuthTokenValidator;
 import com.tripfy.tripfy.auth.model.AuthProvider;
 import com.tripfy.tripfy.auth.model.OAuthUserInfo;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 

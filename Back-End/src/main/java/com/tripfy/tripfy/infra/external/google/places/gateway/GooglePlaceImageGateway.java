@@ -1,4 +1,4 @@
-package com.tripfy.tripfy.infra.google.places.gateway;
+package com.tripfy.tripfy.infra.external.google.places.gateway;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

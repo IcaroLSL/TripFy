@@ -1,4 +1,4 @@
-package com.tripfy.tripfy.infra.oauth.apple;
+package com.tripfy.tripfy.infra.external.oauth.apple;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
@@ -9,9 +9,11 @@ import com.nimbusds.jwt.proc.JWTClaimsSetVerifier;
 import com.nimbusds.jose.proc.JWSVerificationKeySelector;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.JWTClaimsSet;
+
 import com.tripfy.tripfy.auth.gateway.OAuthTokenValidator;
 import com.tripfy.tripfy.auth.model.AuthProvider;
 import com.tripfy.tripfy.auth.model.OAuthUserInfo;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
