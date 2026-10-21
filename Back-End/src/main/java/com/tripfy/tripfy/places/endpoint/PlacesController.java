@@ -1,6 +1,6 @@
 package com.tripfy.tripfy.places.endpoint;
 
-import com.tripfy.tripfy.infra.jwt.auth.AuthenticatedUser;
+import com.tripfy.tripfy.infra.security.jwt.auth.AuthenticatedUser;
 import com.tripfy.tripfy.places.dto.PlaceResponse;
 import com.tripfy.tripfy.places.dto.SearchPlacesResponse;
 import com.tripfy.tripfy.places.model.Local;
@@ -90,11 +90,7 @@ public class PlacesController {
     }
 
     @GetMapping("/places/position")
-    public ResponseEntity<PositionResponse> getCityByPosition(
-            @RequestParam String latitude,
-            @RequestParam String longitude,
-            @AuthenticationPrincipal AuthenticatedUser user) {
-
+    public ResponseEntity<PositionResponse> getCityByPosition(@RequestParam String latitude, @RequestParam String longitude, @AuthenticationPrincipal AuthenticatedUser user) {
         System.out.println("chamando endpoint de busca de lugar por posição");
 
         PositionResponse positionResponse =
@@ -104,10 +100,7 @@ public class PlacesController {
     }
 
     @GetMapping("/places/autocomplete")
-    public ResponseEntity<AutoCompleteResponse> getAutoComplete(
-            @RequestParam String input,
-            @AuthenticationPrincipal AuthenticatedUser user) {
-
+    public ResponseEntity<AutoCompleteResponse> getAutoComplete(@RequestParam String input, @AuthenticationPrincipal AuthenticatedUser user) {
         System.out.println("chamando endpoint de autocomplete");
 
         AutoCompleteResponse autocompleteResponse =
@@ -117,12 +110,9 @@ public class PlacesController {
     }
 
     @GetMapping("/places/image")
-    public ResponseEntity<PlaceImageResponse> getImageByPlace(
-            @RequestParam String photoReference,
-            @RequestParam(defaultValue = "false") boolean dummy,
-            @AuthenticationPrincipal AuthenticatedUser user) {
-        
+    public ResponseEntity<PlaceImageResponse> getImageByPlace(@RequestParam String photoReference, @RequestParam(defaultValue = "false") boolean dummy, @AuthenticationPrincipal AuthenticatedUser user) {
         System.out.println("chamando endpoint de busca de imagem por lugar");
+
         if (dummy) {
             return ResponseEntity.ok(new PlaceImageResponse("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNFCv77ZV6d1Sj2cxI6iMxcqi-Mo11RaEB13vrNWUgeQ&s=10"));
         }

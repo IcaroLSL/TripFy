@@ -1,6 +1,6 @@
 package com.tripfy.tripfy.common.config;
 
-import com.tripfy.tripfy.infra.jwt.auth.JwtAuthenticationFilter;
+import com.tripfy.tripfy.infra.security.jwt.auth.JwtAuthenticationFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
