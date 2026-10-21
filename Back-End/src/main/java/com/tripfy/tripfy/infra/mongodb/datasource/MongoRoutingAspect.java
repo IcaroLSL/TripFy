@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Order(0)
 public class MongoRoutingAspect {
 
-    @Around("execution(* com.tripfy.tripfy.infra.mongo..*Repository.*(..)) " +
+    @Around("execution(* com.tripfy.tripfy.infra.mongodb..*Repository.*(..)) " +
             "&& !execution(* org.springframework.data.mongodb.repository.MongoRepository.*(..))")
     public Object route(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();

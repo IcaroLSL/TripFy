@@ -21,9 +21,8 @@ public class TravelRouteController {
     private final CreateTravelRouteUseCase createTravelRouteUseCase;
 
     @PostMapping
-    public ResponseEntity<CreateTravelRouteResponse> create(
-            @Valid @RequestBody CreateTravelRouteRequest request,
-            Authentication authentication) {
+    public ResponseEntity<CreateTravelRouteResponse> create(@Valid @RequestBody CreateTravelRouteRequest request, Authentication authentication) {
+        System.out.println("chamando endpoint de criação de roteiros");
 
         CreateTravelRouteResponse response =
             createTravelRouteUseCase.execute(request, authentication.getName());
