@@ -1,15 +1,14 @@
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Divider from '../../../components/ui/Divider';
 import { TextField } from '../../../components/ui/FormFields/TextField';
 import { AppTitle, AppDescription, AppText } from '../../../components/ui/TextApp';
-import WarningCard from '../../../components/ui/WarningCard';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../components/ui/Button';
 import { DateField } from '../../../components/ui/FormFields/DateField';
 import { StepProps } from '../../../src/interfaces/StepProps';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Location from 'expo-location';
 import { useConvertLocation } from '../../../hooks/useConvertLocation';
@@ -32,10 +31,12 @@ type FormData = z.infer<typeof formSchema>;
 
 const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData }: StepProps) => {
     const { convertLocation, error, loading, location } = useConvertLocation()
-    const { getLocationSuggestions, error: autocompleteError, loading: autocompleteLoading, locationSuggestions } = useAutocompleteLocation()
+    const { getLocationSuggestions, locationSuggestions } = useAutocompleteLocation()
     const [errorLocation, setErrorLocation] = useState<string | null>(null);
     const [loadingLocation, setLoadingLocation] = useState<boolean>(false);
-    const { control, handleSubmit, setValue, watch, setError } = useForm<FormData>({
+    const [selectedSuggestion, setSelectedSuggestion] = useState<string | null>(null);
+    const [isSuggestionSelected, setIsSuggestionSelected] = useState(false);
+    const { control, handleSubmit, setValue, watch } = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             destino: '',
@@ -54,11 +55,13 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
             try {
 
                 if (watchDestino && watchDestino.length > 0) {
-                    const suggestions = await getLocationSuggestions(watchDestino);
-                    if (suggestions) {
-                        console.log('Location suggestions:', suggestions);
-                    } else {
-                        console.log('No location suggestions found');
+                    if (selectedSuggestion && watchDestino === selectedSuggestion && isSuggestionSelected) {
+                        return;
+                    }
+
+                    if (selectedSuggestion && watchDestino !== selectedSuggestion) {
+                        setSelectedSuggestion(null);
+                        setIsSuggestionSelected(false);
                     }
                 }
             } catch (error) {
@@ -67,7 +70,7 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
         }, 1000)
 
         return () => clearTimeout(fetchLocationSuggestions);
-    }, [watchDestino])
+    }, [watchDestino, selectedSuggestion, isSuggestionSelected])
 
     const handleGetLocation = async () => {
         try {
@@ -78,19 +81,21 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 return;
             }
             const location = await Location.getCurrentPositionAsync({});
-            console.log('Current location:', location);
             const locationName = await convertLocation(location.coords.latitude, location.coords.longitude);
             if (locationName) {
                 setLoadingLocation(false);
                 setErrorLocation(null);
                 setValue('destino', locationName);
+                setSelectedSuggestion(locationName);
+                setIsSuggestionSelected(true);
             } else {
                 setLoadingLocation(false);
                 setErrorLocation('Could not convert location to address');
                 setValue('destino', location.coords.latitude + ', ' + location.coords.longitude);
+                setSelectedSuggestion(location.coords.latitude + ', ' + location.coords.longitude);
+                setIsSuggestionSelected(true);
             }
         } catch (error) {
-            console.error('Error getting current location:', error);
             setLoadingLocation(false);
             setErrorLocation('Error getting current location');
         }
@@ -106,6 +111,18 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
         });
     }
 
+    const handleSelectSuggestion = (suggestion: string) => {
+        setValue('destino', suggestion, { shouldValidate: true, shouldDirty: true });
+        setSelectedSuggestion(suggestion);
+        setIsSuggestionSelected(true);
+        setErrorLocation(null);
+    }
+
+    const shouldShowLocationSuggestions =
+        !isSuggestionSelected &&
+        !!watchDestino?.trim() &&
+        !!locationSuggestions?.length;
+
     return (
         <>
             <AppTitle theme={theme}>Para Onde Vamos?</AppTitle>
@@ -120,29 +137,33 @@ const Step1 = ({ theme, currentStep, setCurrentStep, setRoteiroData, roteiroData
                 </View>
             </Button>
             <Divider theme={theme} message="ou" />
-            <View className="gap-2">
-                <AppText theme={theme}>Destino</AppText>
-                <TextField theme={theme} control={control} name="destino" placeholder="Digite o endereço do destino" />
-            </View>
+            <View className="relative z-30">
+                <View className="gap-2">
+                    <AppText theme={theme}>Destino</AppText>
+                    <TextField theme={theme} control={control} name="destino" placeholder="Digite o endereço do destino" />
+                </View>
 
-            {locationSuggestions && locationSuggestions.length > 0 && (
-                <Card theme={theme} className='absolute top-[30vh] left-0 right-0 p-4 items-center gap-2'>
-                    <AppText theme={theme}>Sugestões de Localização:</AppText>
-                    {locationSuggestions.map((suggestion, index) => (
-                        <Text key={index} className={`text-base text-center items-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
-                            {suggestion}
-                        </Text>
-                    ))}
-                </Card>
-            )}
+                {shouldShowLocationSuggestions && (
+                    <Card theme={theme} className='absolute top-full mt-2 left-0 right-0 p-4 gap-2 z-50'>
+                        <AppText theme={theme}>Sugestões de Localização:</AppText>
+                        {locationSuggestions.map((suggestion, index) => (
+                            <Pressable
+                                key={index}
+                                onPress={() => handleSelectSuggestion(suggestion)}
+                                className='py-2'
+                            >
+                                <Text className={`text-base ${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                                    {suggestion}
+                                </Text>
+                            </Pressable>
+                        ))}
+                    </Card>
+                )}
+            </View>
 
             <View className="gap-2">
                 <AppText theme={theme}>Quando?</AppText>
                 <DateField mode='range' theme={theme} control={control} name="data" placeholder="Selecione a data de início e fim" />
-            </View>
-
-            <View>
-                <AppText theme={theme}> {errorLocation || error}</AppText>
             </View>
 
             <Divider theme={theme} />

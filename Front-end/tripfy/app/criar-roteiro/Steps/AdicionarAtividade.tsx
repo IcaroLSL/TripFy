@@ -110,6 +110,7 @@ const AdicionarAtividade = () => {
                     minRating: roteiroData.avaliacaoMinima || '0',
                     specificPlace: placeName || '',
                 }, 1);
+                console.log(selectedPrice)
                 setPlaces(fetchedPlaces);
             } catch (error) {
                 console.error("Error fetching places:", error);
