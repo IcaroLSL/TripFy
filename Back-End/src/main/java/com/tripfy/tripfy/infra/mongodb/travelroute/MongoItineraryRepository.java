@@ -1,4 +1,4 @@
-package com.tripfy.tripfy.infra.mongo.travelroute;
+package com.tripfy.tripfy.infra.mongodb.travelroute;
 
 import com.tripfy.tripfy.travelroute.gateway.ItineraryRepository;
 import com.tripfy.tripfy.travelroute.model.Itinerary;
