@@ -1,9 +1,8 @@
 package com.tripfy.tripfy.places.endpoint;
 
-import com.tripfy.tripfy.infra.security.jwt.auth.AuthenticatedUser;
+import com.tripfy.tripfy.common.security.AuthenticatedUser;
 import com.tripfy.tripfy.places.dto.PlaceResponse;
 import com.tripfy.tripfy.places.dto.SearchPlacesResponse;
-import com.tripfy.tripfy.places.model.Local;
 import com.tripfy.tripfy.places.usecase.SearchPlacesUseCase;
 import com.tripfy.tripfy.places.usecase.SearchPlacesUseCase.PlacesPageResult;
 import com.tripfy.tripfy.places.utils.PlaceResponseMapper;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import jakarta.validation.constraints.DecimalMax;
@@ -68,7 +66,7 @@ public class PlacesController {
         System.out.println("chamando endpoint de busca de lugares");
 
         List<String> validTypes = placeTypeCatalog.filterValid(types);
-        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.id(), location, page, limit, validTypes, minRating, priceLevels, name);
+        PlacesPageResult pageResult = searchPlacesUseCase.execute(user.getId(), location, page, limit, validTypes, minRating, priceLevels, name);
 
         List<PlaceResponse> places = pageResult.places().stream().map(PlaceResponseMapper::toResponse).toList();
 

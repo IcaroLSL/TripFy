@@ -1,4 +1,3 @@
-// CreateTravelRouteUseCase.java
 package com.tripfy.tripfy.travelroute.usecase;
 
 import com.tripfy.tripfy.common.exception.InvalidRequestException;

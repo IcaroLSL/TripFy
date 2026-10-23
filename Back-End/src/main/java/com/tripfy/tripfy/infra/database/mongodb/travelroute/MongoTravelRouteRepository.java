@@ -1,4 +1,3 @@
-// MongoTravelRouteRepository.java
 package com.tripfy.tripfy.infra.database.mongodb.travelroute;
 
 import com.tripfy.tripfy.travelroute.gateway.TravelRouteRepository;
