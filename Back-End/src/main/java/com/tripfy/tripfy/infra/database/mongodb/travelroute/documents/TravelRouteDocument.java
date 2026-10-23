@@ -1,4 +1,4 @@
-package com.tripfy.tripfy.infra.database.mongodb.travelroute;
+package com.tripfy.tripfy.infra.database.mongodb.travelroute.documents;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,8 +37,16 @@ public class TravelRouteDocument {
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class DayDocument {
-        private List<String> morning;
-        private List<String> afternoon;
-        private List<String> night;
+        private List<ActivityDocument> earlyMorning;
+        private List<ActivityDocument> morning;
+        private List<ActivityDocument> afternoon;
+        private List<ActivityDocument> night;
+    }
+
+    @Getter @Setter @NoArgsConstructor @AllArgsConstructor
+    public static class ActivityDocument {
+        private String placeId;
+        private String startTime;
+        private String endTime;
     }
 }

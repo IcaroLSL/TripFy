@@ -1,4 +1,4 @@
-package com.tripfy.tripfy.infra.database.mongodb.travelroute;
+package com.tripfy.tripfy.infra.database.mongodb.travelroute.documents;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

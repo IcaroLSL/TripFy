@@ -1,0 +1,99 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 005-travel-route-activities-with-time
+      author: tripfy
+      changes:
+        - runCommand:
+            command: |
+              {
+                collMod: "travelRoute",
+                validator: {
+                  $jsonSchema: {
+                    bsonType: "object",
+                    required: [
+                      "name", "ownersId", "places", "coverImage", "location",
+                      "category", "likes", "priceLevel",
+                      "date_created", "date_updated"
+                    ],
+                    properties: {
+                      _id: { bsonType: "objectId" },
+                      name: { bsonType: "string", minLength: 1 },
+                      ownersId: {
+                        bsonType: "array",
+                        items: { bsonType: "string" }
+                      },
+                      places: {
+                        bsonType: "array",
+                        items: {
+                          bsonType: "object",
+                          required: ["earlyMorning", "morning", "afternoon", "night"],
+                          properties: {
+                            earlyMorning: {
+                              bsonType: "array",
+                              items: {
+                                bsonType: "object",
+                                required: ["placeId", "startTime", "endTime"],
+                                properties: {
+                                  placeId:   { bsonType: "string", minLength: 1 },
+                                  startTime: { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+                                  endTime:   { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" }
+                                }
+                              }
+                            },
+                            morning: {
+                              bsonType: "array",
+                              items: {
+                                bsonType: "object",
+                                required: ["placeId", "startTime", "endTime"],
+                                properties: {
+                                  placeId:   { bsonType: "string", minLength: 1 },
+                                  startTime: { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+                                  endTime:   { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" }
+                                }
+                              }
+                            },
+                            afternoon: {
+                              bsonType: "array",
+                              items: {
+                                bsonType: "object",
+                                required: ["placeId", "startTime", "endTime"],
+                                properties: {
+                                  placeId:   { bsonType: "string", minLength: 1 },
+                                  startTime: { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+                                  endTime:   { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" }
+                                }
+                              }
+                            },
+                            night: {
+                              bsonType: "array",
+                              items: {
+                                bsonType: "object",
+                                required: ["placeId", "startTime", "endTime"],
+                                properties: {
+                                  placeId:   { bsonType: "string", minLength: 1 },
+                                  startTime: { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" },
+                                  endTime:   { bsonType: "string", pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$" }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      coverImage: { bsonType: "string", minLength: 1 },
+                      location:   { bsonType: "string", minLength: 1 },
+                      category: {
+                        bsonType: "array",
+                        items: { bsonType: "string" }
+                      },
+                      likes: {
+                        bsonType: "array",
+                        items: { bsonType: "string" }
+                      },
+                      priceLevel: { bsonType: ["int", "null"], minimum: 0 },
+                      date_created: { bsonType: "date" },
+                      date_updated: { bsonType: "date" }
+                    }
+                  }
+                }
+              }

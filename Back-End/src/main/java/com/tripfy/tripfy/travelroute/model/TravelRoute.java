@@ -16,5 +16,16 @@ public record TravelRoute(
     Instant dateCreated,
     Instant dateUpdated
 ) {
-    public record Day(List<String> morning, List<String> afternoon, List<String> night) {}
+    public record Day(
+        List<Activity> earlyMorning, 
+        List<Activity> morning, 
+        List<Activity> afternoon, 
+        List<Activity> night
+    ) {}
+
+    public record Activity(
+        String placeId, 
+        String startTime, 
+        String endTime
+    ) {}
 }

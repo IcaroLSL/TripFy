@@ -2,6 +2,8 @@ package com.tripfy.tripfy.infra.database.mongodb.travelroute;
 
 import com.tripfy.tripfy.travelroute.gateway.ItineraryRepository;
 import com.tripfy.tripfy.travelroute.model.Itinerary;
+import com.tripfy.tripfy.infra.database.mongodb.travelroute.documents.ItineraryDocument;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;

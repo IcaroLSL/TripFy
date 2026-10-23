@@ -1,3 +1,4 @@
+// CreateTravelRouteUseCase.java
 package com.tripfy.tripfy.travelroute.usecase;
 
 import com.tripfy.tripfy.common.exception.InvalidRequestException;
@@ -7,13 +8,16 @@ import com.tripfy.tripfy.travelroute.gateway.ItineraryRepository;
 import com.tripfy.tripfy.travelroute.gateway.TravelRouteRepository;
 import com.tripfy.tripfy.travelroute.model.Itinerary;
 import com.tripfy.tripfy.travelroute.model.TravelRoute;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashSet;
@@ -49,6 +53,10 @@ public class CreateTravelRouteUseCase {
                 "places tem " + request.places().size() + " dia(s), mas o período tem " + days);
         }
 
+        for (int i = 0; i < request.places().size(); i++) {
+            validateDay(i, request.places().get(i));
+        }
+
         // 2. Donos: o usuário do token sempre é o primeiro
         Set<String> owners = new LinkedHashSet<>();
         owners.add(userId);
@@ -56,8 +64,10 @@ public class CreateTravelRouteUseCase {
 
         // 3. Monta o travelRoute
         List<TravelRoute.Day> places = request.places().stream()
-            .map(d -> new TravelRoute.Day(d.morning(), d.afternoon(), d.night()))
-            .toList();
+        .map(d -> new TravelRoute.Day(
+            toActivities(d.earlyMorning()), toActivities(d.morning()),
+            toActivities(d.afternoon()), toActivities(d.night())))
+        .toList();
 
         String cover = (request.coverImage() == null || request.coverImage().isBlank())
             ? defaultCoverImage
@@ -83,5 +93,37 @@ public class CreateTravelRouteUseCase {
             travelRouteRepository.deleteById(saved.id());
             throw e;
         }
+    }
+
+    private void validateDay(int dayIndex, CreateTravelRouteRequest.Day d) {
+        validatePeriod(dayIndex, "earlyMorning", 0, 5, d.earlyMorning());
+        validatePeriod(dayIndex, "morning", 5, 12, d.morning());
+        validatePeriod(dayIndex, "afternoon", 12, 18, d.afternoon());
+        validatePeriod(dayIndex, "night", 18, 24, d.night());
+    }
+
+    private void validatePeriod(int dayIndex, String period, int fromHour, int toHour,
+                                List<CreateTravelRouteRequest.Activity> activities) {
+        for (CreateTravelRouteRequest.Activity a : activities) {
+            LocalTime start = LocalTime.parse(a.startTime());
+            LocalTime end   = LocalTime.parse(a.endTime());
+
+            if (start.getHour() < fromHour || start.getHour() >= toHour) {
+                throw new InvalidRequestException(
+                    "Dia " + (dayIndex + 1) + ": a atividade " + a.placeId()
+                    + " começa às " + a.startTime() + " e não pertence ao período " + period);
+            }
+            if (!end.isAfter(start)) {
+                throw new InvalidRequestException(
+                    "Dia " + (dayIndex + 1) + ": endTime da atividade " + a.placeId()
+                    + " deve ser maior que startTime");
+            }
+        }
+    }
+
+    private List<TravelRoute.Activity> toActivities(List<CreateTravelRouteRequest.Activity> list) {
+        return list.stream()
+            .map(a -> new TravelRoute.Activity(a.placeId(), a.startTime(), a.endTime()))
+            .toList();
     }
 }
