@@ -75,7 +75,7 @@ public class CreateTravelRouteUseCase {
         Instant now = Instant.now();
 
         TravelRoute saved = travelRouteRepository.insert(new TravelRoute(
-            null, request.name(), List.copyOf(owners), places, cover,
+            null, request.name(), List.copyOf(owners), places, cover, request.visibility(),
             request.location(), request.category(), List.of(),
             request.priceLevel(), now, now
         ));

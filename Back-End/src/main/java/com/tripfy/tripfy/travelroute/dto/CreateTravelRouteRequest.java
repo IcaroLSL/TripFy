@@ -17,6 +17,7 @@ public record CreateTravelRouteRequest(
     String coverImage,
     @NotBlank String location,
     @NotEmpty List<@NotBlank String> category,
+    @NotBlank @Pattern(regexp = "^(public|private|shared)$") String visibility,
     @Min(0) Integer priceLevel,
     @NotNull Instant beginningDate,
     @NotNull Instant endingDate

@@ -31,6 +31,7 @@ public class MongoTravelRouteRepository implements TravelRouteRepository {
                 toDocs(day.afternoon()), toDocs(day.night())))
             .toList());
         d.setCoverImage(r.coverImage());
+        d.setVisibility(r.visibility());
         d.setLocation(r.location());
         d.setCategory(r.category());
         d.setLikes(r.likes());
@@ -47,8 +48,8 @@ public class MongoTravelRouteRepository implements TravelRouteRepository {
                     toActivities(x.getEarlyMorning()), toActivities(x.getMorning()),
                     toActivities(x.getAfternoon()), toActivities(x.getNight())))
                 .toList(),
-            s.getCoverImage(), s.getLocation(), s.getCategory(), s.getLikes(),
-            s.getPriceLevel(), s.getDateCreated(), s.getDateUpdated()
+            s.getCoverImage(), s.getVisibility(), s.getLocation(), s.getCategory(), 
+            s.getLikes(), s.getPriceLevel(), s.getDateCreated(), s.getDateUpdated()
         );
     }
 

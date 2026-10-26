@@ -1,9 +1,10 @@
 package com.tripfy.tripfy.travelroute.endpoint;
 
+import com.tripfy.tripfy.common.security.AuthenticatedUser;
 import com.tripfy.tripfy.travelroute.dto.CreateTravelRouteRequest;
 import com.tripfy.tripfy.travelroute.dto.CreateTravelRouteResponse;
 import com.tripfy.tripfy.travelroute.usecase.CreateTravelRouteUseCase;
-import com.tripfy.tripfy.common.security.AuthenticatedUser;
+// import com.tripfy.tripfy.travelroute.usecase.GetTravelRouteByIdUseCase;
 
 import jakarta.validation.Valid;
 
@@ -16,10 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
-
-
 
 @RestController
 @RequestMapping("/v1/travel-route")

@@ -22,6 +22,7 @@ public class TravelRouteDocument {
     private List<String> ownersId;
     private List<DayDocument> places;
     private String coverImage;
+    private String visibility;
     private String location;
     private List<String> category;
     private List<String> likes;

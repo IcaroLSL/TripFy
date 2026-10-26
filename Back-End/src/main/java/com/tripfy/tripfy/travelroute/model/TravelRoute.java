@@ -9,6 +9,7 @@ public record TravelRoute(
     List<String> ownersId,
     List<Day> places,
     String coverImage,
+    String visibility,
     String location,
     List<String> category,
     List<String> likes,
